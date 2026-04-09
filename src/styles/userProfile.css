@@ -1,0 +1,225 @@
+/* =========================
+   PAGE WRAPPER
+========================= */
+
+.system-user-profile-page {
+  padding: 28px;
+  min-height: 100vh;
+  
+background: linear-gradient(
+    135deg,
+    #f4f2fb 0%,
+    #f8fafc 50%,
+    #eef2f7 100%
+);
+ }
+
+/* =========================
+   TOP HEADER BAR
+========================= */
+
+.system-user-profile-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 28px;
+}
+
+.system-user-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
+  font-size: 13px;
+  font-weight: 500;
+  color: #374151;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.system-user-back-btn:hover {
+  background: #f9fafb;
+}
+
+/* Status pill (matches cards) */
+.system-user-status-badge {
+  padding: 6px 16px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.system-user-status-badge.active {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.system-user-status-badge.inactive {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+/* =========================
+   PROFILE CARD (BASE)
+========================= */
+
+.system-user-profile-card {
+  position: relative;
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 24px;
+  box-shadow: 0 10px 28px rgba(0,0,0,0.12);
+  height: 100%;
+}
+
+/* Top accent — SAME as role & user cards */
+.system-user-profile-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 4px;
+  width: 100%;
+  background: linear-gradient(90deg, #2e003e, #6366f1);
+  border-radius: 18px 18px 0 0;
+}
+
+/* =========================
+   LEFT IDENTITY CARD
+========================= */
+
+.system-user-identity {
+  text-align: center;
+}
+
+.system-user-avatar-lg {
+  width: 110px;
+  height: 110px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #2e003e, #6366f1);
+  color: #ffffff;
+  font-size: 32px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 8px auto 16px;
+  box-shadow: 0 14px 36px rgba(99, 102, 241, 0.4);
+}
+
+.system-user-name-lg {
+  font-size: 20px;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 4px;
+}
+
+.system-user-username {
+  font-size: 13px;
+  color: #6b7280;
+  margin-bottom: 16px;
+}
+
+.system-user-role-badge {
+  display: inline-block;
+  padding: 6px 18px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  background: #eef2ff;
+  color: #4f46e5;
+}
+
+/* =========================
+   RIGHT DETAILS CARD
+========================= */
+
+.system-user-details-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #2e003e;
+  margin-bottom: 18px;
+}
+
+.system-user-details-divider {
+  height: 1px;
+  background: #e5e7eb;
+  margin-bottom: 22px;
+}
+
+.system-user-details-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 22px;
+  margin-bottom: 28px;
+}
+
+.system-user-detail {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.system-user-detail-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  
+background: #eef2f7;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+}
+
+.system-user-detail-label {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.system-user-detail-value {
+  font-size: 14px;
+  font-weight: 600;
+  
+ color: #1f2937;            /* ✅ darker than before */
+  word-break: break-all; 
+
+}
+/* =========================
+   PROFILE CARD HOVER (MATCH ROLE CARDS)
+========================= */
+
+.system-user-profile-card {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.system-user-profile-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.2);
+}
+
+.system-user-profile-card:hover::before {
+  box-shadow: 0 0 0 1px rgba(99, 102, 241, 0.35);
+}
+
+
+/* =========================
+   FOOTER NOTICE
+========================= */
+
+.system-user-info-note {
+  background: #f9fafb;
+  border-radius: 12px;
+  padding: 14px 18px;
+  font-size: 13px;
+  color: #4b5563;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}

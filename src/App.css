@@ -1,0 +1,19 @@
+/* Layout container */
+.app-container {
+  display: flex;
+}
+ 
+/* Main content area offset by sidebar */
+.main-content {
+  flex-grow: 1;
+  padding: 20px;
+  margin-left: 260px; /* expanded sidebar width */
+  transition: margin-left 0.4s ease;
+  background-color: #f8f9fa; /* light gray background */
+  min-height: 100vh;
+}
+ 
+/* When sidebar is collapsed */
+.sidebar-collapsed {
+  margin-left: 80px; /* collapsed sidebar width */
+}
