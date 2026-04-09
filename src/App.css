@@ -1,0 +1,89 @@
+/* 1. THE DYNAMIC BACKGROUND */
+.main-content {
+  flex: 1;
+  margin-left: 260px;
+  transition: margin-left 0.3s ease-in-out;
+  background: radial-gradient(circle at 50% 0%, #30164d 0%, #0f051a 70%) !important;
+  background-color: #0f051a !important;
+  min-height: 100vh;
+  padding: 30px;
+  color: #ffffff !important;
+}
+
+.sidebar-collapsed {
+  margin-left: 80px;
+}
+
+/* 2. THE FROSTED GLASS PANELS */
+.glass-panel, .summary-box {
+  background: rgba(255, 255, 255, 0.04) !important;
+  backdrop-filter: blur(15px) saturate(160%);
+  -webkit-backdrop-filter: blur(15px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 16px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  margin-bottom: 25px;
+  padding: 20px;
+  color: #ffffff !important;
+}
+
+/* 3. THE CRITICAL TABLE FIX */
+.table {
+  background: transparent !important;
+  border-collapse: separate !important;
+  border-spacing: 0 10px !important;
+  width: 100%;
+}
+
+.table thead th {
+  background: rgba(0, 0, 0, 0.3) !important;
+  color: #b18cf5 !important; /* Soft purple headers */
+  border: none !important;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  padding: 15px;
+}
+
+/* Rows */
+.table tbody tr,
+.table-striped>tbody>tr:nth-of-type(odd),
+.table-hover>tbody>tr:hover {
+  background: rgba(0, 0, 0, 0.4) !important; /* darker glass row for contrast */
+  border: none !important;
+}
+
+/* Cells */
+.table tbody td {
+  background: transparent !important;
+  border: none !important;
+  color: #dcd6f7 !important; /* light lavender for readability */
+  padding: 20px 15px;
+  vertical-align: middle;
+}
+
+/* Special styling for Description column */
+.description-cell {
+  color: #b18cf5 !important; /* soft purple for visibility */
+  font-style: italic;
+}
+
+/* 4. INPUTS & SELECTS */
+.form-control, .form-select {
+  background: rgba(0, 0, 0, 0.3) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: white !important;
+}
+
+.form-control::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* 5. MODALS */
+.modal-content {
+  background: #1a0b2e !important;
+  color: white !important;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+}
+
+.btn-close { filter: invert(1); }
