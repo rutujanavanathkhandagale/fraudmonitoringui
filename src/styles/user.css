@@ -1,0 +1,589 @@
+/* ======================================================
+   PAGE
+====================================================== */
+.systemuser-page {
+  padding: 24px;
+}
+
+.systemuser-title {
+  color: #ffffff;
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+/* ======================================================
+   FILTER BAR
+====================================================== */
+.systemuser-filters {
+  display: flex;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.systemuser-filters input,
+.systemuser-filters select {
+  min-width: 260px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  border: 1.5px solid #d1d5db;
+  background: #ffffff;
+  font-size: 14px;
+  color: #111827;
+}
+
+/* ======================================================
+   TABLE WRAPPER
+====================================================== */
+.systemuser-table-wrapper {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 18px;
+  box-shadow: 0 24px 50px rgba(0, 0, 0, 0.25);
+}
+
+/* ======================================================
+   TABLE
+====================================================== */
+.systemuser-table {
+  width: 100%;
+  border-collapse: collapse;
+  color: #111827;
+}
+
+.systemuser-table th {
+  padding: 16px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #374151;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.systemuser-table td {
+  padding: 18px 14px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+/* ======================================================
+   USER CELL
+====================================================== */
+.systemuser-usercell {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.systemuser-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #2e003e, #6366f1);
+  color: #ffffff;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.systemuser-name {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.systemuser-email {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+/* ======================================================
+   ROLE (PLAIN TEXT)
+====================================================== */
+.systemuser-role-text {
+  font-size: 14px;
+  font-weight: 500;
+  color: #111827;
+}
+
+/* ======================================================
+   STATUS BADGE
+====================================================== */
+.systemuser-status {
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.systemuser-status.active {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.systemuser-status.inactive {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+/* ======================================================
+   ACTION BUTTON
+====================================================== */
+.systemuser-view-btn {
+  background: #eef2ff;
+  border: none;
+  border-radius: 14px;
+  padding: 8px 18px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #4f46e5;
+  cursor: pointer;
+}
+
+.systemuser-view-btn:hover {
+  background: #e0e7ff;
+  box-shadow: 0 8px 20px rgba(79, 70, 229, 0.35);
+}
+
+/* ======================================================
+   MODAL BACKDROP
+====================================================== */
+
+.modal-backdrop-custom {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+
+/* ======================================================
+   SYSTEM USER VIEW MODAL (MATCH ROLE DETAILS)
+====================================================== */
+.systemuser-view-modal {
+  width: 520px;
+  background: #ffffff;
+  border-radius: 18px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+  overflow: hidden;
+}
+
+/* Header */
+
+.systemuser-view-header {
+  padding: 22px 26px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+
+.systemuser-view-header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #2e003e;
+}
+
+
+.systemuser-close-icon {
+  font-size: 22px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: #9ca3af;
+  line-height: 1;
+}
+
+
+.systemuser-close-icon:hover {
+  color: #111827;
+}
+
+/* Divider */
+.systemuser-divider {
+  height: 1px;
+  background: #e5e7eb;
+}
+
+/* Body */
+.systemuser-view-body {
+  padding: 14px 26px;
+}
+
+.systemuser-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 0;
+  border-bottom: 1px solid #eef2f7;
+}
+
+.systemuser-row:last-child {
+  border-bottom: none;
+}
+
+.systemuser-row .label {
+  font-size: 14px;
+  color: #6b7280;
+  font-weight: 400;
+}
+
+.systemuser-row .value {
+  font-size: 14px;
+  font-weight: 600;
+  color: #111827;
+  
+max-width: 320px;
+  text-align: right;
+  word-break: break-word;
+
+}
+
+/* Footer */
+.systemuser-view-footer {
+  padding: 18px 26px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* Close Button */
+.btn-close-gray {
+  background: #6b7280;
+  color: #ffffff;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.btn-close-gray:hover {
+  background: #4b5563;
+}
+
+/* =========================
+   SYSTEM USER CARD GRID
+========================= */
+
+.system-user-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 22px;
+}
+
+/* =========================
+   SYSTEM USER CARD
+========================= */
+
+.system-user-card {
+  position: relative;
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 22px;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.1);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.system-user-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.18);
+}
+
+/* Top accent (same idea as role card) */
+.system-user-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 5px;
+  width: 100%;
+  background: linear-gradient(90deg, #2e003e, #6366f1);
+  border-radius: 20px 20px 0 0;
+}
+
+/* =========================
+   CARD HEADER
+========================= */
+
+.system-user-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 10px;
+}
+
+/* Avatar */
+.system-user-avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #2e003e, #4f46e5);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 16px;
+  box-shadow: 0 6px 18px rgba(79, 70, 229, 0.45);
+}
+
+/* Name + Email */
+.system-user-info h4 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #2e003e;
+}
+
+.system-user-info p {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+/* =========================
+   STATUS SECTION
+========================= */
+
+.system-user-status {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 22px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.system-user-status.active {
+  color: #15803d;
+}
+
+.system-user-status.inactive {
+  color: #b91c1c;
+}
+
+/* Optional small dot */
+.system-user-status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+/* =========================
+   CARD ACTIONS
+========================= */
+
+.system-user-actions {
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 28px;
+}
+
+/* View button (matches role action language) */
+.system-user-view-btn {
+  padding: 8px 18px;
+  border-radius: 999px;
+  background: #eef2ff;
+  color: #4f46e5;
+  border: 1px solid #c7d2fe;
+  font-size: 13px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.system-user-view-btn:hover {
+  background: #e0e7ff;
+  box-shadow: 0 8px 22px rgba(79, 70, 229, 0.35);
+}
+
+/* =========================
+   PAGE
+========================= */
+
+.system-user-page {
+  padding: 24px;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.system-user-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.system-user-title {
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 20px;
+  margin: 0;
+}
+
+/* =========================
+   SEARCH
+========================= */
+
+.system-user-search {
+  position: relative;
+  width: 260px;
+  margin-bottom: 24px;
+}
+
+.system-user-search input {
+  width: 100%;
+  padding: 8px 12px 8px 34px;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  font-size: 13px;
+}
+
+.system-user-search input:focus {
+  outline: none;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25);
+}
+
+/* =========================
+   CARD GRID
+========================= */
+
+.system-user-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 22px;
+}
+
+/* =========================
+   CARD
+========================= */
+
+.system-user-card {
+  position: relative;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 18px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.system-user-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 30px rgba(0,0,0,0.15);
+}
+
+.system-user-top-accent {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 4px;
+  width: 100%;
+  background: linear-gradient(90deg, #2e003e, #6366f1);
+  border-radius: 16px 16px 0 0;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.system-user-card-header {
+  display: flex;
+  gap: 16px;
+  margin-top: 10px;
+  align-items: center;
+}
+
+.system-user-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #2e003e, #35174f);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.system-user-info h4 {
+  margin: 0;
+  color: #2e003e;
+  font-weight: 600;
+}
+
+.system-user-info p {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+/* =========================
+   STATUS
+========================= */
+
+.system-user-status {
+  margin-top: 18px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.system-user-status.active {
+  color: #15803d;
+}
+
+.system-user-status.inactive {
+  color: #b91c1c;
+}
+
+/* =========================
+   ACTIONS
+========================= */
+
+.system-user-card-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.icon-btn.approve {
+  background: #ecfdf5;
+  color: #15803d;
+}
+
+.icon-btn.approve:hover {
+  box-shadow: 0 6px 14px rgba(21, 128, 61, 0.35);
+}
+
+
+/* Container: center content */
+.system-user-role-id {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+/* Role ID pill */
+.system-user-role-id span {
+  background: #eef2ff;
+  color: #4f46e5;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+

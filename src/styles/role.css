@@ -1,0 +1,611 @@
+/* =========================
+   PAGE LAYOUT
+========================= */
+
+.role-page {
+  padding: 24px;
+  
+}
+
+/* =========================
+   HEADER (CLEAN & MINIMAL)
+========================= */
+.role-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.role-title {
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 20px;
+  margin: 0;
+}
+
+/* Right side actions */
+.role-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* =========================
+   SMALL SEARCH BOX
+========================= */
+.role-search-mini {
+  position: relative;
+}
+
+.role-search-mini input {
+  width: 200px;
+  padding: 8px 10px 8px 30px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  font-size: 13px;
+  outline: none;
+}
+
+.role-search-mini input:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25);
+}
+
+.search-icon-mini {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #6b7280;
+  pointer-events: none;
+}
+/* =========================
+   CARD GRID
+========================= */
+.role-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+/* =========================
+   ROLE CARD
+========================= */
+.role-card {
+  position: relative;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 18px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.role-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 30px rgba(0, 0, 0, 0.15);
+}
+
+/* top gradient line */
+.card-top-border {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 4px;
+  width: 100%;
+  background: linear-gradient(90deg, #2e003e, #ec4899);
+  border-radius: 16px 16px 0 0;
+}
+
+/* =========================
+   CARD HEADER
+========================= */
+.role-card-header {
+  display: flex;
+  gap: 16px;
+  margin-top: 10px;
+  align-items: center;
+}
+
+.role-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #2e003e, #35174f);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.role-info h4 {
+  margin: 0;
+  color: #2e003e;
+  font-weight: 600;
+}
+
+/* =========================
+   CARD ACTIONS
+========================= */
+.role-card-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.icon-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+/* View button */
+.icon-btn.view {
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+.icon-btn.view:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 14px rgba(37, 99, 235, 0.3);
+}
+
+/* Delete button */
+.icon-btn.delete {
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+.icon-btn.delete:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 14px rgba(220, 38, 38, 0.3);
+}
+
+/* ======================================================
+   ADD ROLE MODAL (Uses same design language as cards)
+====================================================== */
+
+/* Blurred background backdrop */
+.modal-backdrop-custom {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: 1040;
+}
+
+/* Modal container */
+.add-role-modal {
+  z-index: 1050;
+}
+
+/* Modal width */
+.add-role-modal .modal-dialog {
+  max-width: 420px;
+}
+
+/* Modal content box */
+.add-role-modal .modal-content {
+  border-radius: 16px;
+  border: none;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+  padding: 4px;
+}
+
+/* Header */
+.add-role-modal .modal-header {
+  padding: 18px 20px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.add-role-modal .modal-title {
+  font-weight: 600;
+  color: #2e003e;
+}
+
+/* Body */
+.add-role-modal .modal-body {
+  padding: 20px;
+}
+
+.add-role-modal label {
+  font-weight: 500;
+  font-size: 14px;
+  color: #374151;
+  margin-bottom: 6px;
+  display: block;
+}
+
+/* Input field */
+.add-role-modal input {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid #d1d5db;
+  font-size: 14px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.add-role-modal input::placeholder {
+  color: #9ca3af;
+}
+
+.add-role-modal input:focus {
+  outline: none;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25);
+}
+
+.add-role-content {
+  position: relative;
+  overflow: hidden;          /* ✅ KEY FIX */
+  border-radius: 16px;
+}
+
+
+/* Footer */
+.add-role-modal .modal-footer {
+  padding: 16px 20px;
+  border-top: 1px solid #e5e7eb;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+/* Buttons */
+.add-role-modal .btn {
+  border-radius: 10px;
+  padding: 8px 18px;
+  font-weight: 500;
+}
+
+/* Cancel button */
+.add-role-modal .btn-secondary {
+  background: #6b7280;
+  border: none;
+}
+
+.add-role-modal .btn-secondary:hover {
+  background: #4b5563;
+}
+
+/* Add Role button */
+.add-role-modal .btn-primary {
+  background: linear-gradient(135deg, #2563eb, #4f46e5);
+  border: none;
+}
+
+.add-role-modal .btn-primary:hover {
+  opacity: 0.95;
+}
+
+/* Disabled state */
+.add-role-modal .btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+/* ======================================================
+   ADD ROLE MOD0 0 4px rgba(124, 58, 237, 0.25);   ADD ROLE MODAL — FINAL POLISHED VERSION
+}
+
+/* ================= FOOTER ================= */
+.add-role-modal .modal-footer {
+  padding: 18px 22px;
+  border-top: 1px solid #e5e7eb;
+  display: flex;
+  justify-content: flex-end;
+  gap: 14px;
+}
+
+/* Buttons */
+.add-role-modal .btn {
+  border-radius: 12px;
+  padding: 10px 20px;
+  font-weight: 500;
+  font-size: 14px;
+}
+
+/* Cancel */
+.add-role-modal .btn-secondary {
+  background: #6b7280;
+  border: none;
+  color: #ffffff;
+}
+
+.add-role-modal .btn-secondary:hover {
+  background: #4b5563;
+}
+
+/* Add Role — purple gradient */
+.add-role-modal .btn-primary {
+  background: linear-gradient(135deg, #2e003e, #6366f1);
+  border: none;
+  color: #ffffff;
+}
+
+.add-role-modal .btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 22px rgba(99, 102, 241, 0.45);
+}
+
+/* Disabled */
+.add-role-modal .btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+/* ====================================================== */ */
+
+/* Blurred backdrop */
+.modal-backdrop-custom {
+  position: fixed;
+  inset: 0;
+  background: rgba(20, 2, 37, 0.55);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 1040;
+}
+
+/* Modal wrapper */
+.add-role-modal {
+  z-index: 1050;
+}
+
+/* Modal width */
+.add-role-modal .modal-dialog {
+  max-width: 440px;
+}
+
+/* Modal card */
+.add-role-modal .modal-content {
+  border-radius: 18px;
+  border: none;
+  padding: 6px;
+  background: #ffffff;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+}
+
+/* ================= HEADER ================= */
+.add-role-modal .modal-header {
+  padding: 20px 22px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.add-role-modal .modal-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #2e003e;
+}
+
+/* ================= BODY ================= */
+.add-role-modal .modal-body {
+  padding: 22px;
+}
+
+.add-role-modal label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 6px;
+  display: block;
+}
+
+/* Input */
+.add-role-modal input {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1.5px solid #d1d5db;
+  font-size: 14px;
+  transition: all 0.25s ease;
+}
+
+.add-role-modal input::placeholder {
+  color: #9ca3af;
+}
+
+.add-role-modal input:focus {
+  outline: none;
+  border-color: #7c3aed;
+}
+
+
+/* ======================================================
+   DELETE ROLE MODAL (MATCHES FRONTEND THEME)
+====================================================== */
+
+.delete-role-modal {
+  z-index: 1050;
+}
+
+.delete-role-content {
+  position: relative;
+  overflow: hidden;              /* ✅ KEY FIX */
+  border-radius: 16px;
+}
+
+
+.delete-role-modal .modal-dialog {
+  max-width: 420px;
+}
+
+/* Card */
+.delete-role-modal .modal-content {
+  border-radius: 16px;
+  border: none;
+  padding: 4px;
+  background: #ffffff;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+}
+
+/* Header */
+.delete-role-modal .modal-header {
+  padding: 18px 20px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.delete-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  font-size: 16px;
+  color: #dc2626;
+}
+
+/* Body */
+.delete-role-modal .modal-body {
+  padding: 20px;
+}
+
+.delete-text {
+  font-size: 14px;
+  color: #374151;
+  margin-bottom: 12px;
+}
+
+/* Warning box */
+.delete-warning {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 13px;
+  color: #991b1b;
+}
+
+/* Footer */
+.delete-role-modal .modal-footer {
+  padding: 16px 20px;
+  border-top: 1px solid #e5e7eb;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+/* Primary delete button */
+.delete-btn-primary {
+  background: linear-gradient(135deg, #dc2626, #ef4444);
+  border: none;
+  color: #ffffff;
+}
+
+.delete-btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 22px rgba(239, 68, 68, 0.45);
+}
+
+
+/* ======================================================
+   VIEW ROLE MODAL – TOP ACCENT (MATCHES ROLE CARD)
+====================================================== */
+
+/* Top accent exactly like card */
+
+
+.modal-top-accent {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 6px;
+  width: 100%;
+  background: linear-gradient(90deg, #2e003e, #ec4899);
+  border-radius: 16px 16px 0 0;
+  z-index: 1;
+}
+
+
+.delete-role-content .modal-header {
+  padding-top: 22px;
+}
+
+.add-role-content .modal-header {
+  padding-top: 22px;
+}
+
+
+
+/* Optional: modal-specific structure */
+.view-role-modal .modal-dialog {
+  max-width: 480px;
+}
+
+.view-role-modal .modal-content {
+  border-radius: 16px;
+  padding: 4px;
+}
+
+/* Header section */
+.role-details-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.role-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #2e003e, #35174f);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+}
+
+.role-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #2e003e;
+}
+
+.role-id {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.role-details-divider {
+  height: 1px;
+  background: #e5e7eb;
+  margin: 14px 0;
+}
+
+.role-details-info .label {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.role-details-info .value {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.view-role-content {
+  position: relative;
+  overflow: hidden;               /* ✅ THIS WAS MISSING */
+  border-radius: 16px;
+}
+
+/* Push header content below accent */
+.view-role-content .modal-header {
+  padding-top: 22px;               /* ✅ Prevent overlap */
+}
+
+
+.role-user-count {
+  display: block;
+  font-size: 0.85rem;
+  color: #6b7280; /* gray */
+  margin-top: 4px;
+}

@@ -1,0 +1,61 @@
+.admin-audit-page {
+  padding: 28px;
+  background: linear-gradient(135deg, #f4f2fb, #f8fafc);
+  min-height: 100vh;
+}
+
+.admin-audit-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  margin-bottom: 24px;
+  color: #2e003e;
+}
+
+.admin-audit-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.admin-audit-card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 16px 18px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+}
+
+.admin-audit-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.admin-audit-action {
+  font-weight: 700;
+  font-size: 13px;
+  color: #4f46e5;
+}
+
+.admin-audit-time {
+  font-size: 12px;
+  color: #6b7280;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.admin-audit-description {
+  margin-top: 6px;
+  font-size: 14px;
+  color: #111827;
+}
+
+.admin-audit-meta {
+  margin-top: 8px;
+  font-size: 12px;
+  color: #6b7280;
+  display: flex;
+  gap: 6px;
+}

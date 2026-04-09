@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
  
@@ -43,11 +44,28 @@ export const AuthProvider = ({ children }) => {
  
   return (
     <AuthContext.Provider value={value}>
+=======
+import React, { createContext, useState, useContext } from "react";
+ 
+// Create the Context
+const AuthContext = createContext();
+ 
+// Create a Provider Component
+export const AuthProvider = ({ children }) => {
+  const [user, setUser] = useState({ name: "System Admin", role: "Admin" });
+ 
+  const login = (userData) => setUser(userData);
+  const logout = () => setUser(null);
+ 
+  return (
+    <AuthContext.Provider value={{ user, login, logout }}>
+>>>>>>> main
       {children}
     </AuthContext.Provider>
   );
 };
  
+<<<<<<< HEAD
 // 2. Custom hook for easy consumption
 export const useAuth = () => {
   const context = useContext(AuthContext);
@@ -63,3 +81,8 @@ AuthProvider.propTypes = {
 };
  
 export default AuthContext;
+=======
+// Custom hook to use the AuthContext easily in any component
+export const useAuth = () => useContext(AuthContext);
+ 
+>>>>>>> main
