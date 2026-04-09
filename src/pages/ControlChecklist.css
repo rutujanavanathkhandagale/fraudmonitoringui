@@ -1,0 +1,230 @@
+.cc-container {
+
+  padding: 20px;
+
+  color: #e2e8f0;
+
+}
+
+/* HEADER */
+
+.cc-header {
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  margin-bottom: 25px;
+
+}
+
+.cc-header h2 {
+
+  font-size: 24px;
+
+  font-weight: 600;
+
+}
+
+/* SEARCH + FILTER */
+
+.cc-actions {
+
+  display: flex;
+
+  gap: 10px;
+
+}
+
+.cc-actions input {
+
+  padding: 8px 12px;
+
+  border-radius: 6px;
+
+  border: none;
+
+  outline: none;
+
+}
+
+.cc-actions button {
+
+  padding: 8px 12px;
+
+  border-radius: 6px;
+
+  border: none;
+
+  background: #1e293b;
+
+  color: white;
+
+  cursor: pointer;
+
+}
+
+.cc-actions button:hover {
+
+  background: #334155;
+
+}
+
+/* FORM */
+
+.cc-form {
+
+  display: flex;
+
+  gap: 10px;
+
+  margin-bottom: 25px;
+
+}
+
+.cc-form input,
+
+.cc-form select {
+
+  padding: 10px;
+
+  border-radius: 6px;
+
+  border: none;
+
+  outline: none;
+
+  width: 180px;
+
+}
+
+.cc-form button {
+
+  background: #2563eb;
+
+  color: white;
+
+  border: none;
+
+  padding: 10px 15px;
+
+  border-radius: 6px;
+
+  cursor: pointer;
+
+}
+
+.cc-form button:hover {
+
+  background: #1d4ed8;
+
+}
+
+/* TABLE */
+
+.cc-table {
+
+  background: #1e293b;
+
+  border-radius: 10px;
+
+  overflow: hidden;
+
+}
+
+table {
+
+  width: 100%;
+
+  border-collapse: collapse;
+
+}
+
+thead {
+
+  background: #0f172a;
+
+}
+
+th {
+
+  padding: 12px;
+
+  text-align: left;
+
+  color: #94a3b8;
+
+  font-weight: 500;
+
+}
+
+td {
+
+  padding: 12px;
+
+  border-top: 1px solid #334155;
+
+}
+
+/* BADGES */
+
+.badge {
+
+  padding: 5px 12px;
+
+  border-radius: 20px;
+
+  font-size: 12px;
+
+}
+
+.pass {
+
+  background: #16a34a;
+
+  color: white;
+
+}
+
+.fail {
+
+  background: #dc2626;
+
+  color: white;
+
+}
+
+/* ACTION BUTTONS */
+
+td button {
+
+  margin-right: 5px;
+
+  padding: 5px 10px;
+
+  border: none;
+
+  border-radius: 5px;
+
+  cursor: pointer;
+
+}
+
+td button:first-child {
+
+  background: #f59e0b;
+
+  color: white;
+
+}
+
+td button:last-child {
+
+  background: #ef4444;
+
+  color: white;
+
+}
+ 
