@@ -1,0 +1,126 @@
+/* Main Page Layout */
+.notification-page {
+  padding: 40px;
+  /* Exact deep midnight purple from your sidebar and dashboard background */
+  background-color: #2e0741ff; 
+  min-height: 100vh;
+  font-family: 'Segoe UI', sans-serif;
+  color: #ffffff;
+}
+
+.notification-page h2 {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 30px;
+  color: #ffffff;
+}
+
+/* Professional Navigation Tabs */
+.tabs {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 30px;
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  /* Darker purple for inactive tabs to provide depth */
+  background: #16061E; 
+  color: #94a3b8;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+/* Active tab using the brand's signature pink-to-purple gradient */
+.tab-btn.active {
+  background: linear-gradient(90deg, #6B1D4F 0%, #a30762 100%);
+  color: #ffffff;
+  border: none;
+  box-shadow: 0 4px 15px rgba(181, 27, 117, 0.3);
+}
+
+/* Notification List with Layered Cards */
+.notification-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.notif-row {
+  /* Using a slightly lighter purple for cards to distinguish them from the background */
+  background: #250B33; 
+  padding: 22px 28px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.notif-row:hover {
+  background: #2D0B3D;
+  transform: translateX(5px);
+}
+
+/* Unread State with the vibrant magenta brand highlight */
+.notif-row.unread {
+  border-left: 5px solid #B51B75;
+  background: rgba(181, 27, 117, 0.05);
+}
+
+.notif-row.read {
+  opacity: 0.6;
+  border: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+/* Text Content Styling */
+.message {
+  font-size: 16px;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 8px;
+}
+
+.timestamp {
+  font-size: 13px;
+  /* Muted grey for non-essential timestamps */
+  color: #b0b0b0; 
+}
+
+/* Pagination Control */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  margin-top: 40px;
+}
+
+.pagination button {
+  padding: 10px 20px;
+  background: #16061E;
+  border: 1px solid #6B1D4F;
+  color: #ffffff;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.pagination button:hover:not(:disabled) {
+  background: #B51B75;
+}
+
+.pagination button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.pagination span {
+  font-weight: 600;
+  color: #94a3b8;
+  font-size: 14px;
+}

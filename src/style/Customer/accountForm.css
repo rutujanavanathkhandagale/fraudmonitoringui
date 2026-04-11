@@ -1,0 +1,131 @@
+/* Full page form container */
+.account-form-container {
+  width: 100%;
+  min-height: 100vh;        
+  padding: 40px 80px;       
+  background: #ffffff;      /* same background as personal form */
+  font-family: "Segoe UI", Arial, sans-serif;
+}
+
+/* Title */
+.account-form-title {
+  font-size: 2rem;
+  font-weight: 600;
+  /* color: #0d6efd; */
+  margin-bottom: 30px;      /* reduced spacing */
+  text-align: center;
+}
+
+/* Form layout */
+.account-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;                /* reduced gap between fields */
+}
+
+/* Each line of the form */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 12px;      /* reduced margin between groups */
+}
+
+/* Labels */
+.form-label {
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 6px;       /* tighter spacing under labels */
+}
+
+/* Inputs & Selects */
+.form-control {
+  width: 100%;
+  border-radius: 6px;
+  padding: 12px;            /* slightly smaller padding */
+  border: 1px solid #ccc;
+  font-size: 15px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-control:focus {
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 3px rgba(13,110,253,0.2);
+  outline: none;
+}
+
+/* Read-only field (Status) */
+.form-control.readonly {
+  background-color: #eee;
+  cursor: not-allowed;
+}
+
+/* Error messages */
+.error-text {
+  color: #dc3545;
+  font-size: 0.85rem;
+  margin-top: 4px;          /* tighter spacing under errors */
+}
+
+/* Submit button */
+.btn-submit {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, #0d6efd, #0b5ed7);
+  color: #fff;
+  font-weight: 600;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 15px;
+  transition: transform 0.2s ease, background 0.3s ease;
+  margin-top: 20px;         /* reduced top margin */
+}
+
+.btn-submit:hover {
+  background: linear-gradient(135deg, #0b5ed7, #094dbd);
+  transform: translateY(-2px);
+}
+
+/* Message box */
+.form-message {
+  margin-top: 20px;
+  text-align: center;
+  font-weight: 600;
+  color: #198754;
+}
+.btn-link {
+  margin-top: 10px;
+  padding: 10px 16px;
+  background: none;     /* removes background color */
+  color: #2980b9;       /* make it look like a link */
+  border: none;         /* removes border */
+  outline: none;        /* removes focus outline */
+  box-shadow: none;     /* removes any shadow */
+  cursor: pointer;
+  font-weight: 600;
+  text-decoration: underline; /* optional: underline like a link */
+}
+
+
+
+/* .btn-link:hover {
+  background-color: #1f6391;
+} */
+
+
+/* Link button
+.btn-link {
+  margin-top: 10px;
+  padding: 10px 16px;
+  /* background-color: #2980b9; */
+  /* color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.3s ease;
+} */
+
+/* .btn-link:hover {
+  background-color: #1f6391;
+} */ 

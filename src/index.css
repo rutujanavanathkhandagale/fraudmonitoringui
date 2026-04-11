@@ -8,13 +8,13 @@
   --accent-bg: rgba(170, 59, 255, 0.1);
   --accent-border: rgba(170, 59, 255, 0.5);
   --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
- 
+  --shadow: rgba(0, 0, 0, 0.1) 0 10px 15px -3px,
+             rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+
   --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
   --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
   --mono: ui-monospace, Consolas, monospace;
- 
+
   font: 18px/145% var(--sans);
   letter-spacing: 0.18px;
   color-scheme: light dark;
@@ -24,12 +24,12 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
- 
+
   @media (max-width: 1024px) {
     font-size: 16px;
   }
 }
- 
+
 @media (prefers-color-scheme: dark) {
   :root {
     --text: #9ca3af;
@@ -41,38 +41,39 @@
     --accent-bg: rgba(192, 132, 252, 0.15);
     --accent-border: rgba(192, 132, 252, 0.5);
     --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
+    --shadow: rgba(0, 0, 0, 0.4) 0 10px 15px -3px,
+              rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
   }
- 
+
   #social .button-icon {
     filter: invert(1) brightness(2);
   }
 }
- 
+
 body {
   margin: 0;
 }
- 
+
 #root {
   width: 1126px;
   max-width: 100%;
   margin: 0 auto;
-  text-align: center;
+  /* ❌ removed text-align: center to stop global centering */
   border-inline: 1px solid var(--border);
   min-height: 100svh;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
 }
- 
+
 h1,
 h2 {
   font-family: var(--heading);
   font-weight: 500;
   color: var(--text-h);
+  text-align: center; /* ✅ headings centered only */
 }
- 
+
 h1 {
   font-size: 56px;
   letter-spacing: -1.68px;
@@ -82,6 +83,7 @@ h1 {
     margin: 20px 0;
   }
 }
+
 h2 {
   font-size: 24px;
   line-height: 118%;
@@ -91,10 +93,11 @@ h2 {
     font-size: 20px;
   }
 }
+
 p {
   margin: 0;
 }
- 
+
 code,
 .counter {
   font-family: var(--mono);
@@ -102,7 +105,7 @@ code,
   border-radius: 4px;
   color: var(--text-h);
 }
- 
+
 code {
   font-size: 15px;
   line-height: 135%;
@@ -129,6 +132,7 @@ code {
 .dashboard-card p {
   color: var(--text);
 }
+
 /* ==============================
    Page + Main Content Layout
    ============================== */
@@ -146,3 +150,30 @@ main {
   margin-left: 60px;
 }
 
+.main-content {
+  background-color: #30164d;       /* faint lavender */
+  min-height: calc(100vh - 70px);  /* account for header height */
+  margin-left: 240px;              /* account for sidebar width */
+  padding: 20px;
+  transition: background-color 0.3s ease;
+}
+
+/* ==============================
+   Global Input Reset
+   ============================== */
+input,
+select,
+textarea,
+.form-control,
+.form-select {
+  text-align: left;
+  line-height: 1.2;
+  vertical-align: top;
+  padding: 8px 12px;
+  color: inherit;
+}
+
+.form-control::placeholder {
+  text-align: left;
+  color: rgba(255, 255, 255, 0.4);
+}

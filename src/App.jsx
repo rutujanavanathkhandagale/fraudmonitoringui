@@ -9,6 +9,16 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
+// Customer
+import RegisterPage from "./pages/Customer/RegisterPage"; 
+import LoginPage from "./pages/Customer/LoginPage";
+import CustSidebar from "./components/Customer/CustSidebar";
+import CusDashboard from "./components/Customer/cusdashboard";
+import CustomerOnboardingForm from "./pages/Customer/CustomerOnboardingForm";
+import CustomerProfile from "./pages/Customer/CustomerProfile";
+import AboutPage from "./pages/Customer/AboutPage";
+import Notification from "./pages/Customer/Notification";
+
 // Investigator
 import InvestigatorSidebar from "./components/Investigator/Isidebar";
 import Transactions from "./pages/Investigator/Transactions";
@@ -22,7 +32,7 @@ import RuleSidebar from "./components/Rule/RuleSidebar";
 import DetectionRulePage from "./pages/Rule/DetectionRulePage";
 
 // Compliance
-import Sidebar from "./components/Compliance/Sidebar";
+import ComplianceSidebar from "./components/Compliance/Sidebar";
 import CDashboard from "./pages/Compliance/CDashboard";
 import KYCVerification from "./pages/Compliance/KYCVerification";
 import TransactionPattern from "./pages/Compliance/TransactionPattern";
@@ -36,7 +46,11 @@ import Settings from "./components/common/Settings";
 import Header from "./components/common/Header";
 import Footer from "./components/common/Footer";
 
-// --- Layout Wrapper for Rule and Investigator ---
+import AuthGuard from "./guards/AuthGuard";
+import RoleGuard from "./guards/RoleGuard";
+import "./App.css";
+
+// --- Layout Wrapper ---
 const DashboardWrapper = ({ SidebarComponent }) => {
   const [collapsed, setCollapsed] = useState(false);
   const theme = useTheme();
@@ -73,32 +87,86 @@ const DashboardWrapper = ({ SidebarComponent }) => {
 
 // --- MAIN APP ---
 export default function App() {
+  const [notifications, setNotifications] = useState([]);
+
   return (
     <AuthProvider>
       <ThemeProvider>
         <BrowserRouter>
           <Routes>
-            {/* 1. Public Landing Page */}
+            {/* Public routes */}
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/settings" element={<Settings />} />
+
+
+            {/* Customer Module */}
+            <Route element={<DashboardWrapper SidebarComponent={CustSidebar} />}>
+              <Route
+                path="/customer/dashboard/:id"
+                element={
+                  <AuthGuard>
+                    <RoleGuard>
+                      <CusDashboard />
+                    </RoleGuard>
+                  </AuthGuard>
+                }
+              />
+              <Route
+                path="/fill-details"
+                element={
+                  <AuthGuard>
+                    <RoleGuard>
+                      <CustomerOnboardingForm />
+                    </RoleGuard>
+                  </AuthGuard>
+                }
+              />
+              <Route
+                path="/profile/:id"
+                element={
+                  <AuthGuard>
+                    <RoleGuard>
+                      <CustomerProfile />
+                    </RoleGuard>
+                  </AuthGuard>
+                }
+              />
+              <Route
+                path="/notification/:id"
+                element={
+                  <AuthGuard>
+                    <RoleGuard>
+                      <Notification
+                        notifications={notifications}
+                        setNotifications={setNotifications}
+                      />
+                    </RoleGuard>
+                  </AuthGuard>
+                }
+              />
+              <Route path="/about" element={<AboutPage />} />
+            </Route>
+
+            {/* Public Landing Page */}
             <Route path="/" element={<Home />} />
 
-            {/* 2. Rule Module */}
+            {/* Rule Module */}
             <Route element={<DashboardWrapper SidebarComponent={RuleSidebar} />}>
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/scenarios" element={<ScenarioPage />} />
               <Route path="/detection-rules" element={<DetectionRulePage />} />
-              <Route path="/settings" element={<Settings />} />
             </Route>
 
-            {/* 3. Investigator Module */}
+            {/* Investigator Module */}
             <Route element={<DashboardWrapper SidebarComponent={InvestigatorSidebar} />}>
               <Route path="/Idashboard" element={<InvestigatorDashboard />} />
               <Route path="/transaction" element={<Transactions />} />
               <Route path="/risk" element={<RiskScoring />} />
             </Route>
 
-            {/* 4. Compliance Module (Uses your specific ComplianceLayout.jsx) */}
-            
-               <Route element={<DashboardWrapper SidebarComponent={Sidebar} />}>
+            {/* Compliance Module */}
+            <Route element={<DashboardWrapper SidebarComponent={ComplianceSidebar} />}>
               <Route path="/Cdashboard" element={<CDashboard />} />
               <Route path="/kyc" element={<KYCVerification />} />
               <Route path="/transaction-pattern" element={<TransactionPattern />} />
