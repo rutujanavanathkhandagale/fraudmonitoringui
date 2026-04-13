@@ -107,7 +107,6 @@ const Sidebar = ({ collapsed }) => {
  * Menu List Wrapper
  */
 const SidebarMenu = ({ collapsed }) => {
-  // ✅ Get id from URL params or localStorage
   const { id: paramId } = useParams();
   const id = paramId || localStorage.getItem("customerId") || localStorage.getItem("userId");
 
@@ -116,8 +115,6 @@ const SidebarMenu = ({ collapsed }) => {
     { icon: <FiEdit />, text: "Fill Details", path: "/fill-details", collapsed },
     { icon: <FaUserCircle />, text: "Profile", path: `/profile/${id}`, collapsed },
     { icon: <FiBell />, text: "Notification", path: `/notification/${id}`, collapsed }
-    
-
   ];
 
   return (

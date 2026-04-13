@@ -1,21 +1,24 @@
 // src/components/Header.jsx
-import React from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { BsBellFill } from "react-icons/bs";
 import { FiShield, FiMenu } from "react-icons/fi";
 import { useTheme } from "../../context/ThemeContext";
+import { useAuth } from "../../context/AuthContext";
+import UserProfilePopup from "./UserProfilePopup";
+import "../../style/UserProfilePopup.css";
 
 const Header = ({ collapsed, setCollapsed, notificationCount = 0 }) => {
   const { currentColors } = useTheme();
+  const { user } = useAuth(); // ✅ get logged-in user
   const navigate = useNavigate();
+  const [showProfile, setShowProfile] = useState(false);
 
   const id = localStorage.getItem("customerId") || localStorage.getItem("userId");
 
   const toggleSidebar = () => {
     if (setCollapsed) setCollapsed(!collapsed);
   };
-
-  
 
   const styles = {
     headerContainer: {
@@ -33,10 +36,7 @@ const Header = ({ collapsed, setCollapsed, notificationCount = 0 }) => {
       zIndex: 1050,
       transition: "background-color 0.4s ease",
     },
-    leftSection: {
-      display: "flex",
-      alignItems: "center",
-    },
+    leftSection: { display: "flex", alignItems: "center" },
     hamburger: {
       fontSize: "24px",
       color: "#ffb3d9",
@@ -50,16 +50,8 @@ const Header = ({ collapsed, setCollapsed, notificationCount = 0 }) => {
       textDecoration: "none",
       cursor: "pointer",
     },
-    shieldIcon: {
-      fontSize: "2.4rem",
-      color: "#b39ddb",
-      marginRight: "15px",
-    },
-    brandTextContainer: {
-      display: "flex",
-      flexDirection: "column",
-      justifyContent: "center",
-    },
+    shieldIcon: { fontSize: "2.4rem", color: "#b39ddb", marginRight: "15px" },
+    brandTextContainer: { display: "flex", flexDirection: "column", justifyContent: "center" },
     brandTitle: {
       margin: 0,
       fontWeight: "bold",
@@ -82,11 +74,7 @@ const Header = ({ collapsed, setCollapsed, notificationCount = 0 }) => {
       borderRight: `1px solid ${currentColors.border}`,
       marginRight: "15px",
     },
-    bell: {
-      fontSize: "1.4rem",
-      color: "gold", // ✅ Yellow bell
-      marginRight: "8px",
-    },
+    bell: { fontSize: "1.4rem", color: "gold", marginRight: "8px" },
     notificationCount: {
       position: "absolute",
       top: "-5px",
@@ -102,11 +90,7 @@ const Header = ({ collapsed, setCollapsed, notificationCount = 0 }) => {
       alignItems: "center",
       justifyContent: "center",
     },
-    profileContainer: {
-      display: "flex",
-      alignItems: "center",
-      cursor: "pointer",
-    },
+    profileContainer: { display: "flex", alignItems: "center", cursor: "pointer" },
     avatar: {
       width: "38px",
       height: "38px",
@@ -120,11 +104,7 @@ const Header = ({ collapsed, setCollapsed, notificationCount = 0 }) => {
       marginRight: "10px",
       color: "#fff",
     },
-    name: {
-      fontWeight: "500",
-      fontSize: "0.95rem",
-      color: currentColors.textPrimary,
-    },
+    name: { fontWeight: "500", fontSize: "0.95rem", color: currentColors.textPrimary },
     navLink: {
       color: currentColors.textSecondary,
       fontWeight: "500",
@@ -132,7 +112,7 @@ const Header = ({ collapsed, setCollapsed, notificationCount = 0 }) => {
       textDecoration: "none",
       marginRight: "20px",
       transition: "color 0.3s",
-    }
+    },
   };
 
   return (
@@ -162,7 +142,7 @@ const Header = ({ collapsed, setCollapsed, notificationCount = 0 }) => {
           <Link to="/about" style={styles.navLink}>About</Link>
         </nav>
 
-        {/* Notification Bell with Count */}
+        {/* Notification Bell */}
         <div
           style={styles.bellWrapper}
           className="ms-3"
@@ -176,13 +156,21 @@ const Header = ({ collapsed, setCollapsed, notificationCount = 0 }) => {
         </div>
 
         {/* Profile */}
-        <div style={styles.profileContainer}>
-          <div style={styles.avatar}>L</div>
+        <div style={styles.profileContainer} onClick={() => setShowProfile(true)}>
+          <div style={styles.avatar}>
+            {user?.fullName?.charAt(0)?.toUpperCase() || "U"}
+          </div>
           <div className="d-flex flex-column d-none d-sm-block">
-            <span style={styles.name} className="mb-0">Rutuja Khandagale</span>
+            <span style={styles.name} className="mb-0">
+              {user?.fullName || "Guest"}
+            </span>
           </div>
         </div>
       </div>
+
+      {showProfile && (
+        <UserProfilePopup user={user} onClose={() => setShowProfile(false)} />
+      )}
     </header>
   );
 };

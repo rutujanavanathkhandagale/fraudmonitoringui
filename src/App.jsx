@@ -84,21 +84,19 @@ const DashboardWrapper = ({ SidebarComponent }) => {
     </div>
   );
 };
-
 // --- MAIN APP ---
 export default function App() {
   const [notifications, setNotifications] = useState([]);
 
   return (
-    <AuthProvider>
-      <ThemeProvider>
-        <BrowserRouter>
+    <BrowserRouter>
+      <AuthProvider>
+        <ThemeProvider>
           <Routes>
             {/* Public routes */}
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/settings" element={<Settings />} />
-
 
             {/* Customer Module */}
             <Route element={<DashboardWrapper SidebarComponent={CustSidebar} />}>
@@ -106,7 +104,7 @@ export default function App() {
                 path="/customer/dashboard/:id"
                 element={
                   <AuthGuard>
-                    <RoleGuard>
+                    <RoleGuard allowedRoles={["Customer"]}>
                       <CusDashboard />
                     </RoleGuard>
                   </AuthGuard>
@@ -116,7 +114,7 @@ export default function App() {
                 path="/fill-details"
                 element={
                   <AuthGuard>
-                    <RoleGuard>
+                    <RoleGuard allowedRoles={["Customer"]}>
                       <CustomerOnboardingForm />
                     </RoleGuard>
                   </AuthGuard>
@@ -126,7 +124,7 @@ export default function App() {
                 path="/profile/:id"
                 element={
                   <AuthGuard>
-                    <RoleGuard>
+                    <RoleGuard allowedRoles={["Customer"]}>
                       <CustomerProfile />
                     </RoleGuard>
                   </AuthGuard>
@@ -136,7 +134,7 @@ export default function App() {
                 path="/notification/:id"
                 element={
                   <AuthGuard>
-                    <RoleGuard>
+                    <RoleGuard allowedRoles={["Customer"]}>
                       <Notification
                         notifications={notifications}
                         setNotifications={setNotifications}
@@ -153,33 +151,141 @@ export default function App() {
 
             {/* Rule Module */}
             <Route element={<DashboardWrapper SidebarComponent={RuleSidebar} />}>
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/scenarios" element={<ScenarioPage />} />
-              <Route path="/detection-rules" element={<DetectionRulePage />} />
+              <Route
+                path="/dashboard"
+                element={
+                  <AuthGuard>
+                    <RoleGuard allowedRoles={["Admin"]}>
+                      <Dashboard />
+                    </RoleGuard>
+                  </AuthGuard>
+                }
+              />
+              <Route
+                path="/scenarios"
+                element={
+                  <AuthGuard>
+                    <RoleGuard allowedRoles={["Modeler"]}>
+                      <ScenarioPage />
+                    </RoleGuard>
+                  </AuthGuard>
+                }
+              />
+              <Route
+                path="/detection-rules"
+                element={
+                  <AuthGuard>
+                    <RoleGuard allowedRoles={["Modeler"]}>
+                      <DetectionRulePage />
+                    </RoleGuard>
+                  </AuthGuard>
+                }
+              />
             </Route>
 
             {/* Investigator Module */}
             <Route element={<DashboardWrapper SidebarComponent={InvestigatorSidebar} />}>
-              <Route path="/Idashboard" element={<InvestigatorDashboard />} />
-              <Route path="/transaction" element={<Transactions />} />
-              <Route path="/risk" element={<RiskScoring />} />
+              <Route
+                path="/Idashboard"
+                element={
+                  <AuthGuard>
+                    <RoleGuard allowedRoles={["Investigator"]}>
+                      <InvestigatorDashboard />
+                    </RoleGuard>
+                  </AuthGuard>
+                }
+              />
+              <Route
+                path="/transaction"
+                element={
+                  <AuthGuard>
+                    <RoleGuard allowedRoles={["Investigator"]}>
+                      <Transactions />
+                    </RoleGuard>
+                  </AuthGuard>
+                }
+              />
+              <Route
+                path="/risk"
+                element={
+                  <AuthGuard>
+                    <RoleGuard allowedRoles={["Analyst"]}>
+                      <RiskScoring />
+                    </RoleGuard>
+                  </AuthGuard>
+                }
+              />
             </Route>
 
             {/* Compliance Module */}
             <Route element={<DashboardWrapper SidebarComponent={ComplianceSidebar} />}>
-              <Route path="/Cdashboard" element={<CDashboard />} />
-              <Route path="/kyc" element={<KYCVerification />} />
-              <Route path="/transaction-pattern" element={<TransactionPattern />} />
-              <Route path="/watchlist" element={<WatchlistPageForm />} />
-              <Route path="/control-checklist" element={<ControlChecklist />} />
-              <Route path="/regulatory-report" element={<RegulatoryReport />} />
+              <Route
+                path="/Cdashboard"
+                element={
+                  <AuthGuard>
+                    <RoleGuard allowedRoles={["Compliance"]}>
+                      <CDashboard />
+                    </RoleGuard>
+                  </AuthGuard>
+                }
+              />
+              <Route
+                path="/kyc"
+                element={
+                  <AuthGuard>
+                    <RoleGuard allowedRoles={["Compliance"]}>
+                      <KYCVerification />
+                    </RoleGuard>
+                  </AuthGuard>
+                }
+              />
+              <Route
+                path="/transaction-pattern"
+                element={
+                  <AuthGuard>
+                    <RoleGuard allowedRoles={["Compliance"]}>
+                      <TransactionPattern />
+                    </RoleGuard>
+                  </AuthGuard>
+                }
+              />
+              <Route
+                path="/watchlist"
+                element={
+                  <AuthGuard>
+                    <RoleGuard allowedRoles={["Compliance"]}>
+                      <WatchlistPageForm />
+                    </RoleGuard>
+                  </AuthGuard>
+                }
+              />
+              <Route
+                path="/control-checklist"
+                element={
+                  <AuthGuard>
+                    <RoleGuard allowedRoles={["Compliance"]}>
+                      <ControlChecklist />
+                    </RoleGuard>
+                  </AuthGuard>
+                }
+              />
+              <Route
+                path="/regulatory-report"
+                element={
+                  <AuthGuard>
+                    <RoleGuard allowedRoles={["Compliance"]}>
+                      <RegulatoryReport />
+                    </RoleGuard>
+                  </AuthGuard>
+                }
+              />
             </Route>
 
             {/* Fallback */}
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
-        </BrowserRouter>
-      </ThemeProvider>
-    </AuthProvider>
+        </ThemeProvider>
+      </AuthProvider>
+    </BrowserRouter>
   );
 }

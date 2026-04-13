@@ -1,7 +1,7 @@
 import { Navigate } from "react-router-dom";
 
 const AuthGuard = ({ children }) => {
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem("token"); // ✅ matches LoginPage
   return token ? children : <Navigate to="/login" />;
 };
 

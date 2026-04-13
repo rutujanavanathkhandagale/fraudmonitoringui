@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { jwtDecode } from "jwt-decode";
+import Swal from "sweetalert2"; // ✅ Import SweetAlert2
 
 const API_BASE = "https://localhost:7181/api/Auth";
 
@@ -39,32 +40,53 @@ export default function LoginPage() {
       if (res.ok) {
         setMessage({ type: "success", text: successMsg });
 
-if (endpoint === "login") {
-  localStorage.setItem("token", data.token);
+        if (endpoint === "login") {
+          localStorage.setItem("token", data.token);
 
-  const decoded = jwtDecode(data.token);
-  const role = decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
-  const userId = decoded["RegistrationId"];
-  const customerId = decoded.CustomerId;
-  const name = decoded.Name; // ✅ assuming backend puts "Name" in token
+          const decoded = jwtDecode(data.token);
+          const role = decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+          const userId = decoded["RegistrationId"];
+          const customerId = decoded.CustomerId;
+         const firstName = decoded.FirstName;
+const lastName = decoded.LastName;
 
-  localStorage.setItem("role", role);
-  localStorage.setItem("userId", userId);
-  if (customerId) localStorage.setItem("customerId", customerId);
-  if (name) localStorage.setItem("name", name);
+if (firstName) localStorage.setItem("firstName", firstName);
+if (lastName) localStorage.setItem("lastName", lastName);
 
+
+          localStorage.setItem("role", role);
+          localStorage.setItem("userId", userId);
+          if (customerId) localStorage.setItem("customerId", customerId);
+          if (name) localStorage.setItem("name", name);
+Swal.fire({
+      title: "Login Successful!",
+      text: "Redirecting to login...",
+      icon: "success",
+      background: "#2e003e",          // dark purple background
+      color: "#ffffff",               // white text
+      confirmButtonColor: "#ffb3d9",  // pink accent button
+      timer: 2000,
+      showConfirmButton: false
+    });
+        // ✅ Role-based redirection after short delay
+setTimeout(() => {
   if (role === "Customer") {
-    if (customerId) {
-      navigate(`/dashboard/${customerId}`);
-    } else {
-      navigate("/fill-details");
-    }
+    if (customerId) navigate(`/customer/dashboard/${customerId}`);
+    else navigate("/fill-details");
+  } else if (role === "Admin") {
+    navigate("/dashboard"); // Rule module
+  } else if (role === "Investigator") {
+    navigate("/Idashboard"); // Investigator module
+  } else if (role === "Compliance") {
+    navigate("/Cdashboard"); // Compliance module
+  } else if (role === "Analyst") {
+    navigate("/risk"); // Analyst module
+  } else if (role === "Modeler") {
+    navigate("/scenarios"); // Modeler module
   } else {
-    navigate("/dashboard");
+    navigate("/"); // fallback
   }
-
-
-
+}, 1000);
 
         } else if (endpoint === "reset-password") {
           setFormData({ email: "", password: "", otp: "", newPassword: "" });
