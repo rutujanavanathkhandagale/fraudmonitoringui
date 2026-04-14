@@ -1,0 +1,213 @@
+/* ======================================================
+   SETTINGS PAGE – CONTROL CENTER (GLASS UI)
+   ====================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700&family=Inter:wght@400;500;600&display=swap');
+
+/* ---------------- ROOT WRAPPER ---------------- */
+.settings-page {
+  min-height: 100vh;
+  background: transparent;
+}
+
+/* ---------------- GLOBAL TEXT ---------------- */
+.settings-title {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.settings-subtitle {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  opacity: 0.75;
+}
+
+/* ---------------- GLASS CARD ---------------- */
+.settings-card {
+  background: var(--card-bg);
+  border-radius: 16px;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+}
+
+.glass {
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+/* ---------------- SECTION HEADERS ---------------- */
+.section-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.section-title svg {
+  color: var(--accent-color);
+}
+
+/* ======================================================
+   THEME OPTIONS
+   ====================================================== */
+
+.theme-option {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 18px 16px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  height: 100%;
+}
+
+.theme-option:hover {
+  transform: translateY(-4px);
+}
+
+.theme-option.active {
+  border: 2px solid var(--accent-color);
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.theme-option .icon {
+  font-size: 22px;
+  margin-bottom: 6px;
+  color: var(--text-secondary);
+}
+
+.theme-option.active .icon {
+  color: var(--accent-color);
+}
+
+.theme-option h6 {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+
+.theme-option p {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  margin-bottom: 0;
+}
+
+.active-badge {
+  margin-top: 6px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--accent-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+}
+
+/* ======================================================
+   TYPOGRAPHY SCALE
+   ====================================================== */
+
+.typography-btn {
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-primary);
+  transition: 0.25s ease;
+}
+
+.typography-btn.active {
+  background: var(--accent-color);
+  color: #fff;
+  border-color: var(--accent-color);
+}
+
+/* ======================================================
+   SYSTEM STATUS & INFO CARDS
+   ====================================================== */
+
+.status-card {
+  background: var(--card-bg);
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  padding: 14px;
+  text-align: center;
+}
+
+.status-title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+}
+
+.status-value {
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+/* ======================================================
+   PROFILE CARD (RIGHT PANEL)
+   ====================================================== */
+
+.profile-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+}
+
+.profile-name {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.profile-subtext {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  opacity: 0.75;
+}
+
+/* ======================================================
+   SECURITY SECTION
+   ====================================================== */
+
+.security-label {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+}
+
+.security-btn {
+  font-size: 0.75rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: none;
+  color: #fff;
+  padding: 8px;
+  border-radius: 10px;
+  transition: 0.25s;
+}
+
+.security-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+/* ---------------- TRANSITIONS ---------------- */
+
+* {
+  transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+}

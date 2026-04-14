@@ -1,0 +1,135 @@
+/* ------------------------------
+   BACKDROP (Glass Blur)
+------------------------------ */
+.modal-backdrop-custom {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(6px);
+  z-index: 1040;
+}
+
+/* ------------------------------
+   MODAL WRAPPER
+------------------------------ */
+.add-role-modal {
+  z-index: 1050;
+}
+
+/* ------------------------------
+   MODAL CONTENT (Glass Card)
+------------------------------ */
+.add-role-content {
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+  overflow: hidden;
+  color: #fff;
+}
+
+/* ------------------------------
+   TOP ACCENT BAR (Theme Match)
+------------------------------ */
+.modal-top-accent {
+  height: 4px;
+  width: 100%;
+  background: linear-gradient(135deg, #d400ff, #ff0080);
+}
+
+/* ------------------------------
+   HEADER
+------------------------------ */
+.add-role-content .modal-header {
+  border-bottom: none;
+  padding: 16px 20px;
+}
+
+.add-role-content .modal-title {
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+
+/* Close button visibility */
+.add-role-content .btn-close {
+  filter: invert(1);
+}
+
+/* ------------------------------
+   BODY
+------------------------------ */
+.add-role-content .modal-body {
+  padding: 20px;
+}
+
+.add-role-content label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+  display: block;
+  opacity: 0.85;
+}
+
+/* Input styling */
+.add-role-content input {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  font-size: 0.85rem;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.add-role-content input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.add-role-content input:focus {
+  border-color: #d400ff;
+  box-shadow: 0 0 0 2px rgba(212, 0, 255, 0.25);
+}
+
+/* ------------------------------
+   FOOTER
+------------------------------ */
+.add-role-content .modal-footer {
+  border-top: none;
+  padding: 16px 20px;
+  gap: 10px;
+}
+
+/* Cancel button */
+.add-role-content .btn-secondary {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: #fff;
+}
+
+.add-role-content .btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Primary action button */
+.purple-btn {
+  background: linear-gradient(135deg, #d400ff, #ff0080);
+  border: none;
+  color: #fff;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  box-shadow: 0 8px 20px rgba(212, 0, 255, 0.35);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.purple-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 28px rgba(212, 0, 255, 0.45);
+}
+
+.purple-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

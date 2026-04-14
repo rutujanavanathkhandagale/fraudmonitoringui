@@ -12,14 +12,14 @@ const RoleGuard = ({ children, allowedRoles }) => {
 
   try {
     const decodedToken = jwtDecode(token);
-    const userRole =
-      decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"] ||
-      decodedToken.role ||
-      localStorage.getItem("role"); // ✅ fallback
+   const rawRole =
+  decodedToken["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"] ||
+  decodedToken.role ||
+  localStorage.getItem("role") ||
+  "";
 
-    const hasAccess = allowedRoles?.some(
-      (role) => role.toLowerCase() === userRole?.toLowerCase()
-    );
+const userRole = rawRole.toUpperCase(); // ✅ normalizhasAc
+   const hasAccess = allowedRoles?.includes(userRole);
 
     if (hasAccess) {
       return children;

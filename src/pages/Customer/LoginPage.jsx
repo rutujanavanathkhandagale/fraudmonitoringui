@@ -44,7 +44,12 @@ export default function LoginPage() {
           localStorage.setItem("token", data.token);
 
           const decoded = jwtDecode(data.token);
-          const role = decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
+          const rawRole =
+  decoded["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"] ||
+  decoded.role ||
+  "";
+
+const role = rawRole.toUpperCase(); // ✅ NORMALIZE ROL
           const userId = decoded["RegistrationId"];
           const customerId = decoded.CustomerId;
          const firstName = decoded.FirstName;
@@ -57,7 +62,7 @@ if (lastName) localStorage.setItem("lastName", lastName);
           localStorage.setItem("role", role);
           localStorage.setItem("userId", userId);
           if (customerId) localStorage.setItem("customerId", customerId);
-          if (name) localStorage.setItem("name", name);
+         
 Swal.fire({
       title: "Login Successful!",
       text: "Redirecting to login...",
@@ -68,26 +73,38 @@ Swal.fire({
       timer: 2000,
       showConfirmButton: false
     });
-        // ✅ Role-based redirection after short delay
-setTimeout(() => {
-  if (role === "Customer") {
-    if (customerId) navigate(`/customer/dashboard/${customerId}`);
-    else navigate("/fill-details");
-  } else if (role === "Admin") {
-    navigate("/dashboard"); // Rule module
-  } else if (role === "Investigator") {
-    navigate("/Idashboard"); // Investigator module
-  } else if (role === "Compliance") {
-    navigate("/Cdashboard"); // Compliance module
-  } else if (role === "Analyst") {
-    navigate("/risk"); // Analyst module
-  } else if (role === "Modeler") {
-    navigate("/scenarios"); // Modeler module
-  } else {
-    navigate("/"); // fallback
+  setTimeout(() => {
+  switch (role) {
+    case "ADMIN":
+      navigate("/role"); // ✅ Admin page
+      break;
+
+    case "INVESTIGATOR":
+      navigate("/Idashboard");
+      break;
+
+    case "COMPLIANCE":
+      navigate("/Cdashboard");
+      break;
+
+    case "ANALYST":
+      navigate("/risk");
+      break;
+
+    case "MODELER":
+      navigate("/scenarios");
+      break;
+
+    case "CUSTOMER":
+      if (customerId) navigate(`/customer/dashboard/${customerId}`);
+      else navigate("/fill-details");
+      break;
+
+    default:
+      console.warn("Unknown role:", role);
+      navigate("/unauthorized");
   }
 }, 1000);
-
         } else if (endpoint === "reset-password") {
           setFormData({ email: "", password: "", otp: "", newPassword: "" });
           setTimeout(() => setStep("login"), 2000);

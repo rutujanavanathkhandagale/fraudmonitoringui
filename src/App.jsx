@@ -1,7 +1,7 @@
 // src/App.jsx
 import React, { useState } from "react";
 import { BrowserRouter, Routes, Route, Navigate, Outlet } from "react-router-dom";
-import { useTheme, ThemeProvider } from "./context/ThemeContext";
+import { ThemeProvider, useTheme } from "./context/ThemeContext";
 import { AuthProvider } from "./context/AuthContext";
 
 // Styling
@@ -9,8 +9,14 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
+// Admin
+import ASidebar from "./components/Admin/ASidebar";
+import AdminAudit from "./pages/Admin/AdminAudit";
+import Role from "./pages/Admin/Role";
+import User from "./pages/Admin/User";
+
 // Customer
-import RegisterPage from "./pages/Customer/RegisterPage"; 
+import RegisterPage from "./pages/Customer/RegisterPage";
 import LoginPage from "./pages/Customer/LoginPage";
 import CustSidebar from "./components/Customer/CustSidebar";
 import CusDashboard from "./components/Customer/cusdashboard";
@@ -40,7 +46,7 @@ import WatchlistPageForm from "./pages/Compliance/WatchlistPageForm";
 import ControlChecklist from "./pages/Compliance/ControlChecklist";
 import RegulatoryReport from "./pages/Compliance/RegulatoryReport";
 
-// Common Pages
+// Common
 import Home from "./pages/Home";
 import Settings from "./components/common/Settings";
 import Header from "./components/common/Header";
@@ -50,32 +56,38 @@ import AuthGuard from "./guards/AuthGuard";
 import RoleGuard from "./guards/RoleGuard";
 import "./App.css";
 
-// --- Layout Wrapper ---
+/* ---------------- Layout Wrapper ---------------- */
 const DashboardWrapper = ({ SidebarComponent }) => {
   const [collapsed, setCollapsed] = useState(false);
   const theme = useTheme();
 
   if (!theme || !theme.currentColors) {
-    return <div style={{ backgroundColor: "transparent", minHeight: "100vh" }} />;
+    return <div style={{ minHeight: "100vh" }} />;
   }
+
   const { currentColors, actualTheme } = theme;
 
   return (
-    <div style={{ backgroundColor: currentColors.appBg, minHeight: "100vh", display: "flex", flexDirection: "column" }}>
+    <div style={{ backgroundColor: currentColors.appBg, minHeight: "100vh" }}>
       <Header collapsed={collapsed} setCollapsed={setCollapsed} />
-      <div style={{ display: "flex", flexGrow: 1 }}>
-        {SidebarComponent && <SidebarComponent collapsed={collapsed} setCollapsed={setCollapsed} />}
+
+      <div style={{ display: "flex" }}>
+        {SidebarComponent && (
+          <SidebarComponent
+            collapsed={collapsed}
+            setCollapsed={setCollapsed}
+          />
+        )}
+
         <main
+          className={`main-content ${collapsed ? "sidebar-collapsed" : ""}`}
           style={{
-            flexGrow: 1,
-            paddingTop: "75px",
             background: currentColors.mainGradient,
-            backdropFilter: actualTheme === "frost" ? "blur(10px)" : "none",
-            display: "flex",
-            flexDirection: "column"
+            backdropFilter:
+              actualTheme === "frost" ? "blur(10px)" : "none",
           }}
         >
-          <div style={{ flexGrow: 1, padding: "20px" }}>
+          <div style={{ padding: "20px" }}>
             <Outlet />
           </div>
           <Footer />
@@ -84,78 +96,67 @@ const DashboardWrapper = ({ SidebarComponent }) => {
     </div>
   );
 };
-// --- MAIN APP ---
-export default function App() {
-  const [notifications, setNotifications] = useState([]);
 
+/* ---------------- Main App ---------------- */
+export default function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
         <ThemeProvider>
           <Routes>
-            {/* Public routes */}
-            <Route path="/register" element={<RegisterPage />} />
+            {/* Public */}
+            <Route path="/" element={<Home />} />
             <Route path="/login" element={<LoginPage />} />
-            <Route path="/settings" element={<Settings />} />
-
-            {/* Customer Module */}
-            <Route element={<DashboardWrapper SidebarComponent={CustSidebar} />}>
+            <Route path="/register" element={<RegisterPage />} />
+           <Route
+  path="/settings"
+  element={
+    <AuthGuard>
+      <Settings />
+    </AuthGuard>
+  }
+/>
+            {/* Admin */}
+            <Route element={<DashboardWrapper SidebarComponent={ASidebar} />}>
               <Route
-                path="/customer/dashboard/:id"
+                path="/role"
                 element={
                   <AuthGuard>
-                    <RoleGuard allowedRoles={["Customer"]}>
-                      <CusDashboard />
+                    <RoleGuard allowedRoles={["ADMIN"]}>
+                      <Role />
                     </RoleGuard>
                   </AuthGuard>
                 }
               />
               <Route
-                path="/fill-details"
+                path="/users"
                 element={
                   <AuthGuard>
-                    <RoleGuard allowedRoles={["Customer"]}>
-                      <CustomerOnboardingForm />
+                    <RoleGuard allowedRoles={["ADMIN"]}>
+                      <User />
                     </RoleGuard>
                   </AuthGuard>
                 }
               />
               <Route
-                path="/profile/:id"
+                path="/audit"
                 element={
                   <AuthGuard>
-                    <RoleGuard allowedRoles={["Customer"]}>
-                      <CustomerProfile />
+                    <RoleGuard allowedRoles={["ADMIN"]}>
+                      <AdminAudit />
                     </RoleGuard>
                   </AuthGuard>
                 }
               />
-              <Route
-                path="/notification/:id"
-                element={
-                  <AuthGuard>
-                    <RoleGuard allowedRoles={["Customer"]}>
-                      <Notification
-                        notifications={notifications}
-                        setNotifications={setNotifications}
-                      />
-                    </RoleGuard>
-                  </AuthGuard>
-                }
-              />
-              <Route path="/about" element={<AboutPage />} />
             </Route>
 
-            {/* Public Landing Page */}
-            <Route path="/" element={<Home />} />
-
-            {/* Rule Module */}
+            {/* Rule (Modeler) */}
             <Route element={<DashboardWrapper SidebarComponent={RuleSidebar} />}>
               <Route
                 path="/dashboard"
                 element={
                   <AuthGuard>
-                    <RoleGuard allowedRoles={["Admin"]}>
+                    <RoleGuard allowedRoles={["MODELER"]}>
                       <Dashboard />
                     </RoleGuard>
                   </AuthGuard>
@@ -165,7 +166,7 @@ export default function App() {
                 path="/scenarios"
                 element={
                   <AuthGuard>
-                    <RoleGuard allowedRoles={["Modeler"]}>
+                    <RoleGuard allowedRoles={["MODELER"]}>
                       <ScenarioPage />
                     </RoleGuard>
                   </AuthGuard>
@@ -175,7 +176,7 @@ export default function App() {
                 path="/detection-rules"
                 element={
                   <AuthGuard>
-                    <RoleGuard allowedRoles={["Modeler"]}>
+                    <RoleGuard allowedRoles={["MODELER"]}>
                       <DetectionRulePage />
                     </RoleGuard>
                   </AuthGuard>
@@ -183,7 +184,7 @@ export default function App() {
               />
             </Route>
 
-            {/* Investigator Module */}
+            {/* Investigator */}
             <Route element={<DashboardWrapper SidebarComponent={InvestigatorSidebar} />}>
               <Route
                 path="/Idashboard"
@@ -217,7 +218,7 @@ export default function App() {
               />
             </Route>
 
-            {/* Compliance Module */}
+            {/* Compliance */}
             <Route element={<DashboardWrapper SidebarComponent={ComplianceSidebar} />}>
               <Route
                 path="/Cdashboard"

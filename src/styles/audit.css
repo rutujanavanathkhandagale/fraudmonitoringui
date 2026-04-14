@@ -1,0 +1,195 @@
+/* ================= PAGE ================= */
+.audit-page {
+  padding: 24px;
+  color: #ffffff;
+  background: transparent;
+}
+
+/* ================= HEADER ================= */
+.audit-header h2 {
+  margin: 0;
+  font-size: 1.4rem;
+}
+
+.audit-header p {
+  margin-top: 4px;
+  font-size: 0.85rem;
+  opacity: 0.7;
+}
+
+/* ================= CONTROLS ================= */
+.audit-controls {
+  display: flex;
+  gap: 12px;
+  margin: 18px 0;
+}
+
+/* INPUT + SELECT (BASE) */
+.audit-controls input,
+.audit-controls select {
+  height: 42px;
+  padding: 10px 14px;
+  font-size: 0.85rem;
+  border-radius: 10px;
+  outline: none;
+  color: #fff;
+
+  background: rgba(30, 30, 40, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+/* INPUT */
+.audit-controls input {
+  flex: 1;
+}
+
+.audit-controls input::placeholder {
+  color: rgba(255, 255, 255, 0.45);
+}
+
+/* ================= ✅ SELECT FIX (NO WHITE) ================= */
+.audit-controls select {
+  min-width: 150px;
+  cursor: pointer;
+
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  padding-right: 36px;
+
+  background-image: url("data:image/svg+xml,%3Csvg width='14' height='14' viewBox='0 0 24 24' fill='white' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 10l5 5 5-5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 14px;
+}
+
+/* ✅ DROPDOWN OPTIONS */
+.audit-controls select option {
+  background: rgb(24, 24, 34);
+  color: #ffffff;
+  font-size: 0.78rem;
+}
+
+/* Hover / selected */
+.audit-controls select option:hover,
+.audit-controls select option:checked {
+  background: linear-gradient(135deg, #7b3cff, #d400ff);
+  color: #ffffff;
+}
+
+/* ================= TABLE CONTAINER ================= */
+.audit-table-container {
+  background: rgba(18, 18, 28, 0.95);
+  border-radius: 18px;
+  border: 1px solid rgba(180, 90, 255, 0.28);
+  overflow: hidden;
+}
+
+/* ================= TABLE ================= */
+.audit-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+/* HEADER */
+.audit-table thead th {
+  padding: 14px 12px;
+  text-align: left;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  opacity: 0.75;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+/* BODY */
+.audit-table tbody td {
+  padding: 14px 12px;
+}
+
+.audit-table tbody tr {
+  transition: background 0.15s ease;
+}
+
+.audit-table tbody tr:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.audit-table tbody tr:not(:last-child) {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* ================= ACTION COLORS ================= */
+.audit-table td.action {
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.audit-table .action.create {
+  color: #22c55e;
+}
+
+.audit-table .action.update,
+.audit-table .action.approve {
+  color: #60a5fa;
+}
+
+.audit-table .action.deactivate,
+.audit-table .action.delete {
+  color: #f87171;
+}
+
+/* ================= EMPTY / LOADING ================= */
+.empty,
+.loading {
+  text-align: center;
+  padding: 32px;
+  opacity: 0.6;
+}
+
+/* ================= PAGINATION ================= */
+.audit-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  padding: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.audit-pagination button {
+  min-width: 32px;
+  height: 30px;
+  padding: 0 10px;
+  font-size: 0.72rem;
+  border-radius: 8px;
+
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+
+  cursor: pointer;
+}
+
+.audit-pagination button:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.audit-pagination button.active {
+  background: linear-gradient(135deg, #7b3cff, #d400ff);
+  border: none;
+}
+
+.audit-pagination button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 900px) {
+  .audit-controls {
+    flex-direction: column;
+  }
+}

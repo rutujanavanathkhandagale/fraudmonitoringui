@@ -4,7 +4,7 @@ import {
   FiCheck, FiLayers, FiDatabase, FiGlobe, FiLock, FiCpu, FiType
 } from 'react-icons/fi';
 import { useTheme } from "../../context/ThemeContext";
-
+ 
 import 'bootstrap/dist/css/bootstrap.min.css';
  
 const Settings = () => {

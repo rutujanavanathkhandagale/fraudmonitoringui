@@ -1,0 +1,207 @@
+/* ================= OVERLAY ================= */
+.user-profile-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(8, 0, 20, 0.75);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+/* ================= MAIN CONTAINER ================= */
+.system-user-profile-page {
+  position: relative;
+  width: 900px;
+  max-width: 95%;
+  padding: 28px;
+  border-radius: 26px;
+
+  background: linear-gradient(
+    135deg,
+    rgba(35, 35, 45, 0.95),
+    rgba(18, 18, 25, 0.95)
+  );
+
+  /* ✅ CLEAN BORDER */
+  border: 1px solid rgba(180, 90, 255, 0.35);
+
+  /* ✅ REMOVE OUTER SHINE */
+  box-shadow: none;
+
+  backdrop-filter: blur(20px);
+  color: #fff;
+}
+/* ================= TOP ACCENT ================= */
+.profile-top-accent {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 3px;
+  width: 100%;
+  border-radius: 26px 26px 0 0;
+  background: linear-gradient(90deg, #d400ff, #ff2f92);
+}
+
+/* ================= HEADER ================= */
+.system-user-profile-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.system-user-back-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  border: none;
+  color: #fff;
+  padding: 8px 14px;
+  border-radius: 10px;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.profile-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* ================= STATUS BADGE ================= */
+.system-user-status-badge {
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+/* ================= DEACTIVATE BUTTON ================= */
+.system-user-deactivate-btn {
+  background: rgba(255, 50, 90, 0.35);
+  border: none;
+  color: #fff;
+  padding: 8px 14px;
+  border-radius: 10px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+/* ================= CONTENT GRID ================= */
+.profile-content {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 24px;
+}
+
+/* ================= CARDS ================= */
+.system-user-profile-card {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(20px);
+  border-radius: 22px;
+  padding: 24px;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+/* ================= LEFT – IDENTITY ================= */
+.system-user-identity {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.system-user-avatar-lg {
+  width: 80px;
+  height: 80px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, #7b3cff, #d400ff);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.9rem;
+  font-weight: bold;
+  box-shadow: 0 0 22px rgba(212, 0, 255, 0.6);
+  margin-bottom: 14px;
+}
+
+.system-user-name-lg {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.system-user-username {
+  font-size: 0.8rem;
+  opacity: 0.7;
+  margin-bottom: 12px;
+}
+
+.system-user-role-badge {
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  background: linear-gradient(135deg, rgba(212, 0, 255, 0.4), rgba(255, 0, 140, 0.4));
+}
+
+/* ================= RIGHT – DETAILS ================= */
+.system-user-details-title {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  font-size: 0.95rem;
+  margin-bottom: 16px;
+}
+
+.system-user-details-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+/* ================= DETAIL ITEM ================= */
+.system-user-detail {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.system-user-detail-icon {
+  color: #d400ff;
+  margin-top: 2px;
+}
+
+.system-user-detail-label {
+  font-size: 0.7rem;
+  opacity: 0.65;
+}
+
+.system-user-detail-value {
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+/* ================= INFO NOTE ================= */
+.system-user-info-note {
+  margin-top: 18px;
+  display: flex;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  padding: 10px 12px;
+  font-size: 0.75rem;
+  opacity: 0.85;
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 768px) {
+  .profile-content {
+    grid-template-columns: 1fr;
+  }
+}
