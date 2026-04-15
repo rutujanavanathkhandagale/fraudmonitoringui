@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
+import { 
+  FiShield, FiPlus, FiEye, FiTrash2, 
+  FiSearch, FiFilter, FiAlertCircle, FiCheckCircle 
+} from "react-icons/fi";
+import { useTheme } from "../../context/ThemeContext";
 
-// --- CONFIGURATION ---
 const BASE_URL = "https://localhost:44372";
 const API = axios.create({ baseURL: `${BASE_URL}/api` });
 
@@ -14,20 +18,9 @@ const watchlistService = {
   deleteEntry: (id) => API.delete(`/Watchlist/${id}`),
 };
 
-const COLORS = {
-  bg: "#ffffff",
-  textMain: "#0f172a",
-  textMuted: "#64748b",
-  electric: "#d3309a",
-  glow: "#a020f0",
-  success: "#16a34a",
-  danger: "#dc2626",
-  border: "#e2e8f0",
-  cardBg: "#f8fafc",
-  inputBg: "#f1f5f9"
-};
-
 function WatchlistPageForm() {
+  const { currentColors, actualTheme } = useTheme();
+  
   const [entries, setEntries] = useState([]);
   const [form, setForm] = useState({ entryId: null, name: "", identifier: "", listType: "Sanctions", status: "Active" });
   const [notification, setNotification] = useState({ open: false, message: "", type: "info" });
@@ -38,11 +31,20 @@ function WatchlistPageForm() {
   const [entitySearchId, setEntitySearchId] = useState("");
   const [isVerifying, setIsVerifying] = useState(false);
 
-  useEffect(() => { fetchData(); }, []);
+  // Unified Theme Logic
+  const accentColor = actualTheme === 'frost' ? "#34abe0" : "#d000f5";
+  
+  const appBackground = actualTheme === 'dark' 
+    ? "linear-gradient(180deg, #2e003e 0%, #1a0620 100%)" 
+    : "linear-gradient(135deg, #fce7f3 0%, #e0f2fe 50%, #f0f9ff 100%)";
 
-  useEffect(() => {
-    if (entitySearchId === "") setSearchTerm("");
-  }, [entitySearchId]);
+  const glassStyle = { 
+    backdropFilter: "blur(12px)", 
+    border: `1px solid ${currentColors.border}`,
+    backgroundColor: actualTheme === 'dark' ? "rgba(255, 255, 255, 0.03)" : "rgba(255, 255, 255, 0.6)"
+  };
+
+  useEffect(() => { fetchData(); }, []);
 
   const fetchData = async () => {
     try {
@@ -62,7 +64,6 @@ function WatchlistPageForm() {
       if (data.status === "FAIL" || data.match === true) {
         const matchedEntry = entries.find(e => e.identifier?.toString() === entitySearchId.toString());
         if (matchedEntry) handleOpenModal("view", matchedEntry); 
-
         setNotification({
           open: true,
           message: `THREAT DETECTED: Account #${entitySearchId} found in ${data.listType || 'Watchlist'}.`,
@@ -113,33 +114,37 @@ function WatchlistPageForm() {
   });
 
   return (
-    <div style={styles.wrapper}>
-      <div className="container-fluid">
+    <div style={{ ...styles.wrapper, background: appBackground, color: currentColors.textPrimary }}>
+      <div style={styles.contentBody}>
         
         {/* Header */}
         <header style={styles.header}>
           <div style={{ display: "flex", alignItems: "center", gap: "15px" }}>
-            <div style={styles.logoIcon}>🛡️</div>
+            <div style={{ ...styles.logoIcon, background: accentColor }}>
+              <FiShield size={22} color="white" />
+            </div>
             <div>
-              <h1 style={styles.logoText}>WATCHLIST <span style={{color: COLORS.electric}}>ENTITY</span></h1>
-              <small style={styles.subLogo}>FRAUDSHIELD SECURE TERMINAL</small>
+              <h1 style={{ ...styles.logoText, color: currentColors.textPrimary }}>WATCHLIST <span style={{color: accentColor}}>ENTITY</span></h1>
+              <small style={{ ...styles.subLogo, color: accentColor }}>FRAUDSHIELD SECURE TERMINAL</small>
             </div>
           </div>
-          <button style={styles.addBtn} onClick={() => handleOpenModal("add")}>+ NEW ENTRY</button>
+          <button style={{ ...styles.addBtn, background: accentColor }} onClick={() => handleOpenModal("add")}>
+            <FiPlus className="me-2" /> NEW ENTRY
+          </button>
         </header>
 
         {/* Intelligence Summary Cards */}
-        <div className="row g-4 mb-5">
+        <div className="row g-4 mb-4">
           {[
-            { label: "TOTAL WATCHED", val: entries.length, color: COLORS.textMain },
-            { label: "SANCTIONS", val: entries.filter(e => e.listType === "Sanctions").length, color: COLORS.danger },
-            { label: "PEP ACTIVE", val: entries.filter(e => e.listType === "PEP").length, color: COLORS.glow },
-            { label: "BLACKLISTED", val: entries.filter(e => e.listType === "InternalBlackList").length, color: COLORS.success }
+            { label: "TOTAL WATCHED", val: entries.length, color: currentColors.textPrimary },
+            { label: "SANCTIONS", val: entries.filter(e => e.listType === "Sanctions").length, color: "#dc2626" },
+            { label: "PEP ACTIVE", val: entries.filter(e => e.listType === "PEP").length, color: "#9333ea" },
+            { label: "BLACKLISTED", val: entries.filter(e => e.listType === "InternalBlackList").length, color: "#16a34a" }
           ].map((stat, i) => (
             <div key={i} className="col-md-3">
-              <motion.div whileHover={{ y: -3 }} style={styles.intelCard}>
-                <small style={styles.cardLabel}>{stat.label}</small>
-                <h2 style={{ color: stat.color, margin: 0, fontWeight: "900" }}>{stat.val}</h2>
+              <motion.div whileHover={{ y: -5 }} style={{ ...styles.intelCard, ...glassStyle }}>
+                <small style={{ ...styles.cardLabel, color: currentColors.textSecondary }}>{stat.label}</small>
+                <h2 style={{ color: stat.color, margin: 0, fontWeight: "900", fontSize: '2rem' }}>{stat.val}</h2>
               </motion.div>
             </div>
           ))}
@@ -148,15 +153,17 @@ function WatchlistPageForm() {
         {/* Search Controls */}
         <div className="row g-3 mb-4">
             <div className="col-md-6">
-                <div style={styles.glassSearch}>
-                    <input style={styles.searchInput} placeholder="Scan Account ID..." value={entitySearchId} onChange={(e) => setEntitySearchId(e.target.value)} />
-                    <button style={styles.verifyBtn} onClick={handleVerifyAutomation}>{isVerifying ? "..." : "SCAN"}</button>
+                <div style={{ ...styles.glassSearch, ...glassStyle }}>
+                    <FiSearch className="ms-3" style={{ color: currentColors.textSecondary }} />
+                    <input style={{ ...styles.searchInput, color: currentColors.textPrimary }} placeholder="Scan Account ID..." value={entitySearchId} onChange={(e) => setEntitySearchId(e.target.value)} />
+                    <button style={{ ...styles.verifyBtn, background: accentColor, color: 'white' }} onClick={handleVerifyAutomation}>{isVerifying ? "..." : "SCAN"}</button>
                 </div>
             </div>
             <div className="col-md-6">
-                <div style={styles.glassSearch}>
-                    <input style={styles.searchInput} placeholder="Filter list..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
-                    <select style={styles.filterDropdown} value={filterType} onChange={(e) => setFilterType(e.target.value)}>
+                <div style={{ ...styles.glassSearch, ...glassStyle }}>
+                    <FiFilter className="ms-3" style={{ color: currentColors.textSecondary }} />
+                    <input style={{ ...styles.searchInput, color: currentColors.textPrimary }} placeholder="Filter entries..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+                    <select style={{ ...styles.filterDropdown, background: accentColor }} value={filterType} onChange={(e) => setFilterType(e.target.value)}>
                         <option value="all">ALL CATEGORIES</option>
                         <option value="Sanctions">SANCTIONS</option>
                         <option value="PEP">PEP</option>
@@ -167,10 +174,10 @@ function WatchlistPageForm() {
         </div>
 
         {/* Data Table */}
-        <div className="table-responsive" style={styles.tableCard}>
-          <table className="table mb-0">
+        <div className="table-responsive" style={{ ...styles.tableCard, ...glassStyle }}>
+          <table className="table mb-0" style={{ color: currentColors.textPrimary, background: 'transparent' }}>
             <thead>
-              <tr>
+              <tr style={{ borderBottom: `2px solid ${currentColors.border}` }}>
                 <th style={styles.th}>ENTITY NAME</th>
                 <th style={styles.th}>ACCOUNT NUMBER</th>
                 <th style={styles.th}>LIST TYPE</th>
@@ -180,19 +187,19 @@ function WatchlistPageForm() {
             </thead>
             <tbody>
               {filteredEntries.map(entry => (
-                <tr key={entry.entryId} style={{ borderBottom: `1px solid ${COLORS.border}` }}>
+                <tr key={entry.entryId} style={{ borderBottom: `1px solid ${currentColors.border}` }}>
                   <td style={styles.td}>{entry.name}</td>
-                  <td style={styles.td}><span style={{ color: COLORS.electric, fontWeight: "800" }}>{entry.identifier}</span></td>
-                  <td style={styles.td}><span style={styles.pill}>{entry.listType}</span></td>
+                  <td style={styles.td}><span style={{ color: accentColor, fontWeight: "800" }}>{entry.identifier}</span></td>
+                  <td style={styles.td}><span style={{ ...styles.pill, borderColor: currentColors.border, color: currentColors.textSecondary }}>{entry.listType}</span></td>
                   <td style={styles.td}>
-                    <span style={{ color: entry.status === "Active" ? COLORS.success : COLORS.danger, fontWeight: "800", fontSize: '12px' }}>
+                    <span style={{ color: entry.status === "Active" ? "#16a34a" : "#dc2626", fontWeight: "900", fontSize: '11px', letterSpacing: '0.5px' }}>
                         ● {entry.status.toUpperCase()}
                     </span>
                   </td>
                   <td style={{ ...styles.td, textAlign: "center" }}>
-                    <div style={{ display: "flex", gap: "8px", justifyContent: "center" }}>
-                      <button style={styles.actionBtn} onClick={() => handleOpenModal("view", entry)}>👁️</button>
-                      <button style={{ ...styles.actionBtn, color: COLORS.danger }} onClick={() => handleDelete(entry.entryId)}>🗑</button>
+                    <div style={{ display: "flex", gap: "10px", justifyContent: "center" }}>
+                      <button style={{ ...styles.actionBtn, borderColor: currentColors.border, color: currentColors.textPrimary }} onClick={() => handleOpenModal("view", entry)}><FiEye size={16}/></button>
+                      <button style={{ ...styles.actionBtn, borderColor: currentColors.border, color: "#dc2626" }} onClick={() => handleDelete(entry.entryId)}><FiTrash2 size={16}/></button>
                     </div>
                   </td>
                 </tr>
@@ -206,37 +213,37 @@ function WatchlistPageForm() {
       <AnimatePresence>
         {modalOpen && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} style={styles.overlay}>
-            <motion.div initial={{ scale: 0.9, y: 20 }} animate={{ scale: 1, y: 0 }} style={styles.overlayBox}>
-              <div style={styles.overlayHeader}>
-                <h5 style={{ margin: 0, fontWeight: "800", fontSize: '14px' }}>{modalMode === "view" ? "ENTITY PROFILE" : "CREATE RECORD"}</h5>
-                <button style={styles.closeBtn} onClick={() => setModalOpen(false)}>×</button>
+            <motion.div initial={{ scale: 0.9, y: 20 }} animate={{ scale: 1, y: 0 }} style={{ ...styles.overlayBox, ...glassStyle }}>
+              <div style={{ ...styles.overlayHeader, borderBottom: `1px solid ${currentColors.border}` }}>
+                <h5 style={{ margin: 0, fontWeight: "900", fontSize: '15px', color: currentColors.textPrimary }}>{modalMode === "view" ? "ENTITY PROFILE" : "CREATE RECORD"}</h5>
+                <button style={{ ...styles.closeBtn, color: currentColors.textSecondary }} onClick={() => setModalOpen(false)}>×</button>
               </div>
-              <div style={{ padding: "30px" }}>
-                <form onSubmit={handleSubmit} className="row g-3">
+              <div style={{ padding: "35px" }}>
+                <form onSubmit={handleSubmit} className="row g-4">
                   <div className="col-12">
-                    <label style={styles.detailLabel}>ENTITY NAME</label>
-                    <input style={styles.formInput} value={form.name} readOnly={modalMode === "view"} onChange={(e) => setForm({...form, name: e.target.value})} />
+                    <label style={{ ...styles.detailLabel, color: accentColor }}>ENTITY NAME</label>
+                    <input style={{ ...styles.formInput, backgroundColor: currentColors.appBg, color: currentColors.textPrimary, borderColor: currentColors.border }} value={form.name} readOnly={modalMode === "view"} onChange={(e) => setForm({...form, name: e.target.value})} />
                   </div>
                   <div className="col-12">
-                    <label style={styles.detailLabel}>ACCOUNT NUMBER</label>
-                    <input style={styles.formInput} value={form.identifier} readOnly={modalMode === "view"} onChange={(e) => setForm({...form, identifier: e.target.value})} />
+                    <label style={{ ...styles.detailLabel, color: accentColor }}>ACCOUNT NUMBER</label>
+                    <input style={{ ...styles.formInput, backgroundColor: currentColors.appBg, color: currentColors.textPrimary, borderColor: currentColors.border }} value={form.identifier} readOnly={modalMode === "view"} onChange={(e) => setForm({...form, identifier: e.target.value})} />
                   </div>
                   <div className="col-md-6">
-                    <label style={styles.detailLabel}>LIST CATEGORY</label>
-                    <select style={styles.formInput} disabled={modalMode === "view"} value={form.listType} onChange={(e) => setForm({...form, listType: e.target.value})}>
+                    <label style={{ ...styles.detailLabel, color: accentColor }}>LIST CATEGORY</label>
+                    <select style={{ ...styles.formInput, backgroundColor: currentColors.appBg, color: currentColors.textPrimary, borderColor: currentColors.border }} disabled={modalMode === "view"} value={form.listType} onChange={(e) => setForm({...form, listType: e.target.value})}>
                       <option value="Sanctions">Sanctions</option>
                       <option value="PEP">PEP</option>
                       <option value="InternalBlackList">Internal Blacklist</option>
                     </select>
                   </div>
                   <div className="col-md-6">
-                    <label style={styles.detailLabel}>STATUS</label>
-                    <select style={styles.formInput} disabled={modalMode === "view"} value={form.status} onChange={(e) => setForm({...form, status: e.target.value})}>
+                    <label style={{ ...styles.detailLabel, color: accentColor }}>STATUS</label>
+                    <select style={{ ...styles.formInput, backgroundColor: currentColors.appBg, color: currentColors.textPrimary, borderColor: currentColors.border }} disabled={modalMode === "view"} value={form.status} onChange={(e) => setForm({...form, status: e.target.value})}>
                       <option value="Active">Active</option>
                       <option value="Inactive">Inactive</option>
                     </select>
                   </div>
-                  {modalMode !== "view" && <button type="submit" style={styles.saveBtn} className="mt-4">COMMIT TO LIST</button>}
+                  {modalMode !== "view" && <button type="submit" style={{ ...styles.saveBtn, background: accentColor }} className="mt-2">COMMIT TO LIST</button>}
                 </form>
               </div>
             </motion.div>
@@ -248,11 +255,11 @@ function WatchlistPageForm() {
       <AnimatePresence>
         {notification.open && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} style={styles.overlay}>
-            <motion.div initial={{ scale: 0.8 }} animate={{ scale: 1 }} style={{...styles.overlayBox, maxWidth: '400px', textAlign: 'center', padding: '40px', borderColor: notification.type === 'danger' ? COLORS.danger : COLORS.success }}>
-              <div style={{ fontSize: '3rem', marginBottom: '15px' }}>{notification.type === 'danger' ? '🚨' : '✅'}</div>
-              <h4 style={{ fontWeight: '900', color: notification.type === 'danger' ? COLORS.danger : COLORS.success }}>{notification.type === 'danger' ? 'THREAT DETECTED' : 'SYSTEM CLEAR'}</h4>
-              <p style={{ color: COLORS.textMuted, fontWeight: '600' }}>{notification.message}</p>
-              <button style={{ ...styles.saveBtn, marginTop: '20px', background: notification.type === 'danger' ? COLORS.danger : COLORS.success }} onClick={() => setNotification({ ...notification, open: false })}>ACKNOWLEDGE</button>
+            <motion.div initial={{ scale: 0.8 }} animate={{ scale: 1 }} style={{...styles.overlayBox, maxWidth: '420px', textAlign: 'center', padding: '45px', borderColor: notification.type === 'danger' ? "#dc2626" : "#16a34a", ...glassStyle }}>
+              <div style={{ fontSize: '3.5rem', marginBottom: '20px' }}>{notification.type === 'danger' ? <FiAlertCircle color="#dc2626" /> : <FiCheckCircle color="#16a34a" />}</div>
+              <h4 style={{ fontWeight: '900', color: notification.type === 'danger' ? "#dc2626" : "#16a34a", letterSpacing: '1px' }}>{notification.type === 'danger' ? 'THREAT DETECTED' : 'SYSTEM CLEAR'}</h4>
+              <p style={{ color: currentColors.textSecondary, fontWeight: '700', fontSize: '14px', marginTop: '10px' }}>{notification.message}</p>
+              <button style={{ ...styles.saveBtn, marginTop: '25px', background: notification.type === 'danger' ? "#dc2626" : "#16a34a" }} onClick={() => setNotification({ ...notification, open: false })}>ACKNOWLEDGE</button>
             </motion.div>
           </motion.div>
         )}
@@ -262,30 +269,31 @@ function WatchlistPageForm() {
 }
 
 const styles = {
-  wrapper: { background: COLORS.bg, minHeight: "100vh", color: COLORS.textMain, padding: "40px", fontFamily: 'Inter, sans-serif' },
-  header: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "40px" },
-  logoIcon: { width: "40px", height: "40px", background: COLORS.textMain, borderRadius: "10px", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "20px" },
-  logoText: { margin: 0, letterSpacing: "1px", fontSize: "1.3rem", fontWeight: "900" },
-  subLogo: { color: COLORS.electric, fontSize: "10px", fontWeight: "bold", letterSpacing: "1px" },
-  addBtn: { background: COLORS.textMain, border: "none", color: "white", padding: "10px 20px", borderRadius: "10px", fontWeight: "bold", cursor: "pointer", fontSize: "11px" },
-  intelCard: { background: COLORS.cardBg, border: `1px solid ${COLORS.border}`, padding: "20px", borderRadius: "20px" },
-  cardLabel: { color: COLORS.textMuted, fontSize: "9px", letterSpacing: "1px", fontWeight: "800", display: "block", marginBottom: "5px" },
-  glassSearch: { background: COLORS.inputBg, border: `1px solid ${COLORS.border}`, borderRadius: "12px", padding: "6px", display: "flex" },
-  searchInput: { background: "transparent", border: "none", color: COLORS.textMain, padding: "8px 12px", flex: 1, outline: "none", fontSize: "13px", fontWeight: "600" },
-  verifyBtn: { background: "white", border: `1px solid ${COLORS.border}`, color: COLORS.textMain, padding: "0 20px", borderRadius: "8px", fontWeight: "bold", cursor: "pointer", fontSize: "11px" },
-  filterDropdown: { background: COLORS.textMain, border: "none", color: "white", padding: "0 10px", borderRadius: "8px", cursor: "pointer", fontWeight: "bold", fontSize: "10px", outline: "none" },
-  tableCard: { background: "white", border: `1px solid ${COLORS.border}`, borderRadius: "20px", overflow: "hidden" },
-  th: { color: COLORS.textMuted, fontSize: "10px", padding: "15px 20px", background: COLORS.cardBg, fontWeight: "800", letterSpacing: "1px", border: "none" },
-  td: { padding: "15px 20px", fontSize: "13px", fontWeight: "600", color: COLORS.textMain },
-  pill: { padding: "4px 10px", borderRadius: "6px", fontSize: "10px", background: COLORS.inputBg, fontWeight: "bold", border: `1px solid ${COLORS.border}` },
-  actionBtn: { background: "white", border: `1px solid ${COLORS.border}`, color: COLORS.textMain, width: "32px", height: "32px", borderRadius: "8px", cursor: "pointer" },
-  saveBtn: { background: COLORS.textMain, border: "none", color: "white", padding: "14px", borderRadius: "10px", fontWeight: "bold", width: "100%", cursor: "pointer", fontSize: "12px" },
-  overlay: { position: "fixed", top: 0, left: 0, width: "100%", height: "100%", background: "rgba(15, 23, 42, 0.4)", zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center", backdropFilter: "blur(4px)" },
-  overlayBox: { background: "white", border: `1px solid ${COLORS.border}`, borderRadius: "24px", width: "95%", maxWidth: "450px", boxShadow: "0 20px 50px rgba(0,0,0,0.1)" },
-  overlayHeader: { padding: "20px 30px", borderBottom: `1px solid ${COLORS.border}`, display: "flex", justifyContent: "space-between", alignItems: "center" },
-  closeBtn: { background: "transparent", border: "none", color: COLORS.textMuted, fontSize: "1.5rem", cursor: "pointer" },
-  detailLabel: { color: COLORS.textMuted, fontSize: '10px', fontWeight: '800', display: 'block', marginBottom: '5px' },
-  formInput: { background: COLORS.inputBg, border: `1px solid ${COLORS.border}`, color: COLORS.textMain, padding: "12px", borderRadius: "10px", width: "100%", outline: "none", marginBottom: "5px", fontWeight: "600" },
+  wrapper: { minHeight: "100vh", width: "100%", display: "flex", flexDirection: "column", paddingBottom: "60px" },
+  contentBody: { padding: "40px 50px", width: "100%" },
+  header: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "45px" },
+  logoIcon: { width: "48px", height: "48px", borderRadius: "14px", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: '0 8px 20px rgba(0,0,0,0.1)' },
+  logoText: { margin: 0, letterSpacing: "1px", fontSize: "1.5rem", fontWeight: "900" },
+  subLogo: { fontSize: "10px", fontWeight: "900", letterSpacing: "2px", textTransform: 'uppercase' },
+  addBtn: { border: "none", color: "white", padding: "14px 28px", borderRadius: "12px", fontWeight: "900", cursor: "pointer", fontSize: "12px", letterSpacing: '0.5px', display: 'flex', alignItems: 'center' },
+  intelCard: { padding: "30px", borderRadius: "24px", boxShadow: '0 10px 40px rgba(0,0,0,0.03)' },
+  cardLabel: { fontSize: "11px", letterSpacing: "1.5px", fontWeight: "900", display: "block", marginBottom: "10px", textTransform: 'uppercase' },
+  glassSearch: { borderRadius: "16px", padding: "10px", display: "flex", alignItems: 'center', boxShadow: '0 4px 25px rgba(0,0,0,0.03)' },
+  searchInput: { background: "transparent", border: "none", padding: "10px 15px", flex: 1, outline: "none", fontSize: "14px", fontWeight: "700" },
+  verifyBtn: { border: "none", padding: "10px 30px", borderRadius: "12px", fontWeight: "900", cursor: "pointer", fontSize: "12px", letterSpacing: '0.5px' },
+  filterDropdown: { border: "none", color: "white", padding: "10px 20px", borderRadius: "12px", cursor: "pointer", fontWeight: "900", fontSize: "11px", outline: "none" },
+  tableCard: { borderRadius: "24px", overflow: "hidden", boxShadow: '0 12px 50px rgba(0,0,0,0.05)' },
+  th: { fontSize: "11px", padding: "20px 30px", fontWeight: "900", letterSpacing: "1.5px", border: "none", background: "transparent" },
+  td: { padding: "20px 30px", fontSize: "14px", fontWeight: "700" },
+  pill: { padding: "5px 12px", borderRadius: "10px", fontSize: "11px", background: "rgba(255,255,255,0.2)", fontWeight: "800", border: `1px solid` },
+  actionBtn: { background: "transparent", border: "1px solid", width: "40px", height: "40px", borderRadius: "12px", cursor: "pointer", display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.2s ease' },
+  saveBtn: { border: "none", color: "white", padding: "16px", borderRadius: "14px", fontWeight: "900", width: "100%", cursor: "pointer", fontSize: "13px", letterSpacing: '1px' },
+  overlay: { position: "fixed", top: 0, left: 0, width: "100%", height: "100%", background: "rgba(0, 0, 0, 0.4)", zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center", backdropFilter: "blur(8px)" },
+  overlayBox: { border: `1px solid`, borderRadius: "30px", width: "95%", maxWidth: "500px", boxShadow: "0 30px 70px rgba(0,0,0,0.3)" },
+  overlayHeader: { padding: "25px 35px", display: "flex", justifyContent: "space-between", alignItems: "center" },
+  closeBtn: { background: "transparent", border: "none", fontSize: "1.8rem", cursor: "pointer" },
+  detailLabel: { fontSize: '11px', fontWeight: '900', display: 'block', marginBottom: '10px', textTransform: 'uppercase', letterSpacing: '1px' },
+  formInput: { border: `1px solid`, padding: "15px", borderRadius: "14px", width: "100%", outline: "none", marginBottom: "5px", fontWeight: "700", fontSize: '14px' },
 };
 
 export default WatchlistPageForm;

@@ -1,22 +1,12 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { FiShield, FiSearch, FiCheckCircle, FiTrash2, FiRefreshCcw, FiSend, FiChevronLeft, FiChevronRight } from "react-icons/fi";
+import { useTheme } from "../../context/ThemeContext";
 
-const BASE_URL = "https://localhost:44372/api";
-
-// Unified Light Theme Colors
-const COLORS = {
-  bg: "#ffffff",
-  textMain: "#0f172a",
-  textMuted: "#64748b",
-  electric: "#d3309a",
-  success: "#16a34a",
-  fail: "#dc2626",
-  border: "#e2e8f0",
-  glass: "#f8fafc",
-  inputBg: "#f1f5f9"
-};
+const BASE_URL = "https://localhost:7181/api";
 
 const ControlChecklist = () => {
+  const { currentColors, actualTheme } = useTheme();
   const [caseId, setCaseId] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(false);
@@ -38,18 +28,24 @@ const ControlChecklist = () => {
 
   const [scanResult, setScanResult] = useState(initialState);
 
+  // Dynamic Theme Logic
+  const accentColor = actualTheme === 'frost' ? "#34abe0" : "#d000f5";
+  
+  // MATCHING DASHBOARD BACKGROUND GRADIENT
+  const appBackground = actualTheme === 'dark' 
+    ? "linear-gradient(180deg, #2e003e 0%, #1a0620 100%)" 
+    : "linear-gradient(135deg, #fce7f3 0%, #e0f2fe 50%, #f0f9ff 100%)";
+
+  const glassStyle = { 
+    backdropFilter: "blur(12px)", 
+    border: `1px solid ${currentColors.border}`,
+    backgroundColor: actualTheme === 'dark' ? "rgba(255, 255, 255, 0.03)" : "rgba(255, 255, 255, 0.6)"
+  };
+
   useEffect(() => {
     fetchAuditHistory();
-    const style = document.createElement("style");
-    style.innerHTML = `
-      input::-webkit-outer-spin-button,
-      input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
-      input[type=number] { -moz-appearance: textfield; }
-    `;
-    document.head.appendChild(style);
   }, []);
 
-  // Instant Validation Logic
   useEffect(() => {
     const validateId = async () => {
       if (!caseId) {
@@ -86,7 +82,6 @@ const ControlChecklist = () => {
     }
   };
 
-  // Automated Compliance Scan
   const handleScan = async () => {
     setLoading(true);
     try {
@@ -116,7 +111,7 @@ const ControlChecklist = () => {
       await axios.post(`${BASE_URL}/ControlChecklist`, {
         caseID: parseInt(caseId),
         overallResult: scanResult.overall,
-        checkedBy: "Gangotri", //
+        checkedBy: "Gangotri",
         details: [
           { controlName: "KYC Verification", status: scanResult.kyc },
           { controlName: "Transaction Pattern", status: scanResult.transaction },
@@ -129,7 +124,6 @@ const ControlChecklist = () => {
     } catch (err) { setError("Push Failed"); }
   };
 
-  // PAGINATION LOGIC
   const filteredAudits = auditStream.filter(item => item.caseID.toString().includes(searchQuery));
   const indexOfLastRecord = currentPage * recordsPerPage;
   const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
@@ -137,96 +131,127 @@ const ControlChecklist = () => {
   const totalPages = Math.ceil(filteredAudits.length / recordsPerPage);
 
   return (
-    <div style={styles.container}>
-      <div style={styles.headerBanner}>
-        <div style={styles.iconBox}>🛡️</div>
-        <div style={styles.headerTextGroup}>
-          <h1 style={styles.mainTitle}>CONTROL<span style={styles.accentTitle}> CHECKLIST</span></h1>
-          <p style={styles.subTitle}>FRAUDSHIELD SECURE TERMINAL</p>
+    <div style={{ ...styles.wrapper, background: appBackground }}>
+      <div style={styles.contentBody}>
+        
+        {/* HEADER */}
+        <div style={styles.headerBanner}>
+          <div style={{ ...styles.iconBox, background: accentColor }}>
+            <FiShield size={24} color="white" />
+          </div>
+          <div style={styles.headerTextGroup}>
+            <h1 style={{ ...styles.mainTitle, color: currentColors.textPrimary }}>CONTROL<span style={{ color: accentColor }}> CHECKLIST</span></h1>
+            <p style={{ ...styles.subTitle, color: accentColor }}>AUDIT LOG & COMPLIANCE TERMINAL</p>
+          </div>
         </div>
-      </div>
 
-      {error && <div style={styles.alert}>{error}</div>}
-      
-      <div style={styles.layout}>
-        {/* NEW AUDIT ENTRY CARD */}
-        <div style={styles.card}>
-          <h3 style={styles.title}>Control Checklist Entry</h3>
-          <div style={styles.inputGroup}>
-            <input 
-              type="number" 
-              style={styles.input} 
-              value={caseId} 
-              onChange={(e) => setCaseId(e.target.value)} 
-              placeholder="Enter Case ID..." 
-            />
+        {error && (
+          <div style={{ ...styles.alert, borderColor: "#dc2626", color: "#dc2626", backgroundColor: actualTheme === 'dark' ? 'rgba(220, 38, 38, 0.1)' : 'rgba(220, 38, 38, 0.05)' }}>
+            {error}
+          </div>
+        )}
+        
+        <div style={styles.layout}>
+          {/* ENTRY CARD */}
+          <div style={{ ...styles.card, ...glassStyle }}>
+            <h3 style={{ ...styles.cardTitle, color: accentColor }}>New Audit Entry</h3>
+            <div style={styles.inputGroup}>
+              <input 
+                type="number" 
+                style={{ ...styles.input, backgroundColor: currentColors.appBg, color: currentColors.textPrimary, borderColor: currentColors.border }} 
+                value={caseId} 
+                onChange={(e) => setCaseId(e.target.value)} 
+                placeholder="Enter Case ID..." 
+              />
+              <button 
+                onClick={handleScan} 
+                disabled={!isValidCase || loading} 
+                style={{ ...styles.btn, background: accentColor, opacity: isValidCase ? 1 : 0.4 }}
+              >
+                {loading ? "..." : "SCAN"}
+              </button>
+            </div>
+
+            <div style={styles.scanBox}>
+              <Row label="KYC Verification" status={scanResult.kyc} themeColors={currentColors} accent={accentColor} />
+              <Row label="Transaction Pattern" status={scanResult.transaction} themeColors={currentColors} accent={accentColor} />
+              <Row label="Watchlist Entity" status={scanResult.watchlist} themeColors={currentColors} accent={accentColor} />
+            </div>
+
             <button 
-              onClick={handleScan} 
-              disabled={!isValidCase || loading} 
-              style={{...styles.btn, opacity: isValidCase ? 1 : 0.4}}
+              onClick={handlePush} 
+              disabled={!scanResult.readyToPush} 
+              style={{ ...styles.pushBtn, background: accentColor, opacity: scanResult.readyToPush ? 1 : 0.4 }}
             >
-              {loading ? "..." : "Verify"}
+              <FiSend style={{ marginRight: '8px' }} /> COMMIT TO LEDGER
             </button>
           </div>
-          <div style={styles.scanBox}>
-            <Row label="KYC Verification" status={scanResult.kyc} />
-            <Row label="Transaction Pattern" status={scanResult.transaction} />
-            <Row label="Watchlist Entity" status={scanResult.watchlist} />
-          </div>
-          <button 
-            onClick={handlePush} 
-            disabled={!scanResult.readyToPush} 
-            style={{...styles.pushBtn, opacity: scanResult.readyToPush ? 1 : 0.4}}
-          >
-            Commit Result
-          </button>
-        </div>
 
-        {/* AUDIT HISTORY CARD */}
-        <div style={styles.card}>
-          <div style={styles.headerRow}>
-            <h3 style={styles.title}>Control Checklist History</h3>
-            <input 
-              type="text" 
-              placeholder="Search Case ID..." 
-              style={styles.searchBar} 
-              value={searchQuery} 
-              onChange={(e) => setSearchQuery(e.target.value)} 
-            />
-          </div>
-          <table style={styles.table}>
-            <thead>
-              <tr style={styles.thRow}>
-                <th style={styles.th}>Case Details</th>
-                <th style={styles.th}>Overall Result</th>
-                <th style={styles.th}>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {currentRecords.map(item => (
-                <tr key={item.id} style={styles.tr}>
-                  <td style={styles.td}>Case #{item.caseID}</td>
-                  <td style={{...styles.td, fontWeight: "bold", color: item.overallResult === 'PASS' ? COLORS.success : COLORS.fail}}>
-                    {item.overallResult}
-                  </td>
-                  <td style={styles.td}>
-                    <button onClick={() => setCaseId(item.caseID.toString())} style={styles.actionBtn}>RE-ANALYZE</button>
-                    <button 
-                      onClick={() => { if(window.confirm("Delete record?")) axios.delete(`${BASE_URL}/ControlChecklist/${item.caseID}`).then(fetchAuditHistory); }} 
-                      style={styles.delBtn}
-                    >
-                      DELETE
-                    </button>
-                  </td>
+          {/* HISTORY CARD */}
+          <div style={{ ...styles.card, ...glassStyle }}>
+            <div style={styles.headerRow}>
+              <h3 style={{ ...styles.cardTitle, color: accentColor }}>Audit History</h3>
+              <div style={{ ...styles.searchWrapper, borderColor: currentColors.border, backgroundColor: currentColors.appBg }}>
+                <FiSearch size={14} style={{ color: currentColors.textSecondary, marginRight: '8px' }} />
+                <input 
+                  type="text" 
+                  placeholder="Filter cases..." 
+                  style={{ ...styles.searchBar, color: currentColors.textPrimary }} 
+                  value={searchQuery} 
+                  onChange={(e) => setSearchQuery(e.target.value)} 
+                />
+              </div>
+            </div>
+
+            <table style={styles.table}>
+              <thead>
+                <tr style={{ borderBottom: `1px solid ${currentColors.border}` }}>
+                  <th style={{ ...styles.th, color: currentColors.textSecondary }}>CASE ID</th>
+                  <th style={{ ...styles.th, color: currentColors.textSecondary }}>OUTCOME</th>
+                  <th style={{ ...styles.th, color: currentColors.textSecondary }}>ACTIONS</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-          
-          <div style={styles.pagination}>
-            <button onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))} disabled={currentPage === 1} style={styles.pageBtn}>PREV</button>
-            <span style={{fontSize: '12px', color: COLORS.textMuted}}>Page {currentPage} of {totalPages || 1}</span>
-            <button onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))} disabled={currentPage === totalPages || totalPages === 0} style={styles.pageBtn}>NEXT</button>
+              </thead>
+              <tbody>
+                {currentRecords.map(item => (
+                  <tr key={item.id} style={{ borderBottom: `1px solid ${currentColors.border}` }}>
+                    <td style={{ ...styles.td, color: currentColors.textPrimary }}>#{item.caseID}</td>
+                    <td style={{ ...styles.td }}>
+                      <span style={{ 
+                        fontWeight: "900", 
+                        fontSize: '11px',
+                        color: item.overallResult === 'PASS' ? "#16a34a" : "#dc2626",
+                        backgroundColor: item.overallResult === 'PASS' ? 'rgba(22, 163, 74, 0.1)' : 'rgba(220, 38, 38, 0.1)',
+                        padding: '4px 10px',
+                        borderRadius: '6px'
+                      }}>
+                        {item.overallResult}
+                      </span>
+                    </td>
+                    <td style={styles.td}>
+                      <button onClick={() => setCaseId(item.caseID.toString())} style={{ ...styles.actionBtn, borderColor: currentColors.border, color: currentColors.textPrimary }}>
+                        <FiRefreshCcw size={12} />
+                      </button>
+                      <button 
+                        onClick={() => { if(window.confirm("Delete record?")) axios.delete(`${BASE_URL}/ControlChecklist/${item.caseID}`).then(fetchAuditHistory); }} 
+                        style={styles.delBtn}
+                      >
+                        <FiTrash2 size={12} />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            
+            <div style={styles.pagination}>
+              <button onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))} disabled={currentPage === 1} style={{ ...styles.pageBtn, color: currentColors.textPrimary, borderColor: currentColors.border }}>
+                <FiChevronLeft />
+              </button>
+              <span style={{ fontSize: '12px', fontWeight: '700', color: currentColors.textSecondary }}>{currentPage} / {totalPages || 1}</span>
+              <button onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))} disabled={currentPage === totalPages || totalPages === 0} style={{ ...styles.pageBtn, color: currentColors.textPrimary, borderColor: currentColors.border }}>
+                <FiChevronRight />
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -234,54 +259,42 @@ const ControlChecklist = () => {
   );
 };
 
-const Row = ({ label, status }) => (
-  <div style={styles.row}>
-    <span style={{color: COLORS.textMain}}>{label}</span>
-    <span style={{fontWeight: '900', color: status === 'PASS' ? COLORS.success : status === 'FAIL' ? COLORS.fail : COLORS.textMuted}}>
+const Row = ({ label, status, themeColors, accent }) => (
+  <div style={{ ...styles.row, backgroundColor: themeColors.appBg, borderColor: themeColors.border }}>
+    <span style={{ color: themeColors.textPrimary, fontWeight: '600' }}>{label}</span>
+    <span style={{ fontWeight: '900', color: status === 'PASS' ? "#16a34a" : status === 'FAIL' ? "#dc2626" : themeColors.textSecondary }}>
       {status}
     </span>
   </div>
 );
 
 const styles = {
-  container: { background: COLORS.bg, minHeight: "100vh", color: COLORS.textMain, padding: "40px" },
-  
-  headerBanner: { display: "flex", alignItems: "center", gap: "20px", marginBottom: "40px" },
-  iconBox: { 
-    width: "60px", 
-    height: "60px", 
-    background: COLORS.electric, 
-    borderRadius: "15px", 
-    display: "flex", 
-    alignItems: "center", 
-    justifyContent: "center", 
-    fontSize: "30px",
-    boxShadow: "0 4px 15px rgba(211, 48, 154, 0.2)" 
-  },
+  wrapper: { minHeight: "100vh", width: "100%", display: "flex", flexDirection: "column" },
+  contentBody: { padding: "40px" },
+  headerBanner: { display: "flex", alignItems: "center", gap: "18px", marginBottom: "35px" },
+  iconBox: { width: "50px", height: "50px", borderRadius: "12px", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 4px 15px rgba(0,0,0,0.1)" },
   headerTextGroup: { display: "flex", flexDirection: "column" },
-  mainTitle: { margin: 0, fontSize: "28px", fontWeight: "900", letterSpacing: "1px", color: COLORS.textMain },
-  accentTitle: { color: COLORS.electric },
-  subTitle: { margin: 0, fontSize: "11px", letterSpacing: "2px", color: COLORS.electric, fontWeight: "bold", marginTop: "4px" },
-
-  alert: { background: "#fef2f2", border: `1px solid ${COLORS.fail}`, color: COLORS.fail, padding: "12px", borderRadius: "10px", marginBottom: "20px", fontSize: "13px" },
-  layout: { display: "grid", gridTemplateColumns: "380px 1fr", gap: "30px" },
-  card: { background: COLORS.glass, border: `1px solid ${COLORS.border}`, borderRadius: "24px", padding: "30px", boxShadow: "0 2px 10px rgba(0,0,0,0.02)" },
-  title: { color: COLORS.electric, fontSize: "16px", fontWeight: "700", marginBottom: "20px", textTransform: "uppercase" },
-  headerRow: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' },
-  searchBar: { background: COLORS.bg, border: `1px solid ${COLORS.border}`, borderRadius: "8px", padding: "8px 12px", color: COLORS.textMain, fontSize: "13px" },
-  inputGroup: { display: 'flex', gap: '10px', marginBottom: '20px' },
-  input: { flex: 1, background: COLORS.inputBg, border: `1px solid ${COLORS.border}`, borderRadius: "10px", padding: "12px", color: COLORS.textMain, fontWeight: "600" },
-  btn: { background: COLORS.textMain, border: "none", color: "white", borderRadius: "10px", padding: "0 20px", cursor: "pointer", fontWeight: "600", textTransform: "uppercase", fontSize: "11px" },
-  row: { display: "flex", justifyContent: "space-between", background: COLORS.bg, border: `1px solid ${COLORS.border}`, padding: "14px", borderRadius: "12px", marginBottom: "10px", fontSize: "13px" },
-  pushBtn: { width: "100%", padding: "16px", borderRadius: "12px", background: COLORS.electric, color: "white", fontWeight: "bold", border: "none", cursor: "pointer", marginTop: "10px", transition: "transform 0.2s" },
+  mainTitle: { margin: 0, fontSize: "24px", fontWeight: "900" },
+  subTitle: { margin: 0, fontSize: "11px", letterSpacing: "1.5px", fontWeight: "800", marginTop: "2px" },
+  alert: { border: `1px solid`, padding: "12px 18px", borderRadius: "12px", marginBottom: "25px", fontSize: "13px", fontWeight: "600" },
+  layout: { display: "grid", gridTemplateColumns: "400px 1fr", gap: "30px" },
+  card: { padding: "35px", borderRadius: "24px", boxShadow: "0 10px 40px rgba(0,0,0,0.04)" },
+  cardTitle: { fontSize: "14px", fontWeight: "800", marginBottom: "25px", textTransform: "uppercase", letterSpacing: '1px' },
+  headerRow: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '25px' },
+  searchWrapper: { display: 'flex', alignItems: 'center', border: '1px solid', borderRadius: '12px', padding: '8px 15px', width: '250px' },
+  searchBar: { background: 'transparent', border: 'none', fontSize: '13px', outline: 'none', width: '100%', fontWeight: '600' },
+  inputGroup: { display: 'flex', gap: '10px', marginBottom: '30px' },
+  input: { flex: 1, border: `1px solid`, borderRadius: "14px", padding: "14px", outline: 'none', fontSize: "14px", fontWeight: "700" },
+  btn: { border: "none", color: "white", borderRadius: "14px", padding: "0 25px", cursor: "pointer", fontWeight: "900", fontSize: "12px" },
+  row: { display: "flex", justifyContent: "space-between", border: `1px solid`, padding: "16px 20px", borderRadius: "16px", marginBottom: "15px", fontSize: "14px" },
+  pushBtn: { width: "100%", padding: "18px", borderRadius: "16px", color: "white", fontWeight: "900", border: "none", cursor: "pointer", marginTop: "10px", fontSize: '13px', display: 'flex', alignItems: 'center', justifyContent: 'center' },
   table: { width: "100%", borderCollapse: "collapse" },
-  th: { textAlign: "left", padding: "15px", color: COLORS.textMuted, fontSize: "11px", textTransform: "uppercase", letterSpacing: "1px" },
-  tr: { borderBottom: `1px solid ${COLORS.border}`, transition: "background 0.2s" },
-  td: { padding: "15px", fontSize: "14px", color: COLORS.textMain },
-  actionBtn: { background: "transparent", border: `1px solid ${COLORS.border}`, color: COLORS.textMain, padding: "6px 12px", borderRadius: "6px", marginRight: '8px', cursor: "pointer", fontSize: "11px", fontWeight: "600" },
-  delBtn: { background: "#fff1f2", border: `1px solid ${COLORS.fail}`, color: COLORS.fail, padding: "6px 12px", borderRadius: "6px", cursor: "pointer", fontSize: "11px", fontWeight: "600" },
-  pagination: { display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '20px', marginTop: '20px' },
-  pageBtn: { background: COLORS.bg, border: `1px solid ${COLORS.border}`, color: COLORS.textMain, padding: "6px 16px", borderRadius: "8px", cursor: "pointer", fontWeight: "600", fontSize: "11px" }
+  th: { textAlign: "left", padding: "15px", fontSize: "11px", fontWeight: "800", textTransform: "uppercase", letterSpacing: "1.5px" },
+  td: { padding: "18px 15px", fontSize: "14px", fontWeight: '600' },
+  actionBtn: { background: "transparent", border: `1px solid`, padding: "8px", borderRadius: "10px", marginRight: '8px', cursor: "pointer", display: 'inline-flex', alignItems: 'center' },
+  delBtn: { background: "rgba(220, 38, 38, 0.1)", border: "none", color: "#dc2626", padding: "8px", borderRadius: "10px", cursor: "pointer", display: 'inline-flex', alignItems: 'center' },
+  pagination: { display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '15px', marginTop: '30px' },
+  pageBtn: { background: "transparent", border: `1px solid`, padding: "8px", borderRadius: "10px", cursor: "pointer", display: 'flex', alignItems: 'center' }
 };
 
 export default ControlChecklist;

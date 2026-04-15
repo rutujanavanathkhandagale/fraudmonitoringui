@@ -1,26 +1,14 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
+import { FiSearch, FiEdit2, FiTrash2, FiAlertCircle, FiCheck, FiFileText, FiX } from "react-icons/fi";
+import { useTheme } from "../../context/ThemeContext";
 
 const API_BASE = "https://localhost:44372/api/RegulatoryReport";
 const CASE_API = "https://localhost:44372/api/Case";
 
-// Updated Light Theme Colors
-const COLORS = {
-  bg: "#ffffff",
-  textMain: "#0f172a",
-  textMuted: "#64748b",
-  electric: "#d3309a",
-  success: "#16a34a",
-  info: "#3b82f6", 
-  warning: "#f59e0b",
-  error: "#dc2626",
-  border: "#e2e8f0",
-  glass: "#f8fafc",
-  inputBg: "#f1f5f9"
-};
-
 function RegulatoryReport() {
+  const { currentColors, actualTheme } = useTheme();
   const [reports, setReports] = useState([]);
   const [searchId, setSearchId] = useState("");
   const [loading, setLoading] = useState(false);
@@ -35,26 +23,25 @@ function RegulatoryReport() {
     status: "Pending"
   });
 
-  // Global style to clean up number inputs
-  useEffect(() => {
-    const style = document.createElement('style');
-    style.innerHTML = `
-      input::-webkit-outer-spin-button,
-      input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
-      input[type=number] { -moz-appearance: textfield; }
-    `;
-    document.head.appendChild(style);
-    return () => document.head.removeChild(style);
-  }, []);
+  // Unified Theme Logic
+  const accentColor = actualTheme === 'frost' ? "#34abe0" : "#d000f5";
+  
+  const appBackground = actualTheme === 'dark' 
+    ? "linear-gradient(180deg, #2e003e 0%, #1a0620 100%)" 
+    : "linear-gradient(135deg, #fce7f3 0%, #e0f2fe 50%, #f0f9ff 100%)";
+
+  const glassEffect = { 
+    backdropFilter: "blur(12px)", 
+    border: `1px solid ${currentColors.border}`,
+    backgroundColor: actualTheme === 'dark' ? "rgba(255, 255, 255, 0.03)" : "rgba(255, 255, 255, 0.6)"
+  };
 
   useEffect(() => {
     fetchAllReports();
   }, []);
 
   useEffect(() => {
-    if (searchId === "") {
-      fetchAllReports();
-    }
+    if (searchId === "") fetchAllReports();
   }, [searchId]);
 
   const notify = (msg, type = "success") => {
@@ -82,9 +69,7 @@ function RegulatoryReport() {
     } catch (err) {
       setReports([]);
       if(searchId) notify("No report found for this ID", "error");
-    } finally {
-      setLoading(false);
-    }
+    } finally { setLoading(false); }
   };
 
   const prepareEdit = (report) => {
@@ -108,21 +93,20 @@ function RegulatoryReport() {
     try {
       if (isEditing) {
         if (formData.reportType === originalData.reportType && formData.status === originalData.status) {
-          notify("NO UPDATION: No changes detected.", "warning");
+          notify("No changes detected.", "warning");
           setLoading(false);
           return;
         }
-
         await axios.put(`${API_BASE}/case/${targetCaseId}`, { 
             reportType: formData.reportType, 
             status: formData.status 
         });
-        notify("SUCCESS: Registry updated.", "success");
+        notify("Registry updated successfully.", "success");
       } else {
         if (!caseValid) throw new Error(`Case ID #${targetCaseId} not found.`);
         const dupCheck = await axios.get(`${API_BASE}/case/${targetCaseId}`);
         const alreadyExists = Array.isArray(dupCheck.data) ? dupCheck.data.length > 0 : !!dupCheck.data;
-        if (alreadyExists) throw new Error(`DENIED: Report already exists for Case #${targetCaseId}`);
+        if (alreadyExists) throw new Error(`Report already exists for Case #${targetCaseId}`);
 
         await axios.post(API_BASE, { 
           ...formData, 
@@ -130,15 +114,13 @@ function RegulatoryReport() {
           period: "Weekly",
           submittedDate: new Date().toISOString()
         });
-        notify("SUCCESS: Report added to registry.", "success");
+        notify("Report added to registry.", "success");
       }
       resetForm();
       fetchAllReports();
     } catch (err) {
-      notify(err.message || "SYSTEM ERROR: API Transmission failed.", "error");
-    } finally {
-      setLoading(false);
-    }
+      notify(err.message || "API Transmission failed.", "error");
+    } finally { setLoading(false); }
   };
 
   const handleDelete = async (caseId) => {
@@ -146,13 +128,11 @@ function RegulatoryReport() {
     setLoading(true);
     try {
       await axios.delete(`${API_BASE}/case/${caseId}`);
-      notify(`PURGED: Case #${caseId} deleted.`, "warning");
+      notify(`Case #${caseId} deleted from records.`, "warning");
       fetchAllReports();
     } catch (err) {
-      notify("DELETE FAILED: Server rejection.", "error");
-    } finally {
-      setLoading(false);
-    }
+      notify("Delete failed: Server rejection.", "error");
+    } finally { setLoading(false); }
   };
 
   const resetForm = () => {
@@ -162,16 +142,25 @@ function RegulatoryReport() {
     setFormData({ caseID: "", reportType: "SAR", status: "Pending" });
   };
 
+  const getStatusStyle = (status) => {
+    switch(status) {
+      case 'Submitted': return { bg: 'rgba(22, 163, 74, 0.1)', text: '#16a34a' };
+      case 'Approved': return { bg: 'rgba(59, 130, 246, 0.1)', text: '#3b82f6' };
+      default: return { bg: 'rgba(245, 158, 11, 0.1)', text: '#f59e0b' };
+    }
+  };
+
   return (
-    <div style={styles.wrapper}>
+    <div style={{ ...styles.wrapper, background: appBackground, color: currentColors.textPrimary }}>
       <AnimatePresence>
         {notification.show && (
           <motion.div 
             initial={{ y: -50, x: "-50%", opacity: 0 }}
             animate={{ y: 20, x: "-50%", opacity: 1 }}
             exit={{ y: -50, x: "-50%", opacity: 0 }}
-            style={{...styles.popup, borderBottom: `3px solid ${COLORS[notification.type]}`}}
+            style={{ ...styles.popup, backgroundColor: currentColors.cardBg, color: currentColors.textPrimary, borderColor: currentColors.border, backdropFilter: "blur(10px)" }}
           >
+            <div style={{ ...styles.popBar, background: notification.type === 'error' ? '#dc2626' : notification.type === 'warning' ? '#f59e0b' : '#16a34a' }} />
             {notification.msg}
           </motion.div>
         )}
@@ -179,21 +168,30 @@ function RegulatoryReport() {
 
       <div className="container-fluid">
         <header style={styles.header}>
-            <h2 style={styles.logoText}>REGULATORY <span style={{color: COLORS.electric}}>REPORT</span></h2>
-            <small style={styles.subLogo}>COMPLIANCE AUDIT TERMINAL</small>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+                <div style={{ ...styles.iconBox, background: accentColor }}>
+                    <FiFileText color="white" size={24} />
+                </div>
+                <div>
+                    <h2 style={{ ...styles.logoText, color: currentColors.textPrimary }}>REGULATORY <span style={{ color: accentColor }}>REPORT</span></h2>
+                    <small style={{ ...styles.subLogo, color: accentColor }}>COMPLIANCE AUDIT TERMINAL</small>
+                </div>
+            </div>
         </header>
 
         <div className="row g-4">
           <div className="col-lg-4">
-            <motion.div style={styles.glassCard} layout>
-              <h5 style={styles.cardTitle}>{isEditing ? "Modify Entry" : "Registry Entry"}</h5>
+            <motion.div style={{ ...styles.glassCard, ...glassEffect }} layout>
+              <h5 style={{ ...styles.cardTitle, color: accentColor }}>{isEditing ? "Modify Entry" : "Registry Entry"}</h5>
               <form onSubmit={handleSave}>
                 <div className="mb-3">
-                  <label style={styles.label}>CASE ID</label>
+                  <label style={{ ...styles.label, color: accentColor }}>CASE ID</label>
                   <input 
                     style={{
                       ...styles.input, 
-                      borderColor: caseValid === true ? COLORS.success : caseValid === false ? COLORS.error : COLORS.border
+                      backgroundColor: currentColors.appBg,
+                      color: currentColors.textPrimary,
+                      borderColor: caseValid === true ? "#16a34a" : caseValid === false ? "#dc2626" : currentColors.border
                     }} 
                     type="number" 
                     value={formData.caseID} 
@@ -202,21 +200,25 @@ function RegulatoryReport() {
                     disabled={isEditing} 
                     required 
                   />
-                  {caseValid === false && <small style={{color: COLORS.error, fontSize: '10px', fontWeight: 'bold'}}>Case ID invalid</small>}
+                  {caseValid === false && <small style={{ color: "#dc2626", fontSize: '10px', fontWeight: 'bold' }}>Case ID invalid</small>}
                 </div>
 
                 <div className="mb-3">
-                  <label style={styles.label}>REPORT TYPE</label>
-                  <select style={styles.select} value={formData.reportType} onChange={(e) => setFormData({...formData, reportType: e.target.value})}>
+                  <label style={{ ...styles.label, color: accentColor }}>REPORT TYPE</label>
+                  <select 
+                    style={{ ...styles.select, backgroundColor: currentColors.appBg, color: currentColors.textPrimary, borderColor: currentColors.border }} 
+                    value={formData.reportType} 
+                    onChange={(e) => setFormData({...formData, reportType: e.target.value})}
+                  >
                     <option value="SAR">SAR (Suspicious Activity)</option>
                     <option value="STR">STR (Suspicious Transaction)</option>
                   </select>
                 </div>
 
                 <div className="mb-4">
-                  <label style={styles.label}>REPORT STATUS</label>
+                  <label style={{ ...styles.label, color: accentColor }}>REPORT STATUS</label>
                   <select 
-                    style={{...styles.select, borderLeft: `4px solid ${formData.status === 'Submitted' ? COLORS.success : formData.status === 'Approved' ? COLORS.info : COLORS.warning}`}} 
+                    style={{ ...styles.select, backgroundColor: currentColors.appBg, color: currentColors.textPrimary, borderColor: currentColors.border }} 
                     value={formData.status} 
                     onChange={(e) => setFormData({...formData, status: e.target.value})}
                   >
@@ -226,65 +228,83 @@ function RegulatoryReport() {
                   </select>
                 </div>
 
-                <button style={styles.mainBtn} type="submit" disabled={loading}>
-                  {loading ? "..." : isEditing ? "UPDATE REGISTRY" : "ADD TO REGISTRY"}
+                <button style={{ ...styles.mainBtn, background: accentColor }} type="submit" disabled={loading}>
+                  {loading ? "PROCESSING..." : isEditing ? "UPDATE REGISTRY" : "ADD TO REGISTRY"}
                 </button>
-                {isEditing && <button onClick={resetForm} style={styles.cancelBtn}>CANCEL EDIT</button>}
+                {isEditing && (
+                    <button onClick={resetForm} type="button" style={{ ...styles.cancelBtn, color: currentColors.textSecondary, borderColor: currentColors.border }}>
+                        <FiX style={{ marginRight: '5px' }} /> CANCEL EDIT
+                    </button>
+                )}
               </form>
             </motion.div>
           </div>
 
           <div className="col-lg-8">
-            <motion.div style={styles.glassCard}>
+            <motion.div style={{ ...styles.glassCard, ...glassEffect }}>
               <div style={styles.tableHeader}>
-                <h5 style={{...styles.cardTitle, margin: 0}}>Audit History</h5>
+                <h5 style={{ ...styles.cardTitle, color: accentColor, margin: 0 }}>Audit History</h5>
                 
-                <div style={styles.searchBox}>
+                <div style={{ ...styles.searchBox, backgroundColor: currentColors.appBg, borderColor: currentColors.border }}>
+                  <FiSearch style={{ color: currentColors.textSecondary, marginLeft: '12px' }} />
                   <input 
                     type="number" 
                     placeholder="Case ID Search..." 
-                    style={styles.searchInput}
+                    style={{ ...styles.searchInput, color: currentColors.textPrimary }}
                     value={searchId}
                     onChange={(e) => setSearchId(e.target.value)}
                   />
-                  <button style={styles.searchBtn} onClick={fetchAllReports}>🔍</button>
                 </div>
               </div>
 
               <div style={styles.tableArea}>
-                <table className="table" style={{ color: COLORS.textMain }}>
+                <table className="table" style={{ color: currentColors.textPrimary, background: 'transparent' }}>
                   <thead>
-                    <tr>
-                      <th style={styles.th}>RECORD INFO</th>
-                      <th style={styles.th}>STATUS</th>
-                      <th style={styles.th} className="text-end">ACTIONS</th>
+                    <tr style={{ borderBottom: `1px solid ${currentColors.border}` }}>
+                      <th style={{ ...styles.th, color: currentColors.textSecondary }}>RECORD INFO</th>
+                      <th style={{ ...styles.th, color: currentColors.textSecondary }}>STATUS</th>
+                      <th style={{ ...styles.th, color: currentColors.textSecondary }} className="text-end">ACTIONS</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {reports.map((r) => (
-                      <tr key={r.reportID || r.reportId} style={{ borderBottom: `1px solid ${COLORS.border}` }}>
-                        <td style={{ padding: "15px 0" }}>
-                          <div style={{ fontWeight: "800", color: COLORS.textMain }}>CASE #{r.caseID || r.caseId}</div>
-                          <small style={{ color: COLORS.textMuted, fontWeight: "600" }}>{r.reportType}</small>
-                        </td>
-                        <td style={{ verticalAlign: "middle" }}>
-                          <span style={
-                              r.status === "Submitted" ? styles.badgeSuccess : 
-                              r.status === "Approved" ? styles.badgeInfo : styles.badgePending
-                          }>
-                            {r.status.toUpperCase()}
-                          </span>
-                        </td>
-                        <td className="text-end" style={{ verticalAlign: "middle" }}>
-                          <button style={styles.editBtn} onClick={() => prepareEdit(r)}>✏️</button>
-                          <button style={styles.deleteBtn} onClick={() => handleDelete(r.caseID || r.caseId)}>🗑️</button>
-                        </td>
-                      </tr>
-                    ))}
+                    {reports.map((r) => {
+                      const s = getStatusStyle(r.status);
+                      return (
+                        <tr key={r.reportID || r.reportId} style={{ borderBottom: `1px solid ${currentColors.border}` }}>
+                          <td style={{ padding: "18px 0" }}>
+                            <div style={{ fontWeight: "800" }}>CASE #{r.caseID || r.caseId}</div>
+                            <small style={{ color: currentColors.textSecondary, fontWeight: "700" }}>{r.reportType}</small>
+                          </td>
+                          <td style={{ verticalAlign: "middle" }}>
+                            <span style={{ 
+                                backgroundColor: s.bg, 
+                                color: s.text, 
+                                padding: "6px 12px", 
+                                borderRadius: "8px", 
+                                fontSize: "10px", 
+                                fontWeight: "900" 
+                            }}>
+                              {r.status.toUpperCase()}
+                            </span>
+                          </td>
+                          <td className="text-end" style={{ verticalAlign: "middle" }}>
+                            <button style={{ ...styles.actionBtn, color: currentColors.textPrimary, borderColor: currentColors.border }} onClick={() => prepareEdit(r)}>
+                                <FiEdit2 size={14} />
+                            </button>
+                            <button style={styles.deleteBtn} onClick={() => handleDelete(r.caseID || r.caseId)}>
+                                <FiTrash2 size={14} />
+                            </button>
+                          </td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
                 {reports.length === 0 && !loading && (
-                    <div style={{textAlign: 'center', color: COLORS.textMuted, padding: '40px', fontWeight: 'bold'}}>No Records Found.</div>
+                    <div style={{ textAlign: 'center', color: currentColors.textSecondary, padding: '60px' }}>
+                        <FiAlertCircle size={30} style={{ marginBottom: '10px', opacity: 0.5 }} />
+                        <div style={{ fontWeight: '800', fontSize: '13px' }}>NO REGULATORY RECORDS FOUND</div>
+                    </div>
                 )}
               </div>
             </motion.div>
@@ -296,29 +316,27 @@ function RegulatoryReport() {
 }
 
 const styles = {
-  wrapper: { background: COLORS.bg, minHeight: "100vh", color: COLORS.textMain, padding: "40px" },
-  popup: { position: "fixed", top: "0", left: "50%", zIndex: 9999, background: "white", color: COLORS.textMain, padding: "15px 30px", borderRadius: "12px", boxShadow: "0 10px 40px rgba(0,0,0,0.1)", fontWeight: "800", fontSize: "12px", minWidth: "350px", textAlign: "center", border: `1px solid ${COLORS.border}` },
+  wrapper: { minHeight: "100vh", padding: "40px" },
+  popup: { position: "fixed", top: "20px", left: "50%", zIndex: 9999, padding: "16px 30px", borderRadius: "12px", boxShadow: "0 20px 40px rgba(0,0,0,0.2)", fontWeight: "800", fontSize: "12px", minWidth: "350px", textAlign: "center", border: `1px solid`, overflow: 'hidden' },
+  popBar: { position: 'absolute', top: 0, left: 0, width: '100%', height: '4px' },
   header: { marginBottom: "40px" },
-  logoText: { margin: 0, fontWeight: "900", letterSpacing: "1px", color: COLORS.textMain },
-  subLogo: { color: COLORS.electric, fontSize: "10px", fontWeight: "bold", letterSpacing: "2px" },
-  glassCard: { background: COLORS.glass, border: `1px solid ${COLORS.border}`, padding: "30px", borderRadius: "24px", boxShadow: "0 4px 15px rgba(0,0,0,0.02)" },
-  cardTitle: { fontWeight: "800", color: COLORS.textMain, marginBottom: "25px", textTransform: "uppercase", fontSize: "14px", letterSpacing: "1px" },
-  label: { fontSize: "10px", fontWeight: "bold", color: COLORS.electric, marginBottom: "8px", display: "block", letterSpacing: "1px" },
-  input: { width: "100%", background: COLORS.inputBg, border: `1px solid ${COLORS.border}`, borderRadius: "10px", padding: "12px", color: COLORS.textMain, outline: "none", fontWeight: "600" },
-  select: { width: "100%", background: "white", border: `1px solid ${COLORS.border}`, borderRadius: "10px", padding: "12px", color: COLORS.textMain, cursor: "pointer", fontWeight: "600" },
-  mainBtn: { width: "100%", padding: "14px", borderRadius: "12px", border: "none", background: COLORS.textMain, color: "white", fontWeight: "bold", cursor: "pointer", marginTop: "10px", fontSize: "12px" },
-  cancelBtn: { width: "100%", background: "transparent", border: `1px solid ${COLORS.border}`, color: COLORS.textMuted, padding: "10px", borderRadius: "10px", marginTop: "10px", cursor: "pointer", fontWeight: "bold", fontSize: "11px" },
+  iconBox: { width: '50px', height: '50px', borderRadius: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 8px 20px rgba(0,0,0,0.1)' },
+  logoText: { margin: 0, fontWeight: "900" },
+  subLogo: { fontSize: "10px", fontWeight: "800", letterSpacing: "2px", textTransform: 'uppercase' },
+  glassCard: { padding: "35px", borderRadius: "24px", boxShadow: "0 10px 40px rgba(0,0,0,0.04)" },
+  cardTitle: { fontWeight: "800", marginBottom: "25px", textTransform: "uppercase", fontSize: "14px", letterSpacing: "1.5px" },
+  label: { fontSize: "11px", fontWeight: "900", marginBottom: "8px", display: "block", letterSpacing: "1px" },
+  input: { width: "100%", border: `1px solid`, borderRadius: "14px", padding: "14px", outline: "none", fontWeight: "700", fontSize: '14px' },
+  select: { width: "100%", border: `1px solid`, borderRadius: "14px", padding: "14px", cursor: "pointer", fontWeight: "700", outline: 'none', fontSize: '14px' },
+  mainBtn: { width: "100%", padding: "16px", borderRadius: "14px", border: "none", color: "white", fontWeight: "900", cursor: "pointer", marginTop: "10px", fontSize: "12px", letterSpacing: '1px' },
+  cancelBtn: { width: "100%", background: "transparent", border: `1px solid`, padding: "12px", borderRadius: "14px", marginTop: "12px", cursor: "pointer", fontWeight: "800", fontSize: "11px", display: 'flex', alignItems: 'center', justifyContent: 'center' },
   tableArea: { maxHeight: "550px", overflowY: "auto" },
-  th: { fontSize: "10px", color: COLORS.textMuted, border: "none", paddingBottom: "15px", letterSpacing: "1px" },
-  badgePending: { background: "#fffbeb", color: COLORS.warning, padding: "6px 12px", borderRadius: "8px", fontSize: "10px", fontWeight: "900" },
-  badgeSuccess: { background: "#f0fdf4", color: COLORS.success, padding: "6px 12px", borderRadius: "8px", fontSize: "10px", fontWeight: "900" },
-  badgeInfo: { background: "#eff6ff", color: COLORS.info, padding: "6px 12px", borderRadius: "8px", fontSize: "10px", fontWeight: "900" },
-  editBtn: { background: "white", border: `1px solid ${COLORS.border}`, color: COLORS.textMain, padding: "8px 12px", borderRadius: "8px", cursor: "pointer", marginRight: "8px" },
-  deleteBtn: { background: "transparent", border: `1px solid ${COLORS.error}`, color: COLORS.error, padding: "8px 12px", borderRadius: "8px", cursor: "pointer" },
-  tableHeader: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "25px", flexWrap: "wrap", gap: "15px" },
-  searchBox: { display: "flex", background: COLORS.inputBg, borderRadius: "10px", border: `1px solid ${COLORS.border}`, overflow: "hidden", width: "260px" },
-  searchInput: { background: "transparent", border: "none", padding: "10px 15px", color: COLORS.textMain, outline: "none", fontSize: "13px", width: "100%", fontWeight: "600" },
-  searchBtn: { background: "white", border: "none", color: COLORS.textMain, padding: "0 15px", cursor: "pointer", borderLeft: `1px solid ${COLORS.border}` }
+  th: { fontSize: "11px", fontWeight: '800', border: "none", paddingBottom: "15px", letterSpacing: "1.5px" },
+  actionBtn: { background: "transparent", border: `1px solid`, padding: "8px 12px", borderRadius: "10px", cursor: "pointer", marginRight: "8px" },
+  deleteBtn: { background: "rgba(220, 38, 38, 0.1)", border: "none", color: "#dc2626", padding: "8px 12px", borderRadius: "10px", cursor: "pointer" },
+  tableHeader: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "30px", flexWrap: "wrap", gap: "15px" },
+  searchBox: { display: "flex", alignItems: 'center', borderRadius: "14px", border: `1px solid`, overflow: "hidden", width: "280px" },
+  searchInput: { background: "transparent", border: "none", padding: "12px 15px", outline: "none", fontSize: "14px", width: "100%", fontWeight: "700" }
 };
 
 export default RegulatoryReport;

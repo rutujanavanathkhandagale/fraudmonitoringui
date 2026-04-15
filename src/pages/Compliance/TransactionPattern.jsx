@@ -1,25 +1,32 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
-
-const COLORS = {
-  bg: "#ffffff",
-  textMain: "#0f172a",
-  textMuted: "#64748b",
-  electric: "#d3309a",
-  glow: "#a020f0",
-  success: "#16a34a",
-  danger: "#dc2626",
-  border: "#e2e8f0",
-  cardBg: "#f8fafc",
-  inputBg: "#f1f5f9"
-};
+import { 
+  FiShield, FiSearch, FiActivity, FiAlertTriangle, 
+  FiInfo, FiBarChart2 
+} from "react-icons/fi";
+import { useTheme } from "../../context/ThemeContext";
 
 const TransactionPattern = () => {
   const [customerId, setCustomerId] = useState("");
   const [transactionId, setTransactionId] = useState("");
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
+
+  const { currentColors, actualTheme } = useTheme();
+
+  // Unified Theme Logic
+  const accentColor = actualTheme === 'frost' ? "#34abe0" : "#d000f5";
+  
+  const appBackground = actualTheme === 'dark' 
+    ? "linear-gradient(180deg, #2e003e 0%, #1a0620 100%)" 
+    : "linear-gradient(135deg, #fce7f3 0%, #e0f2fe 50%, #f0f9ff 100%)";
+
+  const glassStyle = { 
+    backdropFilter: "blur(12px)", 
+    border: `1px solid ${currentColors.border}`,
+    backgroundColor: actualTheme === 'dark' ? "rgba(255, 255, 255, 0.03)" : "rgba(255, 255, 255, 0.6)"
+  };
 
   const handleAudit = async (e) => {
     if (e) e.preventDefault();
@@ -35,112 +42,93 @@ const TransactionPattern = () => {
   };
 
   return (
-    <div style={styles.wrapper}>
-      <div style={styles.container}>
+    <div style={{ ...styles.wrapper, background: appBackground, color: currentColors.textPrimary }}>
+      <div style={styles.contentBody}>
         
-        {/* TOP SEARCH BAR */}
-        <div style={styles.searchBar}>
+        {/* HEADER SEARCH TERMINAL */}
+        <header style={{ ...styles.searchBar, ...glassStyle }}>
           <div style={styles.logoGroup}>
-            <div style={styles.miniShield}>🛡️</div>
+            <div style={{ ...styles.miniShield, background: accentColor }}>
+              <FiShield size={22} color="white" />
+            </div>
             <div>
-              <div style={{ fontSize: '14px', fontWeight: '900', letterSpacing: '1px', color: COLORS.textMain }}>Transaction Pattern</div>
-              <div style={{ fontSize: '9px', fontWeight: '800', color: COLORS.electric, textTransform: 'uppercase' }}>Compliance Officer Terminal</div>
+              <div style={{ fontSize: '16px', fontWeight: '900', letterSpacing: '0.5px' }}>TRANSACTION PATTERN</div>
+              <div style={{ fontSize: '10px', fontWeight: '800', color: accentColor, textTransform: 'uppercase', letterSpacing: '1px' }}>Compliance Terminal</div>
             </div>
           </div>
+          
           <form onSubmit={handleAudit} style={styles.formInline}>
             <input 
-              style={styles.input} 
+              style={{ ...styles.input, backgroundColor: currentColors.appBg, color: currentColors.textPrimary, borderColor: currentColors.border }} 
               placeholder="Customer ID" 
               value={customerId}
               onChange={(e) => setCustomerId(e.target.value)} 
             />
             <input 
-              style={styles.input} 
+              style={{ ...styles.input, backgroundColor: currentColors.appBg, color: currentColors.textPrimary, borderColor: currentColors.border }} 
               placeholder="Transaction ID" 
               value={transactionId}
               onChange={(e) => setTransactionId(e.target.value)} 
             />
-            <button style={styles.primaryBtn}>{loading ? "SCANNING..." : "RUN AUDIT"}</button>
+            <button style={{ ...styles.primaryBtn, background: accentColor }}>
+              {loading ? "SCANNING..." : <><FiSearch className="me-2" /> RUN AUDIT</>}
+            </button>
           </form>
-        </div>
+        </header>
 
         <AnimatePresence>
           {result && (
-            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
-              
-              {/* MAIN THREE-COLUMN GRID */}
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
               <div style={styles.dashboardGrid}>
                 
-                {/* COLUMN 1: SPECIFIC TRANSACTION DATA */}
-                <div style={styles.card}>
-                  <label style={styles.cardLabel}>SPECIFIC TRANSACTION</label>
+                {/* CARD 1: TRANSACTION DATA */}
+                <div style={{ ...styles.card, ...glassStyle }}>
+                  <label style={{ ...styles.cardLabel, color: currentColors.textSecondary }}><FiInfo className="me-2" size={14} /> CURRENT ANALYSIS</label>
                   <div style={styles.statusHeader}>
-                    <h1 style={{ color: result.transactionResult === "PASS" ? COLORS.success : COLORS.danger, fontWeight: '900', margin: 0 }}>
-                      {result.transactionResult}
-                    </h1>
-                    <span style={styles.subStatus}>{result.transactionStatus}</span>
+                    <h2 style={{ color: result.transactionResult === "PASS" ? "#10b981" : "#ef4444", fontWeight: '900', fontSize: '2.5rem', marginBottom: '5px' }}>{result.transactionResult}</h2>
+                    <span style={{ fontSize: '12px', fontWeight: '800', opacity: 0.7, textTransform: 'uppercase', letterSpacing: '0.5px' }}>{result.transactionStatus}</span>
                   </div>
-
                   <div style={styles.dataList}>
-                    <DataRow label="Amount" value={`₹${result.currentTransactionAmount.toLocaleString()}`} />
-                    <DataRow label="Type" value={result.currentTransactionType} />
-                    <DataRow label="Channel" value={result.currentTransactionChannel} />
-                    <DataRow label="Timestamp" value={new Date(result.currentTransactionDate).toLocaleString()} />
+                    <DataRow label="Amount" value={`₹${result.currentTransactionAmount.toLocaleString()}`} colors={currentColors} />
+                    <DataRow label="Channel" value={result.currentTransactionChannel} colors={currentColors} />
+                    <DataRow label="Security Flag" value={result.isFlagged ? "Flagged" : "Clean"} colors={currentColors} accent={result.isFlagged ? "#ef4444" : "#10b981"} />
                   </div>
                 </div>
 
-                {/* COLUMN 2: CUSTOMER BEHAVIORAL PATTERN */}
-                <div style={{ ...styles.card, borderTop: `4px solid ${COLORS.textMain}` }}>
-                  <label style={styles.cardLabel}>CUSTOMER PATTERN</label>
+                {/* CARD 2: BEHAVIORAL SCORE */}
+                <div style={{ ...styles.card, borderTop: `6px solid ${accentColor}`, ...glassStyle }}>
+                  <label style={{ ...styles.cardLabel, color: currentColors.textSecondary }}><FiActivity className="me-2" size={14} /> RISK BEHAVIOR</label>
                   <div style={styles.statusHeader}>
-                    <h1 style={{ color: result.customerResult === "FAIL" ? COLORS.danger : COLORS.success, fontWeight: '900', margin: 0 }}>
-                      {result.customerResult}
-                    </h1>
-                    <span style={styles.subStatus}>{result.customerStatus}</span>
+                    <h2 style={{ color: result.riskScore > 75 ? "#ef4444" : accentColor, fontWeight: '900', fontSize: '2.5rem', marginBottom: '5px' }}>{result.riskScore}%</h2>
+                    <span style={{ fontSize: '12px', fontWeight: '800', opacity: 0.7, textTransform: 'uppercase' }}>INTERNAL RISK RATING</span>
                   </div>
-
-                  <div style={styles.riskMeter}>
-                    <div style={styles.riskLabel}>RISK SCORE: {result.riskScore}%</div>
-                    <div style={styles.riskBar}>
-                        <div style={{ ...styles.riskFill, width: `${result.riskScore}%`, background: result.riskScore > 70 ? COLORS.danger : COLORS.electric }}></div>
-                    </div>
+                  <div style={styles.progressTrack}>
+                    <motion.div 
+                      initial={{ width: 0 }} 
+                      animate={{ width: `${result.riskScore}%` }} 
+                      style={{ ...styles.progressBar, background: accentColor }} 
+                    />
                   </div>
-
                   <div style={styles.dataList}>
-                    <DataRow label="Severity Level" value={result.highestSeverity} color={result.highestSeverity === "High" ? COLORS.danger : COLORS.textMain} />
-                    <DataRow label="Alerts Mapped" value={result.totalMappedAlerts} />
-                    <DataRow label="7-Day Count" value={result.last7DaysCount} />
-                    <DataRow label="Total Volume" value={result.totalTransactions} />
+                    <DataRow label="KYC History" value={result.customerStatus} colors={currentColors} />
+                    <DataRow label="Mapped Alerts" value={result.totalMappedAlerts} colors={currentColors} />
                   </div>
                 </div>
 
-                {/* COLUMN 3: HISTORICAL AGGREGATES */}
-                <div style={styles.card}>
-                  <label style={styles.cardLabel}>HISTORICAL BENCHMARKS</label>
-                  <div style={styles.statsGrid}>
-                    <div style={styles.statBox}>
-                      <small style={styles.statBoxLabel}>AVERAGE</small>
-                      <div style={styles.statValue}>₹{result.averageAmount.toLocaleString()}</div>
-                    </div>
-                    <div style={styles.statBox}>
-                      <small style={styles.statBoxLabel}>MAXIMUM</small>
-                      <div style={styles.statValue}>₹{result.maxAmount.toLocaleString()}</div>
-                    </div>
-                    <div style={styles.statBox}>
-                      <small style={styles.statBoxLabel}>MINIMUM</small>
-                      <div style={styles.statValue}>₹{result.minAmount.toLocaleString()}</div>
-                    </div>
-                  </div>
-
-                  <div style={{ marginTop: '20px' }}>
-                    <label style={styles.cardLabel}>AUDIT REASONS</label>
-                    <div style={styles.reasonScroll}>
-                      {result.reasons.map((reason, i) => (
-                        <div key={i} style={styles.reasonItem}>
-                          <span style={{ color: COLORS.danger }}>•</span> {reason}
-                        </div>
-                      ))}
-                    </div>
+                {/* CARD 3: AUDIT LOGS */}
+                <div style={{ ...styles.card, ...glassStyle }}>
+                  <label style={{ ...styles.cardLabel, color: currentColors.textSecondary }}><FiBarChart2 className="me-2" size={14} /> AUDIT SUMMARY</label>
+                  <div style={styles.reasonBox}>
+                    {result.reasons.map((r, i) => (
+                      <div key={i} style={{ 
+                        ...styles.reasonItem, 
+                        borderLeft: `3px solid ${accentColor}`, 
+                        backgroundColor: actualTheme === 'dark' ? 'rgba(255,255,255,0.05)' : 'rgba(255,255,255,0.4)' 
+                      }}>
+                        <FiAlertTriangle size={14} className="me-2" style={{ color: result.riskScore > 70 ? "#ef4444" : accentColor, flexShrink: 0 }} />
+                        <span style={{ fontWeight: '600', fontSize: '12.5px' }}>{r}</span>
+                      </div>
+                    ))}
                   </div>
                 </div>
 
@@ -153,44 +141,34 @@ const TransactionPattern = () => {
   );
 };
 
-// Helper Component
-const DataRow = ({ label, value, color }) => (
-  <div style={styles.row}>
-    <span style={{ color: COLORS.textMuted }}>{label}</span>
-    <span style={{ fontWeight: '700', color: color || COLORS.textMain }}>{value}</span>
+const DataRow = ({ label, value, colors, accent }) => (
+  <div style={{ display: 'flex', justifyContent: 'space-between', padding: '14px 0', borderBottom: `1px solid ${colors.border}`, fontSize: '14px' }}>
+    <span style={{ color: colors.textSecondary, fontWeight: '600' }}>{label}</span>
+    <span style={{ fontWeight: '800', color: accent || colors.textPrimary }}>{value}</span>
   </div>
 );
 
 const styles = {
-  wrapper: { background: COLORS.bg, minHeight: "100vh", color: COLORS.textMain, padding: "40px", fontFamily: "'Inter', sans-serif" },
-  container: { maxWidth: "1200px", margin: "0 auto" },
-  
-  searchBar: { background: COLORS.cardBg, border: `1px solid ${COLORS.border}`, padding: '15px 25px', borderRadius: '15px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '30px' },
-  logoGroup: { display: 'flex', gap: '12px', alignItems: 'center' },
-  miniShield: { background: COLORS.textMain, color: 'white', width: '32px', height: '32px', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '16px' },
-  formInline: { display: "flex", gap: "10px" },
-  input: { background: "white", border: `1px solid ${COLORS.border}`, padding: "10px 15px", borderRadius: "8px", color: COLORS.textMain, outline: 'none', width: '150px', fontSize: '12px', fontWeight: '600' },
-  primaryBtn: { background: COLORS.textMain, color: "white", border: "none", padding: "0 20px", borderRadius: "8px", fontWeight: "800", cursor: "pointer", fontSize: '10px', textTransform: 'uppercase' },
-
-  dashboardGrid: { display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "25px" },
-  card: { background: "white", border: `1px solid ${COLORS.border}`, borderRadius: "20px", padding: "25px", display: 'flex', flexDirection: 'column' },
-  cardLabel: { fontSize: "10px", fontWeight: "800", color: COLORS.textMuted, letterSpacing: "1px", marginBottom: "15px", display: 'block', textTransform: 'uppercase' },
-  statusHeader: { marginBottom: '20px' },
-  subStatus: { fontSize: '12px', color: COLORS.textMuted, fontWeight: '700' },
-  
-  row: { display: 'flex', justifyContent: 'space-between', padding: '12px 0', borderBottom: `1px solid ${COLORS.border}`, fontSize: '13px' },
-  
-  riskMeter: { marginBottom: '20px', background: COLORS.inputBg, padding: '15px', borderRadius: '12px' },
-  riskLabel: { fontSize: '11px', fontWeight: '800', marginBottom: '8px' },
-  riskBar: { height: '6px', background: COLORS.border, borderRadius: '10px', overflow: 'hidden' },
-  riskFill: { height: '100%', borderRadius: '10px' },
-
-  statsGrid: { display: 'grid', gridTemplateColumns: '1fr', gap: '10px' },
-  statBox: { background: COLORS.cardBg, padding: '12px', borderRadius: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' },
-  statBoxLabel: { fontWeight: '800', color: COLORS.textMuted, fontSize: '9px' },
-  statValue: { fontWeight: '800', fontSize: '14px' },
-  reasonScroll: { maxHeight: '150px', overflowY: 'auto', background: COLORS.inputBg, padding: '12px', borderRadius: '10px' },
-  reasonItem: { fontSize: '11px', marginBottom: '8px', color: COLORS.textMain, fontWeight: '600', display: 'flex', gap: '8px' }
+  wrapper: { minHeight: "100vh", width: "100%", display: "flex", flexDirection: "column", paddingBottom: "40px" },
+  contentBody: { padding: "40px 50px", width: "100%" },
+  searchBar: { 
+    padding: '20px 35px', borderRadius: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', 
+    marginBottom: '40px', boxShadow: '0 10px 40px rgba(0,0,0,0.04)' 
+  },
+  logoGroup: { display: 'flex', gap: '18px', alignItems: 'center' },
+  miniShield: { width: '48px', height: '48px', borderRadius: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 8px 20px rgba(0,0,0,0.1)' },
+  formInline: { display: "flex", gap: "15px" },
+  input: { border: "1px solid", padding: "14px 20px", borderRadius: "12px", outline: 'none', width: '220px', fontSize: '13px', fontWeight: '700', transition: '0.2s' },
+  primaryBtn: { color: "white", border: "none", padding: "0 30px", borderRadius: "12px", fontWeight: "900", cursor: "pointer", fontSize: '11px', letterSpacing: '0.5px', textTransform: 'uppercase', display: 'flex', alignItems: 'center' },
+  dashboardGrid: { display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(340px, 1fr))", gap: "30px" },
+  card: { borderRadius: "28px", padding: "35px", boxShadow: '0 15px 45px rgba(0,0,0,0.04)' },
+  cardLabel: { fontSize: "11px", fontWeight: "900", letterSpacing: "1.5px", marginBottom: "25px", display: 'flex', alignItems: 'center', textTransform: 'uppercase' },
+  statusHeader: { marginBottom: '30px' },
+  progressTrack: { height: '10px', background: 'rgba(0,0,0,0.08)', borderRadius: '12px', overflow: 'hidden', margin: '20px 0 30px 0' },
+  progressBar: { height: '100%', borderRadius: '12px' },
+  reasonBox: { display: 'flex', flexDirection: 'column', gap: '15px' },
+  reasonItem: { padding: '15px 18px', borderRadius: '12px', display: 'flex', alignItems: 'center', boxShadow: '0 4px 15px rgba(0,0,0,0.02)' },
+  dataList: { marginTop: '10px' }
 };
 
 export default TransactionPattern;

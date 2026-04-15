@@ -42,6 +42,7 @@ import ComplianceSidebar from "./components/Compliance/Sidebar";
 import CDashboard from "./pages/Compliance/CDashboard";
 import KYCVerification from "./pages/Compliance/KYCVerification";
 import TransactionPattern from "./pages/Compliance/TransactionPattern";
+import KYCNotification from "./pages/Compliance/Notification";
 import WatchlistPageForm from "./pages/Compliance/WatchlistPageForm";
 import ControlChecklist from "./pages/Compliance/ControlChecklist";
 import RegulatoryReport from "./pages/Compliance/RegulatoryReport";
@@ -224,7 +225,7 @@ export default function App() {
                 path="/Cdashboard"
                 element={
                   <AuthGuard>
-                    <RoleGuard allowedRoles={["Compliance"]}>
+                    <RoleGuard allowedRoles={["COMPLIANCE"]}>
                       <CDashboard />
                     </RoleGuard>
                   </AuthGuard>
@@ -234,7 +235,7 @@ export default function App() {
                 path="/kyc"
                 element={
                   <AuthGuard>
-                    <RoleGuard allowedRoles={["Compliance"]}>
+                    <RoleGuard allowedRoles={["COMPLIANCE"]}>
                       <KYCVerification />
                     </RoleGuard>
                   </AuthGuard>
@@ -244,7 +245,7 @@ export default function App() {
                 path="/transaction-pattern"
                 element={
                   <AuthGuard>
-                    <RoleGuard allowedRoles={["Compliance"]}>
+                    <RoleGuard allowedRoles={["COMPLIANCE"]}>
                       <TransactionPattern />
                     </RoleGuard>
                   </AuthGuard>
@@ -254,8 +255,18 @@ export default function App() {
                 path="/watchlist"
                 element={
                   <AuthGuard>
-                    <RoleGuard allowedRoles={["Compliance"]}>
+                    <RoleGuard allowedRoles={["COMPLIANCE"]}>
                       <WatchlistPageForm />
+                    </RoleGuard>
+                  </AuthGuard>
+                }
+              />
+              <Route
+                path="/Notification"
+                element={
+                  <AuthGuard>
+                    <RoleGuard allowedRoles={["COMPLIANCE"]}>
+                      <KYCNotification />
                     </RoleGuard>
                   </AuthGuard>
                 }
@@ -264,7 +275,7 @@ export default function App() {
                 path="/control-checklist"
                 element={
                   <AuthGuard>
-                    <RoleGuard allowedRoles={["Compliance"]}>
+                    <RoleGuard allowedRoles={["COMPLIANCE"]}>
                       <ControlChecklist />
                     </RoleGuard>
                   </AuthGuard>
@@ -274,7 +285,7 @@ export default function App() {
                 path="/regulatory-report"
                 element={
                   <AuthGuard>
-                    <RoleGuard allowedRoles={["Compliance"]}>
+                    <RoleGuard allowedRoles={["COMPLIANCE"]}>
                       <RegulatoryReport />
                     </RoleGuard>
                   </AuthGuard>
