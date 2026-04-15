@@ -1,0 +1,155 @@
+:root {
+  --text: #9ca3af;
+  --text-h: #f3f4f6;
+  --bg: #0f051a;
+  --border: rgba(255, 255, 255, 0.1);
+  --accent: #c084fc;
+  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
+  --mono: ui-monospace, Consolas, monospace;
+
+  /* ✅ GLOBAL FONT SIZE INCREASE */
+  font-size: 20px; 
+  line-height: 1.6;
+}
+
+/* Base resets */
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg);
+  font-family: var(--sans);
+  color: var(--text);
+  font-size: 1rem; /* This now refers to the 20px set in :root */
+  overflow-x: hidden;
+}
+
+/* Headings */
+h1 { font-size: 3.5rem !important; } /* Large display titles */
+h2 { font-size: 2rem !important; }   /* Page headers */
+h3 { font-size: 1.5rem !important; } /* Box headers */
+
+.app-container {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+}
+
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  transition: margin-left 0.3s ease-in-out;
+  background: radial-gradient(circle at 50% 0%, #30164d 0%, #0f051a 70%) !important;
+  background-color: #0f051a !important;
+  min-height: 100vh;
+  color: #ffffff !important;
+}
+
+.page-wrapper {
+  flex: 1;
+  padding: 30px;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* FROSTED GLASS PANELS */
+.glass-panel, .summary-box, form {
+  background: rgba(255, 255, 255, 0.04) !important;
+  backdrop-filter: blur(15px) saturate(160%);
+  -webkit-backdrop-filter: blur(15px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 16px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  margin-bottom: 25px;
+  padding: 25px;
+  color: #ffffff !important;
+}
+
+/* ✅ TABLE FONT SIZE INCREASE */
+.table {
+  background: transparent !important;
+  border-collapse: separate !important;
+  border-spacing: 0 10px !important;
+  color: #ffffff !important;
+  width: 100%;
+  font-size: 1.1rem; /* Makes table data larger */
+}
+
+.table thead th {
+  background: rgba(0, 0, 0, 0.3) !important;
+  color: #b18cf5 !important;
+  border: none !important;
+  text-transform: uppercase;
+  font-size: 0.9rem; /* Header stays slightly smaller for contrast */
+  padding: 15px;
+}
+
+.table tbody tr {
+  background: rgba(255, 255, 255, 0.05) !important;
+  color: #ffffff !important;
+}
+
+.table tbody td {
+  background: transparent !important;
+  border: none !important;
+  color: #ffffff !important;
+  padding: 18px 15px; /* Added padding for better readability */
+  vertical-align: middle;
+}
+
+/* INPUTS & SELECTS */
+.form-control, .form-select {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  color: #ffffff !important;
+  font-size: 1.1rem !important; /* Larger text when typing */
+  padding: 12px;
+}
+
+/* Placeholder text */
+.form-control::placeholder {
+  color: rgba(255, 255, 255, 0.5) !important;
+}
+
+/* ✅ Dropdown visibility fix */
+.form-select {
+  background-color: #2a1b3d !important; /* deep purple background */
+  color: #ffffff !important;            /* white text */
+}
+
+.form-select option {
+  background-color: #2a1b3d !important; /* same dark background */
+  color: #ffffff !important;            /* white text */
+}
+
+/* MODALS */
+.modal-content {
+  background: #1a0b2e !important;
+  color: white !important;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  font-size: 1.1rem;
+  width: 100%;
+}
+
+/* ✅ This increases the actual breadth of the modal container */
+@media (min-width: 992px) {
+  .modal-lg {
+    max-width: 900px; /* Increased from default 800px */
+  }
+  .modal-xl {
+    max-width: 1140px; /* Use this if you want it even wider */
+  }
+}
+
+.modal-body {
+  padding: 30px; /* More breathing room inside the wider form */
+}
+
+.btn {
+  font-size: 1.1rem;
+  padding: 10px 20px;
+}
+
+.btn-close { filter: invert(1); }

@@ -1,17 +1,17 @@
 import { useState, useEffect } from "react";
 import { updateScenario } from "../../services/Rule/scenarioService";
 import Swal from "sweetalert2";
- 
+
 export default function ScenarioEditForm({ scenario, onScenarioUpdated }) {
   const [formData, setFormData] = useState({ ...scenario });
   const [errors, setErrors] = useState({});
- 
+
   useEffect(() => {
     if (scenario) {
       setFormData({ ...scenario });
     }
   }, [scenario]);
- 
+
   const validateField = (name, value) => {
     let error = "";
     if (name === "description") {
@@ -24,25 +24,25 @@ export default function ScenarioEditForm({ scenario, onScenarioUpdated }) {
     }
     return error;
   };
- 
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
-   
+    
     const error = validateField(name, value);
     setErrors((prev) => ({ ...prev, [name]: error }));
   };
- 
-  const isFormInvalid =
-    !formData.description?.trim() ||
-    !formData.riskDomain?.trim() ||
+
+  const isFormInvalid = 
+    !formData.description?.trim() || 
+    !formData.riskDomain?.trim() || 
     Object.values(errors).some(err => err !== "");
- 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       await updateScenario(formData.scenarioId, formData);
- 
+
       Swal.fire({
         title: "Scenario Updated",
         text: `Scenario "${formData.name}" has been updated successfully!`,
@@ -53,7 +53,7 @@ export default function ScenarioEditForm({ scenario, onScenarioUpdated }) {
         color: "#fff",
         width: "350px",
       });
- 
+
       onScenarioUpdated();
     } catch (error) {
       console.error("Error updating scenario:", error);
@@ -68,7 +68,7 @@ export default function ScenarioEditForm({ scenario, onScenarioUpdated }) {
       });
     }
   };
- 
+
   // CORRECTED: Highly subtle blur/opacity style
   const subtleDisabledStyle = {
     filter: "blur(0.4px)", // Reduced blur significantly
@@ -76,7 +76,7 @@ export default function ScenarioEditForm({ scenario, onScenarioUpdated }) {
     cursor: "not-allowed",
     backgroundColor: "rgba(255, 255, 255, 0.05)"
   };
- 
+
   return (
     <form onSubmit={handleSubmit}>
       {/* Name - Subtly Non-Editable */}
@@ -91,7 +91,7 @@ export default function ScenarioEditForm({ scenario, onScenarioUpdated }) {
           style={subtleDisabledStyle}
         />
       </div>
- 
+
       <div className="mb-3">
         <label className="form-label">Description <span className="text-danger">*</span></label>
         <textarea
@@ -102,7 +102,7 @@ export default function ScenarioEditForm({ scenario, onScenarioUpdated }) {
         />
         {errors.description && <div className="invalid-feedback">{errors.description}</div>}
       </div>
- 
+
       <div className="mb-3">
         <label className="form-label">Risk Domain <span className="text-danger">*</span></label>
         <input
@@ -114,7 +114,7 @@ export default function ScenarioEditForm({ scenario, onScenarioUpdated }) {
         />
         {errors.riskDomain && <div className="invalid-feedback">{errors.riskDomain}</div>}
       </div>
- 
+
       <div className="mb-4">
         <label className="form-label">Status</label>
         <select
@@ -127,10 +127,10 @@ export default function ScenarioEditForm({ scenario, onScenarioUpdated }) {
           <option value="Inactive">Inactive</option>
         </select>
       </div>
- 
-      <button
-        type="submit"
-        className="btn btn-success w-100"
+
+      <button 
+        type="submit" 
+        className="btn btn-success w-100" 
         disabled={isFormInvalid}
       >
         {isFormInvalid ? "Please fill required fields" : "Update Scenario"}

@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import Select from "react-select";
 import Swal from "sweetalert2";
+
 import { createDetectionRule } from "../../services/Rule/detectionRuleService";
 import { getAllScenarios } from "../../services/Rule/scenarioService";
- 
 export default function DetectionRuleCreateForm({ onRuleCreated }) {
   const [scenarios, setScenarios] = useState([]);
   const [selectedScenario, setSelectedScenario] = useState(null);
@@ -13,7 +13,7 @@ export default function DetectionRuleCreateForm({ onRuleCreated }) {
   const [customerType, setCustomerType] = useState("");
   const [status, setStatus] = useState("Active");
   const [errors, setErrors] = useState({});
- 
+
   useEffect(() => {
     const fetchScenarios = async () => {
       try {
@@ -30,7 +30,7 @@ export default function DetectionRuleCreateForm({ onRuleCreated }) {
     };
     fetchScenarios();
   }, []);
- 
+
   const validate = () => {
     const newErrors = {};
     if (!selectedScenario) newErrors.scenario = "Scenario is required.";
@@ -44,11 +44,11 @@ export default function DetectionRuleCreateForm({ onRuleCreated }) {
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
- 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) return;
- 
+
     try {
       await createDetectionRule({
         scenarioId: selectedScenario.value,
@@ -58,7 +58,7 @@ export default function DetectionRuleCreateForm({ onRuleCreated }) {
         customerType,
         status,
       });
- 
+
       Swal.fire({
         title: "Rule Created",
         text: `Detection rule "${expression}" has been created successfully!`,
@@ -69,9 +69,9 @@ export default function DetectionRuleCreateForm({ onRuleCreated }) {
         color: "#fff",
         width: "350px",
       });
- 
+
       if (onRuleCreated) onRuleCreated();
- 
+
       // Reset form
       setSelectedScenario(null);
       setExpression("");
@@ -93,7 +93,7 @@ export default function DetectionRuleCreateForm({ onRuleCreated }) {
       });
     }
   };
- 
+
   const customSelectStyles = {
     control: (provided) => ({
       ...provided,
@@ -123,7 +123,7 @@ export default function DetectionRuleCreateForm({ onRuleCreated }) {
       backgroundColor: "#1e1e1e",
     }),
   };
- 
+
   return (
     <form onSubmit={handleSubmit}>
       <div className="mb-3">
@@ -137,7 +137,7 @@ export default function DetectionRuleCreateForm({ onRuleCreated }) {
         />
         {errors.scenario && <div className="text-danger">{errors.scenario}</div>}
       </div>
- 
+
       <div className="mb-3">
         <label className="form-label">Expression</label>
         <input
@@ -149,7 +149,7 @@ export default function DetectionRuleCreateForm({ onRuleCreated }) {
         />
         {errors.expression && <div className="invalid-feedback">{errors.expression}</div>}
       </div>
- 
+
       <div className="mb-3">
         <label className="form-label">Threshold</label>
         <input
@@ -162,7 +162,7 @@ export default function DetectionRuleCreateForm({ onRuleCreated }) {
         />
         {errors.threshold && <div className="invalid-feedback">{errors.threshold}</div>}
       </div>
- 
+
       <div className="mb-3">
         <label className="form-label">Version</label>
         <input
@@ -174,7 +174,7 @@ export default function DetectionRuleCreateForm({ onRuleCreated }) {
         />
         {errors.version && <div className="invalid-feedback">{errors.version}</div>}
       </div>
- 
+
       <div className="mb-3">
         <label className="form-label">Customer Type</label>
         <input
@@ -186,7 +186,7 @@ export default function DetectionRuleCreateForm({ onRuleCreated }) {
         />
         {errors.customerType && <div className="invalid-feedback">{errors.customerType}</div>}
       </div>
- 
+
       <div className="mb-3">
         <label className="form-label">Rule Status</label>
         <select
@@ -200,7 +200,7 @@ export default function DetectionRuleCreateForm({ onRuleCreated }) {
         </select>
         {errors.status && <div className="invalid-feedback">{errors.status}</div>}
       </div>
- 
+
       <button type="submit" className="btn btn-success">Save Rule</button>
     </form>
   );

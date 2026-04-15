@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { createScenario } from "../../services/Rule/scenarioService";
 import Swal from "sweetalert2";
- 
+import { createScenario } from "../../services/Rule/scenarioService";
+
 export default function ScenarioForm({ onScenarioCreated }) {
   const [formData, setFormData] = useState({
     name: "",
@@ -10,47 +10,47 @@ export default function ScenarioForm({ onScenarioCreated }) {
     status: "Active",
   });
   const [errors, setErrors] = useState({});
- 
+
   const validate = () => {
     const newErrors = {};
- 
+
     if (!formData.name.trim()) {
       newErrors.name = "Name is required.";
     } else if (formData.name.length > 100) {
       newErrors.name = "Name must be less than 100 characters.";
     }
- 
+
     if (!formData.description.trim()) {
       newErrors.description = "Description is required.";
     } else if (formData.description.length > 250) {
       newErrors.description = "Description must be less than 250 characters.";
     }
- 
+
     if (!formData.riskDomain.trim()) {
       newErrors.riskDomain = "Risk Domain is required.";
     } else if (formData.riskDomain.length > 50) {
       newErrors.riskDomain = "Risk Domain must be less than 50 characters.";
     }
- 
+
     if (!formData.status) {
       newErrors.status = "Status is required.";
     }
- 
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
- 
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
- 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) return;
- 
+
     try {
       await createScenario(formData);
- 
+
       Swal.fire({
         title: "Scenario Created",
         text: `Scenario "${formData.name}" has been added successfully!`,
@@ -69,7 +69,7 @@ export default function ScenarioForm({ onScenarioCreated }) {
           htmlContainer: "text-light"
         }
       });
- 
+
       setFormData({ name: "", description: "", riskDomain: "", status: "Active" });
       setErrors({});
       onScenarioCreated();
@@ -91,7 +91,7 @@ export default function ScenarioForm({ onScenarioCreated }) {
       });
     }
   };
- 
+
   return (
     <form onSubmit={handleSubmit} className="mb-4">
       <div className="mb-3">
@@ -106,7 +106,7 @@ export default function ScenarioForm({ onScenarioCreated }) {
         />
         {errors.name && <div className="invalid-feedback">{errors.name}</div>}
       </div>
- 
+
       <div className="mb-3">
         <label className="form-label">Description</label>
         <textarea
@@ -118,7 +118,7 @@ export default function ScenarioForm({ onScenarioCreated }) {
         />
         {errors.description && <div className="invalid-feedback">{errors.description}</div>}
       </div>
- 
+
       <div className="mb-3">
         <label className="form-label">Risk Domain</label>
         <input
@@ -131,7 +131,7 @@ export default function ScenarioForm({ onScenarioCreated }) {
         />
         {errors.riskDomain && <div className="invalid-feedback">{errors.riskDomain}</div>}
       </div>
- 
+
       <div className="mb-3">
         <label className="form-label">Status</label>
         <select
@@ -146,7 +146,7 @@ export default function ScenarioForm({ onScenarioCreated }) {
         </select>
         {errors.status && <div className="invalid-feedback">{errors.status}</div>}
       </div>
- 
+
       <button type="submit" className="btn btn-success">Create Scenario</button>
     </form>
   );

@@ -1,16 +1,16 @@
 /* Main Layout Container */
 .dashboard-container {
-    background-color: #0f051a;
+    background-color: #0f051a; 
     min-height: 100vh;
 }
- 
+
 /* Glass Panel Styling (Used for Module Info & Distribution Grid) */
 .glass-panel {
     background: #1a0b2e;
     border: 1px solid rgba(255, 255, 255, 0.05);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 }
- 
+
 /* Module Feature Section (Top) */
 .module-illustration {
     width: 240px;
@@ -22,7 +22,7 @@
     overflow: hidden;
     box-shadow: 0 0 20px rgba(124, 58, 237, 0.15);
 }
- 
+
 .module-illustration::before {
     content: "";
     position: absolute;
@@ -33,29 +33,29 @@
     background: radial-gradient(circle, rgba(167, 139, 250, 0.1) 0%, transparent 60%);
     animation: rotate-glow 10s linear infinite;
 }
- 
+
 @keyframes rotate-glow {
     from { transform: rotate(0deg); }
     to { transform: rotate(360deg); }
 }
- 
+
 /* KPI Cards (Middle Row) */
 .kpi-card {
     background: #1a0b2e;
     border: 1px solid rgba(255, 255, 255, 0.05);
     transition: all 0.3s ease-in-out;
 }
- 
+
 .kpi-card:hover {
     transform: translateY(-5px);
     background: #240f3d;
     border-color: rgba(124, 58, 237, 0.3);
 }
- 
+
 /* Accents for KPI Cards */
 .border-start-blue { border-left: 5px solid #3b82f6 !important; }
 .border-start-green { border-left: 5px solid #10b981 !important; }
- 
+
 /* Icon Styling */
 .kpi-icon {
     width: 48px;
@@ -65,33 +65,33 @@
     align-items: center;
     justify-content: center;
 }
- 
+
 .kpi-icon.blue { background: rgba(59, 130, 246, 0.15); color: #3b82f6; }
 .kpi-icon.green { background: rgba(16, 185, 129, 0.15); color: #10b981; }
- 
+
 /* Individual Domain Boxes (Bottom Grid) */
 .domain-item-box {
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.05);
     transition: all 0.2s ease;
 }
- 
+
 .domain-item-box:hover {
     background: rgba(255, 255, 255, 0.07);
     transform: translateY(-3px);
     border-color: rgba(167, 139, 250, 0.2);
 }
- 
+
 /* Progress Bar Customization */
 .bg-dark-purple {
-    background-color: #05010a !important;
+    background-color: #05010a !important; 
 }
- 
+
 .bg-purple-gradient {
     background: linear-gradient(90deg, #7c3aed, #ec4899) !important;
     border-radius: 10px;
 }
- 
+
 /* Badge for "Scenarios" count */
 .bg-purple-badge {
     background: linear-gradient(135deg, #7c3aed, #ec4899);
@@ -99,30 +99,30 @@
     padding: 0.4em 0.8em;
     font-weight: 600;
 }
- 
+
 /* Sync Animation */
 .sync-indicator.spinning {
     animation: spin 2s linear infinite;
 }
- 
+
 @keyframes spin {
     from { transform: rotate(0deg); }
     to { transform: rotate(360deg); }
 }
- 
+
 /* Typography & Helpers */
 .text-purple-light { color: #a78bfa; }
- 
-.smallest {
-    font-size: 0.7rem;
+
+.smallest { 
+    font-size: 0.7rem; 
     letter-spacing: 0.5px;
     text-transform: uppercase;
 }
- 
+
 .fade-in {
     animation: fadeIn 0.5s ease-in;
 }
- 
+
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(-10px); }
     to { opacity: 1; transform: translateY(0); }

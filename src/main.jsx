@@ -9,6 +9,9 @@ import "@salesforce-ux/design-system/assets/styles/salesforce-lightning-design-s
 
 // ✅ Load your own styles last so they override Bootstrap/SLDS
 import "./index.css"
+import "./styles/Rule/rule.css";   // ✅ add this line
+
+
 
 import App from './App.jsx'
 

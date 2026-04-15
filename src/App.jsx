@@ -32,11 +32,11 @@ import RiskScoring from "./pages/Investigator/RiskScoring";
 import InvestigatorDashboard from "./pages/Investigator/IDashboard";
 
 // Rule
+// Rule
 import Dashboard from "./pages/Rule/Dashboard";
 import ScenarioPage from "./pages/Rule/ScenarioPage";
-import RuleSidebar from "./components/Rule/RuleSidebar";
-import DetectionRulePage from "./pages/Rule/DetectionRulePage";
-
+import DetectionRulePage from "./pages/Rule/DetectionRulesPage";
+import RuleSidebar from "./components/Rule/Sidebar";
 // Compliance
 import ComplianceSidebar from "./components/Compliance/Sidebar";
 import CDashboard from "./pages/Compliance/CDashboard";

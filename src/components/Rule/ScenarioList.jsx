@@ -26,10 +26,7 @@ export default function ScenarioList({ scenarios, onUpdated, onEdit, onDelete })
             scenarios.map((s) => (
               <tr key={s.scenarioId}>
                 <td className="fw-bold">{s.name}</td>
-                {/* Description column styled for visibility */}
-                <td className="description-cell small" style={{ maxWidth: "300px" }}>
-                  {s.description || "—"}
-                </td>
+                <td className="text-white-50 small" style={{ maxWidth: '300px' }}>{s.description}</td>
                 <td>{s.riskDomain}</td>
                 <td>
                   <span className={`badge ${s.status === "Active" ? "bg-success" : "bg-secondary"}`}>
@@ -39,16 +36,16 @@ export default function ScenarioList({ scenarios, onUpdated, onEdit, onDelete })
                 <td className="text-center">
                   <div className="d-flex justify-content-center gap-2">
                     <button
-                      className="btn btn-sm"
+                      className="btn btn-sm text-white-50"
                       onClick={() => onEdit(s)}
-                      style={{ background: "transparent", border: "none", color: "#b18cf5" }}
+                      style={{ background: "transparent", border: "none" }}
                     >
                       <i className="bi bi-pencil-square fs-5"></i>
                     </button>
                     <button
-                      className="btn btn-sm"
+                      className="btn btn-sm text-white-50"
                       onClick={() => setDeletingScenario(s)}
-                      style={{ background: "transparent", border: "none", color: "#ff6b6b" }}
+                      style={{ background: "transparent", border: "none" }}
                     >
                       <i className="bi bi-trash-fill fs-5"></i>
                     </button>
@@ -61,7 +58,7 @@ export default function ScenarioList({ scenarios, onUpdated, onEdit, onDelete })
       </table>
 
       {deletingScenario && (
-        <div className="modal d-block" style={{ background: "rgba(0,0,0,0.8)" }} tabIndex="-1">
+        <div className="modal d-block" style={{background: 'rgba(0,0,0,0.8)'}} tabIndex="-1">
           <div className="modal-dialog modal-dialog-centered">
             <div className="modal-content">
               <div className="modal-header border-0">
@@ -69,9 +66,7 @@ export default function ScenarioList({ scenarios, onUpdated, onEdit, onDelete })
                 <button type="button" className="btn-close" onClick={() => setDeletingScenario(null)}></button>
               </div>
               <div className="modal-body">
-                <p>
-                  Are you sure you want to delete scenario <strong>{deletingScenario.name}</strong>?
-                </p>
+                <p>Are you sure you want to delete scenario <strong>{deletingScenario.name}</strong>?</p>
               </div>
               <div className="modal-footer border-0">
                 <button className="btn btn-outline-light" onClick={() => setDeletingScenario(null)}>Cancel</button>

@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { ShieldCheck, Zap, CheckCircle, RefreshCw, Cpu, BarChart3 } from 'lucide-react';
+import React, { useState, useEffect } from "react";
+import { ShieldCheck, Zap, CheckCircle, RefreshCw, Cpu, BarChart3 } from "lucide-react";
+
 import { getAllScenarios } from "../../services/Rule/scenarioService";
 import { getAllDetectionRules } from "../../services/Rule/detectionRuleService";
 
-import "../../style/rule/Dashbord.css";
- 
+import "../../styles/Rule/Dashboard.css";
+
 const Dashboard = () => {
   const [stats, setStats] = useState({
     totalScenarios: 0,
@@ -14,7 +15,7 @@ const Dashboard = () => {
     domainData: []
   });
   const [isSyncing, setIsSyncing] = useState(false);
- 
+
   const fetchStats = async () => {
     setIsSyncing(true);
     try {
@@ -22,13 +23,13 @@ const Dashboard = () => {
         getAllScenarios(),
         getAllDetectionRules()
       ]);
- 
+
       const domains = scenarios.reduce((acc, curr) => {
         const domain = curr.riskDomain || 'General';
         acc[domain] = (acc[domain] || 0) + 1;
         return acc;
       }, {});
- 
+
       setStats({
         totalScenarios: scenarios?.length || 0,
         activeScenarios: scenarios?.filter(s => s.status?.toLowerCase() === 'active').length || 0,
@@ -42,13 +43,13 @@ const Dashboard = () => {
       setTimeout(() => setIsSyncing(false), 800);
     }
   };
- 
+
   useEffect(() => {
     fetchStats();
     const interval = setInterval(fetchStats, 10000);
     return () => clearInterval(interval);
   }, []);
- 
+
   return (
     <div className="container-fluid dashboard-container p-4 p-md-5 text-start">
       {/* 1. Header */}
@@ -61,7 +62,7 @@ const Dashboard = () => {
           <RefreshCw size={22} className="text-purple-light" />
         </div>
       </header>
- 
+
       {/* 2. TOP SECTION: Module Description (Like your screenshot) */}
       <div className="row mb-5">
         <div className="col-12">
@@ -74,18 +75,18 @@ const Dashboard = () => {
             <div className="module-text">
               {/*<h4 className="text-white fw-bold mb-3">Module 4.5: Rules, Scenarios & Thresholds</h4>*/}
               <p className="text-white-50 lh-lg mb-0">
-                FraudShield’s core intelligence is driven by this module, which serves as the central
-                configuration engine for the entire system. It empowers Risk Modelers and Rule Authors
-                to design, manage, and version the detection logic used to monitor transactions in real time.
-                By defining Scenarios and authoring specific Detection Rules, this module enables the
-                system to evaluate transaction events against complex behavioral profiles and custom
+                FraudShield’s core intelligence is driven by this module, which serves as the central 
+                configuration engine for the entire system. It empowers Risk Modelers and Rule Authors 
+                to design, manage, and version the detection logic used to monitor transactions in real time. 
+                By defining Scenarios and authoring specific Detection Rules, this module enables the 
+                system to evaluate transaction events against complex behavioral profiles and custom 
                 thresholds.
               </p>
             </div>
           </div>
         </div>
       </div>
- 
+
       {/* 3. MIDDLE SECTION: KPI Cards */}
       <div className="row g-4 mb-5">
         <div className="col-12 col-md-6">
@@ -117,7 +118,7 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
- 
+
       {/* 4. BOTTOM SECTION: Risk Domain Distribution */}
       <div className="glass-panel p-4 rounded-4 border border-white border-opacity-10">
         <div className="d-flex justify-content-between align-items-center mb-4">
@@ -133,8 +134,8 @@ const Dashboard = () => {
                   <span className="badge bg-purple-badge">{domain.count} Scenarios</span>
                 </div>
                 <div className="progress bg-dark-purple" style={{ height: '6px' }}>
-                  <div
-                    className="progress-bar bg-purple-gradient"
+                  <div 
+                    className="progress-bar bg-purple-gradient" 
                     style={{ width: `${(domain.count / stats.totalScenarios) * 100}%` }}
                   ></div>
                 </div>
@@ -146,5 +147,5 @@ const Dashboard = () => {
     </div>
   );
 };
- 
+
 export default Dashboard;

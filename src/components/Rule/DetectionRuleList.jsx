@@ -1,10 +1,10 @@
 import React from 'react';
- 
+
 export default function DetectionRuleList({ rules, onEdit, onDelete }) {
   if (!rules || rules.length === 0) {
     return <p className="text-white-50 p-5 text-center">No detection rules found.</p>;
   }
- 
+
   const renderStatusBadge = (status) => {
     const isActive = status?.toLowerCase() === "active";
     return (
@@ -13,7 +13,7 @@ export default function DetectionRuleList({ rules, onEdit, onDelete }) {
       </span>
     );
   };
- 
+
   return (
     <div className="table-responsive">
       <table className="table align-middle">
