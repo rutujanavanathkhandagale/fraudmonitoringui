@@ -30,7 +30,7 @@ function PersonalForm() {
     const fetchExistingProfile = async () => {
       if (customerId && customerId !== "null") {
         try {
-          const response = await axios.get(`https://localhost:7181/api/PersonalDetails/${customerId}`);
+          const response = await axios.get(`https://localhost:44372/api/PersonalDetails/${customerId}`);
           if (response.data) {
             const d = response.data;
             setForm({
@@ -73,7 +73,7 @@ function PersonalForm() {
     };
 
     try {
-      const url = "https://localhost:7181/api/PersonalDetails";
+      const url = "https://localhost:44372/api/PersonalDetails";
       let response;
 
       if (customerId) {

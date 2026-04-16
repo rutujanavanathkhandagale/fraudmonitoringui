@@ -9,6 +9,14 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
+//Alert
+
+import ADashboard from "./pages/AlertCase/ADashboard";
+import ACSidebar from "./components/AlertCase/ACSidebar"; 
+import Alerts from "./pages/AlertCase/Alerts";
+import Cases from "./pages/AlertCase/Cases";
+
+
 // Admin
 import ASidebar from "./components/Admin/ASidebar";
 import AdminAudit from "./pages/Admin/AdminAudit";
@@ -100,6 +108,7 @@ const DashboardWrapper = ({ SidebarComponent }) => {
 
 /* ---------------- Main App ---------------- */
 export default function App() {
+    const [notifications, setNotifications] = useState([]);
   return (
     <BrowserRouter>
       <AuthProvider>
@@ -116,7 +125,56 @@ export default function App() {
       <Settings />
     </AuthGuard>
   }
+
 />
+
+  {/* Customer Module */}
+            <Route element={<DashboardWrapper SidebarComponent={CustSidebar} notifications={notifications} />}>
+              <Route
+                path="/customer/dashboard/:id"
+                element={
+                  <AuthGuard>
+                    <RoleGuard allowedRoles={["CUSTOMER"]}>
+                      <CusDashboard />
+                    </RoleGuard>
+                  </AuthGuard>
+                }
+              />
+              <Route
+                path="/fill-details"
+                element={
+                  <AuthGuard>
+                    <RoleGuard allowedRoles={["CUSTOMER"]}>
+                      <CustomerOnboardingForm />
+                    </RoleGuard>
+                  </AuthGuard>
+                }
+              />
+              <Route
+                path="/profile/:id"
+                element={
+                  <AuthGuard>
+                    <RoleGuard allowedRoles={["CUSTOMER"]}>
+                      <CustomerProfile />
+                    </RoleGuard>
+                  </AuthGuard>
+                }
+              />
+              <Route
+                path="/notification/:id"
+                element={
+                  <AuthGuard>
+                    <RoleGuard allowedRoles={["CUSTOMER"]}>
+                      <Notification
+                        notifications={notifications}
+                        setNotifications={setNotifications}
+                      />
+                    </RoleGuard>
+                  </AuthGuard>
+                }
+              />
+              <Route path="/about" element={<AboutPage />} />
+            </Route>
             {/* Admin */}
             <Route element={<DashboardWrapper SidebarComponent={ASidebar} />}>
               <Route
@@ -191,17 +249,17 @@ export default function App() {
                 path="/Idashboard"
                 element={
                   <AuthGuard>
-                    <RoleGuard allowedRoles={["Investigator"]}>
+                    <RoleGuard allowedRoles={["INVESTIGATOR"]}>
                       <InvestigatorDashboard />
                     </RoleGuard>
                   </AuthGuard>
                 }
               />
               <Route
-                path="/transaction"
+                path="/Transaction"
                 element={
                   <AuthGuard>
-                    <RoleGuard allowedRoles={["Investigator"]}>
+                    <RoleGuard allowedRoles={["INVESTIGATOR"]}>
                       <Transactions />
                     </RoleGuard>
                   </AuthGuard>
@@ -211,7 +269,7 @@ export default function App() {
                 path="/risk"
                 element={
                   <AuthGuard>
-                    <RoleGuard allowedRoles={["Analyst"]}>
+                    <RoleGuard allowedRoles={["INVESTIGATOR"]}>
                       <RiskScoring />
                     </RoleGuard>
                   </AuthGuard>
@@ -292,6 +350,42 @@ export default function App() {
                 }
               />
             </Route>
+            {/* Alert & Case */}
+<Route element={<DashboardWrapper SidebarComponent={ACSidebar} />}>
+  <Route
+    path="/alert/dashboard"
+    element={
+      <AuthGuard>
+        <RoleGuard allowedRoles={["ANALYST", "INVESTIGATOR"]}>
+          <ADashboard />
+        </RoleGuard>
+      </AuthGuard>
+    }
+  />
+
+  <Route
+    path="/alert/alerts"
+    element={
+      <AuthGuard>
+        <RoleGuard allowedRoles={["ANALYST", "INVESTIGATOR"]}>
+          <Alerts />
+        </RoleGuard>
+      </AuthGuard>
+    }
+  />
+
+  <Route
+    path="/alert/cases"
+    element={
+      <AuthGuard>
+        <RoleGuard allowedRoles={["ANALYST", "INVESTIGATOR"]}>
+          <Cases />
+        </RoleGuard>
+      </AuthGuard>
+    }
+  />
+</Route>
+ 
 
             {/* Fallback */}
             <Route path="*" element={<Navigate to="/" replace />} />

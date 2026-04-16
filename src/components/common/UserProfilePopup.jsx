@@ -1,96 +1,95 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { FiUser, FiLogOut, FiX } from "react-icons/fi";
-import Swal from "sweetalert2";
+import { FiLogOut, FiUser, FiX } from "react-icons/fi";
 import "../../style/UserProfilePopup.css";
-
-export default function UserProfilePopup({ user, onClose }) {
+ 
+const UserProfilePopup = ({ user, onClose }) => {
   const navigate = useNavigate();
-  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
-
+  const [showForm, setShowForm] = useState(false);
+  const [formData, setFormData] = useState({
+    registrationId: "",
+    firstName: "",
+    lastName: "",
+    email: "",
+    phoneNo: "",
+    role: ""
+  });
+ 
+  useEffect(() => {
+    setFormData({
+      registrationId: user?.registrationId || localStorage.getItem("userId") || "",
+      firstName: user?.firstName || localStorage.getItem("firstName") || "",
+      lastName: user?.lastName || localStorage.getItem("lastName") || "",
+      email: user?.email || localStorage.getItem("email") || "",
+      phoneNo: user?.phoneNo || localStorage.getItem("phoneNo") || "",
+      role: user?.role || localStorage.getItem("role") || "Customer"
+    });
+  }, [user]);
+ 
   const handleLogout = () => {
     localStorage.clear();
-
-    Swal.fire({
-      title: "Logout Successful!",
-      text: "Redirecting to login...",
-      icon: "success",
-      background: "#2e003e",
-      color: "#ffffff",
-      confirmButtonColor: "#ffb3d9",
-      timer: 2000,
-      showConfirmButton: false
-    });
-
-    setTimeout(() => {
-      navigate("/login", { replace: true });
-    }, 2000);
+    onClose();
+    navigate("/");
+    window.location.reload();
   };
-
+ 
   return (
-    <>
-      <div className="profile-popup" onClick={(e) => e.stopPropagation()}>
-        <button className="close-btn" onClick={onClose}>
-          <FiX />
-        </button>
-
-        <div className="avatar">
-          {user?.firstName?.charAt(0)?.toUpperCase() || "U"}
-        </div>
-
-        {/* ✅ Use firstName + lastName from Registration table */}
-<h4>Hi, {user?.firstName} {user?.lastName}</h4>
-        <p>{user?.role || "Profile"}</p>
-
-        <div className="popup-actions">
-          <button
-            className="action-btn"
-            onClick={() => {
-              onClose();
-              navigate(`/profile/${user?.registrationId || ""}`);
-            }}
-          >
-            <FiUser size={16} />
-            <span>My profile</span>
-          </button>
-
-          <button
-            className="action-btn"
-            onClick={() => setShowLogoutConfirm(true)}
-          >
-            <FiLogOut size={16} />
-            <span>Log out</span>
-          </button>
-        </div>
-
-        <div className="popup-footer">
-          <span>Privacy policy</span>
-          <span>·</span>
-          <span>Terms of service</span>
-        </div>
-      </div>
-
-      {showLogoutConfirm && (
-        <div className="logout-overlay">
-          <div className="logout-modal">
-            <h4>Confirm Log Out</h4>
-            <p>Are you sure you want to log out?</p>
-
-            <div className="logout-actions">
-              <button
-                className="cancel-btn"
-                onClick={() => setShowLogoutConfirm(false)}
-              >
-                Cancel
-              </button>
-
-              <button className="confirm-btn" onClick={handleLogout}>
-                Log out
-              </button>
+    <div className="profile-popup-card">
+      <button className="close-popup-btn" onClick={onClose}><FiX /></button>
+ 
+      {!showForm ? (
+        <>
+          <div className="popup-user-info">
+            <div className="popup-large-avatar">
+              {(formData.firstName.charAt(0) || "U").toUpperCase()}
             </div>
+            <h3>Hi, {formData.firstName}</h3>
+            <p className="popup-role">{formData.role}</p>
           </div>
+ 
+          <div className="popup-menu-list">
+            <button onClick={() => setShowForm(true)}>
+              <FiUser /> My profile
+            </button>
+            <button className="logout-item" onClick={handleLogout}>
+              <FiLogOut /> Log out
+            </button>
+          </div>
+ 
+          <div className="popup-links">
+            <span>Privacy policy</span> • <span>Terms of service</span>
+          </div>
+        </>
+      ) : (
+        <div className="popup-form">
+          <h3>Profile Details</h3>
+          <form>
+         
+            <label>First Name</label>
+            <input name="firstName" value={formData.firstName} readOnly />
+ 
+            <label>Last Name</label>
+            <input name="lastName" value={formData.lastName} readOnly />
+ 
+            <label>Email</label>
+            <input name="email" value={formData.email} readOnly />
+ 
+            <label>Phone No</label>
+            <input name="phoneNo" value={formData.phoneNo} readOnly />
+ 
+            <label>Role</label>
+            <input name="role" value={formData.role} readOnly />
+ 
+            <div className="form-actions">
+              <button type="button" onClick={() => setShowForm(false)}>Close</button>
+            </div>
+          </form>
         </div>
       )}
-    </>
+    </div>
   );
-}
+};
+ 
+export default UserProfilePopup;
+ 
+ 

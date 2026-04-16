@@ -13,34 +13,34 @@ export function Home() {
   const { currentColors, actualTheme, fontSize } = useTheme(); // 2. Get dynamic theme data
  
   const stats = [
-    { label: 'Transactions Scored Daily', value: '50M+', icon: Activity, color: '#34d399' },
+    { label: 'Transactions Scored Daily', value: '5M+', icon: Activity, color: '#34d399' },
     { label: 'False Positives Reduced', value: '45%', icon: TrendingUp, color: '#c084fc' },
-    { label: 'Entities Resolved', value: '12M+', icon: Network, color: '#f472b6' },
-    { label: 'System Uptime Target', value: '99.9%', icon: Shield, color: '#22d3ee' },
+    { label: 'Cases Resolved', value: '1M+', icon: Network, color: '#f472b6' },
+    { label: 'Availability', value: '24/7', icon: Shield, color: '#22d3ee' },
   ];
  
   const features = [
     {
       title: 'Transaction Ingestion & Scoring',
-      description: 'Ingest events via REST API and evaluate them in real-time against rules, scenarios, and behavioral profiles.',
+      description: 'Analyze transactions in real-time and detect suspicious activities using risk-based rules.',
       icon: Zap,
       bgColor: '#9333ea',
     },
     {
       title: 'Alerts & Case Management',
-      description: 'Bundle threshold-breaching alerts into prioritized cases for in-depth investigation and resolution.',
+      description: 'Monitor generated alerts and convert them into cases for investigation.',
       icon: FileSearch,
       bgColor: '#db2777',
     },
     {
-      title: 'Entity Resolution & Watchlists',
-      description: 'Maintain internal watchlists and resolve entity linkages across customer accounts and counterparties.',
+      title: 'Customer Risk Tracking',
+      description: 'Track customer behavior and identify high-risk users based on alerts and activity.',
       icon: Network,
       bgColor: '#059669',
     },
     {
       title: 'Regulatory Reporting (SAR/STR)',
-      description: 'Seamlessly prepare, approve, and maintain comprehensive audit evidence for regulatory submissions.',
+      description: 'Generate reports and visual insights to understand fraud trends and system performance.',
       icon: Scale,
       bgColor: '#0891b2',
     },
@@ -88,7 +88,7 @@ export function Home() {
           <Link to="/" className="d-flex align-items-center gap-3 text-decoration-none">
             <Shield size={32} color={actualTheme === 'light' ? '#9333ea' : "#c084fc"} />
             <div className="d-flex flex-column">
-              <span className="fs-5 fw-bold lh-1" style={{ color: currentColors.textPrimary }}>FraudGuard Bank</span>
+              <span className="fs-5 fw-bold lh-1" style={{ color: currentColors.textPrimary }}>FraudShield </span>
               <span className="text-uppercase fw-medium mt-1" style={{ fontSize: '0.75rem', color: currentColors.textSecondary, letterSpacing: '0.05em' }}>Real-Time AML & Fraud Monitoring</span>
             </div>
           </Link>
@@ -104,98 +104,113 @@ export function Home() {
         </div>
       </nav>
  
-      {/* Hero Section */}
-      <section className="position-relative overflow-hidden py-5 mt-5">
-        <div className="container position-relative z-1 py-5">
-          <div className="row align-items-center gy-5">
-            <div className="col-lg-6 text-start">
-              <div className="d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill mb-4"
-                   style={{
-                     backgroundColor: actualTheme === 'dark' ? 'rgba(168, 85, 247, 0.1)' : 'rgba(147, 51, 234, 0.05)',
-                     border: `1px solid ${currentColors.border}`,
-                     color: actualTheme === 'dark' ? '#d8b4fe' : '#9333ea'
+    
+           
+      <section className="py-5 mt-4">
+        <div className="container">
+          
+          {/* Using pure CSS flexbox here. 
+            flexWrap: 'wrap' is allowed for mobile, but on laptops it will stay side-by-side. 
+          */}
+          <div 
+            className="d-flex flex-column flex-lg-row align-items-center justify-content-between" 
+            style={{ width: '100%', gap: '2rem' }}
+          >
+            
+            {/* LEFT COLUMN: Text Content (Forced to take up 50% of the space) */}
+            <div style={{ flex: '1 1 50%', minWidth: '300px' }} className="text-start">
+              <div className="d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill mb-4" 
+                   style={{ 
+                     backgroundColor: 'rgba(255, 255, 255, 0.05)', 
+                     border: '1px solid rgba(255, 255, 255, 0.1)', 
+                     color: '#e9d5ff' 
                    }}>
-                <Shield size={16} />
+                <Shield size={14} />
                 <span className="fw-medium small">Internal AML & Fraud Monitoring Platform</span>
               </div>
-              <h1 className="display-4 fw-bold mb-4 lh-sm" style={{ color: currentColors.textPrimary }}>
+              
+              <h1 className="display-4 fw-bold mb-4" style={{ color: '#ffffff', lineHeight: '1.2' }}>
                 Enterprise-Grade <br />
                 <span style={styles.textGradient}>Transaction Monitoring</span>
               </h1>
-              <p className="lead mb-4 opacity-75" style={{ maxWidth: '600px', color: currentColors.textPrimary }}>
-                FraudShield provides real-time anti-money laundering (AML) and fraud risk scoring. Designed to empower analysts, investigators, and compliance officers.
+              
+              <p className="lead mb-5" style={{ color: 'rgba(255, 255, 255, 0.7)', maxWidth: '500px' }}>
+                FraudShield provides real-time anti-money laundering (AML) and fraud risk scoring.It continuously monitors transactions in real time, applies advanced detection rules and behavioral scenarios, and assigns risk scores to highlight suspicious activities.
               </p>
-              <Link to="/login" className="btn btn-lg px-5 fw-bold shadow" style={styles.btnGradient}>
-                Launch Portal
-              </Link>
+              
+             
             </div>
-            <div className="col-lg-6 d-flex justify-content-center align-items-center">
-              <HeroAnimation />
+
+            {/* RIGHT COLUMN: Hero Animation (Forced to take up the other 50%) */}
+            <div 
+              style={{ flex: '1 1 50%', display: 'flex', justifyContent: 'center', minWidth: '300px' }}
+            >
+              {/* Added a subtle scale so it fits nicely inside its 50% half without overflowing */}
+              <div style={{ width: '100%', maxWidth: '550px', transform: 'scale(0.95)', transformOrigin: 'center' }}>
+                <HeroAnimation />
+              </div>
             </div>
+
           </div>
         </div>
       </section>
  
       {/* Stats Section - Background scales with theme */}
-      <section className="py-5"
-               style={{
-                 background: actualTheme === 'dark'
-                   ? 'linear-gradient(to right, rgba(88, 28, 135, 0.5), rgba(131, 24, 67, 0.5))'
-                   : 'rgba(0,0,0,0.02)',
-                 backdropFilter: 'blur(4px)',
-                 borderTop: `1px solid ${currentColors.border}`,
-                 borderBottom: `1px solid ${currentColors.border}`
-               }}>
-        <div className="container">
-          <div className="row g-4 text-center">
-            {stats.map((stat, index) => {
-              const Icon = stat.icon;
-              return (
-                <div key={index} className="col-6 col-md-3">
-                  <div className="d-flex justify-content-center mb-3">
-                    <Icon size={32} color={stat.color} />
-                  </div>
-                  <div className="display-6 fw-bold mb-2" style={{ color: currentColors.textPrimary }}>{stat.value}</div>
-                  <div className="fw-medium" style={{ color: currentColors.textSecondary }}>{stat.label}</div>
-                </div>
-              );
-            })}
-          </div>
+     {/* STATS SECTION - FORCED SINGLE ROW */}
+<section className="py-5 border-top border-bottom" style={{ borderColor: 'rgba(255,255,255,0.1)' }}>
+  <div className="container">
+    
+    {/* d-flex and flex-md-nowrap force all items into one horizontal line on desktop */}
+    <div className="d-flex flex-wrap flex-md-nowrap justify-content-center justify-content-md-between text-center gap-4">
+      
+      {stats.map((stat, i) => (
+        
+        <div key={i} style={{ flex: '1 1 0', minWidth: '200px' }}>
+          {/* flex: '1 1 0' ensures every item takes up the exact same amount of space */}
+          
+          <stat.icon size={28} color={stat.color} className="mb-3" />
+          <div className="display-6 fw-bold text-white mb-2">{stat.value}</div>
+          <div className="small fw-medium" style={{ color: 'rgba(255,255,255,0.7)' }}>{stat.label}</div>
         </div>
-      </section>
+
+      ))}
+      
+    </div>
+  </div>
+</section>
  
       {/* Features Section */}
+   {/* FEATURES SECTION - FORCED SINGLE ROW */}
       <section className="py-5 my-5">
         <div className="container">
           <div className="text-center mb-5">
-            <h2 className="display-6 fw-semibold mb-3" style={{ color: currentColors.textPrimary }}>Comprehensive AML Framework</h2>
-            <p className="lead opacity-75 mx-auto" style={{ maxWidth: '700px', color: currentColors.textPrimary }}>
-              A modular system built for RBAC compliance, securing retail and corporate banking products through advanced rule authoring.
+            <h2 className="display-5 fw-bold text-white mb-3">Comprehensive AML Application</h2>
+            <p className="mx-auto" style={{ maxWidth: '600px', color: 'rgba(255,255,255,0.7)' }}>
+             A real-time fraud monitoring system that detects suspicious transactions, generates alerts, and enables case-based investigation using a rule-driven approach.
             </p>
           </div>
-          <div className="row g-4">
-            {features.map((feature, index) => {
-              const Icon = feature.icon;
-              return (
-                <div key={index} className="col-md-6 col-lg-3">
-                  <div className="card h-100 shadow-sm transition-all"
-                       style={{ ...styles.glassCard, transition: 'transform 0.2s' }}
-                       onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-5px)'}
-                       onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}>
-                    <div className="card-body p-4">
-                      <div className="rounded-3 d-inline-flex align-items-center justify-content-center mb-4 shadow"
-                           style={{ width: '48px', height: '48px', backgroundColor: feature.bgColor }}>
-                        <Icon size={24} color="white" />
-                      </div>
-                      <h5 className="fw-bold mb-3" style={{ color: currentColors.textPrimary }}>{feature.title}</h5>
-                      <p style={{ fontSize: '0.95rem', color: currentColors.textSecondary }}>
-                        {feature.description}
-                      </p>
-                    </div>
+          
+          {/* d-flex and flex-xl-nowrap force all 4 cards into one horizontal line on desktops */}
+          <div className="d-flex flex-wrap flex-xl-nowrap justify-content-center gap-4">
+            
+            {features.map((f, i) => (
+              
+              <div key={i} style={{ flex: '1 1 0', minWidth: '240px' }}>
+                {/* flex: '1 1 0' ensures every card takes up exactly 25% of the space */}
+                
+                <div className="card h-100 border-0 shadow-sm p-4 text-start" style={styles.glassCard}>
+                  <div className="d-inline-flex align-items-center justify-content-center mb-4" 
+                       style={{ width: '45px', height: '45px', backgroundColor: f.bgColor, borderRadius: '10px' }}>
+                    <f.icon size={22} color="white" />
                   </div>
+                  <h6 className="fw-bold text-white mb-3">{f.title}</h6>
+                  <p className="small mb-0" style={{ color: 'rgba(255,255,255,0.6)' }}>{f.description}</p>
                 </div>
-              );
-            })}
+
+              </div>
+
+            ))}
+            
           </div>
         </div>
       </section>

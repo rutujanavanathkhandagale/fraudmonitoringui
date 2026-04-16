@@ -1,11 +1,11 @@
 /* customerProfile.css */
-
+ 
 .profile-card {
   max-width: 1000px;
   margin: 2rem auto;
   padding: 2.5rem;
   /* Exact deep purple from your sidebar */
-  background: #1F082A; 
+  background: #1F082A;
   border-radius: 16px;
   border: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
@@ -19,8 +19,8 @@
   font-size: 24px;
   font-weight: bold;
 }
-
-
+ 
+ 
 .profile-header {
   display: flex;
   align-items: center;
@@ -28,7 +28,7 @@
   padding-bottom: 1.5rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
-
+ 
 .profile-avatar-placeholder {
   width: 90px;
   height: 90px;
@@ -44,22 +44,22 @@
   border: 3px solid #ffffff;
   box-shadow: 0 4px 15px rgba(181, 27, 117, 0.4);
 }
-
+ 
 .info-box, .kyc-box {
   /* Slightly lighter purple to create a "card" effect against the background */
-  background: #250B33; 
+  background: #250B33;
   border: 1px solid rgba(255, 255, 255, 0.05);
   border-radius: 12px;
   padding: 1.8rem;
 }
-
+ 
 .section-title {
   font-size: 1.2rem;
   font-weight: 700;
   color: #ffffff;
   margin-bottom: 1.2rem;
 }
-
+ 
 /* Updated Form Inputs to remove white boxes */
 .form-input {
   background: #16061E; /* Dark inset background */
@@ -69,7 +69,7 @@
   padding: 10px;
   width: 100%;
 }
-
+ 
 .btn-save {
   background: linear-gradient(90deg, #6B1D4F 0%, #B51B75 100%);
   color: #fff;
@@ -79,3 +79,5 @@
   border: none;
   cursor: pointer;
 }
+ 
+ 

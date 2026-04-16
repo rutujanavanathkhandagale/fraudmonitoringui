@@ -3,7 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
  
 // Update the port if your backend is running on a different one [cite: 5]
-const API_BASE = "https://localhost:7181/api/Registration";
+const API_BASE = "https://localhost:44372/api/Registration";
  
 export function RegisterPage() {
   const navigate = useNavigate();

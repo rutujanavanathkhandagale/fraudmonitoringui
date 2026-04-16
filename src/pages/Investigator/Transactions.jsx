@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import axios from "axios";
 import {
   BarChart,
@@ -12,8 +12,7 @@ import {
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useTheme } from "../../context/ThemeContext";
 
- 
-// --- Data for Analytics ---
+
 const typeData = [
   { name: "Debit", value: 45 },
   { name: "Credit", value: 30 },
@@ -21,7 +20,7 @@ const typeData = [
   { name: "Crypto", value: 7 },
   { name: "ATM/POS", value: 3 },
 ];
- 
+
 const channelData = [
   { name: "Online", value: 40 },
   { name: "Mobile", value: 25 },
@@ -29,64 +28,42 @@ const channelData = [
   { name: "POS", value: 10 },
   { name: "Wire", value: 10 },
 ];
- 
+
 const customerData = [
   { name: "Retail", value: 55 },
   { name: "Student", value: 25 },
   { name: "Business", value: 20 },
 ];
- 
+
 const Transactions = () => {
   const { currentColors, actualTheme } = useTheme();
- 
-  const [formData, setFormData] = useState({
-    accountID: "", customerId: "", customerType: "", counterpartyAccount: "",
-    amount: "", currency: "", transactionType: "", channel: "",
-    timestamp: "", geoLocation: "", status: "", sourceType: "",
-  });
- 
-  const [errors, setErrors] = useState({});
- 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-    if (errors[e.target.name]) {
-      setErrors({ ...errors, [e.target.name]: null });
-    }
-  };
- 
-  const validateForm = () => {
-    let newErrors = {};
-    if (!formData.accountID) newErrors.accountID = "AccountID is required.";
-    if (!formData.customerId) newErrors.customerId = "CustomerId is required.";
-    if (!formData.customerType) newErrors.customerType = "Customer type is required.";
-    if (!formData.counterpartyAccount) newErrors.counterpartyAccount = "CounterpartyAccount is required.";
-    if (!formData.amount || formData.amount <= 0) newErrors.amount = "Amount must be greater than zero.";
-    if (!formData.currency) newErrors.currency = "Currency is required.";
-    if (!formData.transactionType) newErrors.transactionType = "TransactionType is required.";
-    if (!formData.channel) newErrors.channel = "Channel is required.";
-    if (!formData.timestamp) newErrors.timestamp = "Timestamp is required.";
-    if (!formData.status) newErrors.status = "Status is required.";
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
- 
+
+  // Optimized Form Handling
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!validateForm()) return;
+    const form = e.target;
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData.entries());
+
+    // Basic Validation
+    if (!data.accountID || !data.customerId || !data.customerType || !data.counterpartyAccount || !data.currency || !data.transactionType || !data.channel || !data.timestamp || !data.status) {
+      alert("Please fill out all required fields.");
+      return;
+    }
+    if (Number(data.amount) <= 0) {
+      alert("Amount must be greater than zero.");
+      return;
+    }
+
     try {
-      await axios.post("https://localhost:44372/api/Transaction", formData);
+      await axios.post("https://localhost:44372/api/Transaction", data);
       alert("Transaction successfully added!");
-      setFormData({
-        accountID: "", customerId: "", customerType: "", counterpartyAccount: "",
-        amount: "", currency: "", transactionType: "", channel: "",
-        timestamp: "", geoLocation: "", status: "", sourceType: "",
-      });
-      setErrors({});
+      form.reset(); 
     } catch (err) {
       alert("Failed to add transaction");
     }
   };
- 
+
   // DYNAMIC STYLE LOGIC
   const dynamicInputStyle = {
     backgroundColor: actualTheme === 'dark' ? "rgba(255, 255, 255, 0.05)" : "rgba(0, 0, 0, 0.05)",
@@ -95,30 +72,49 @@ const Transactions = () => {
     borderRadius: "8px",
     padding: "10px"
   };
- 
+
+  // Explicitly define the dropdown arrow (chevron) SVG so it never disappears 
+  const dynamicSelectStyle = {
+    ...dynamicInputStyle,
+    backgroundImage: actualTheme === 'dark' 
+      ? `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e")` 
+      : `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23333333' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e")`,
+    backgroundRepeat: "no-repeat",
+    backgroundPosition: "right 0.75rem center",
+    backgroundSize: "16px 12px",
+    appearance: "none",
+    WebkitAppearance: "none"
+  };
+
   const dynamicLabelStyle = {
     color: currentColors.textPrimary,
     fontWeight: "bold",
     marginBottom: "0.5rem",
     display: "block"
   };
- 
+
   const tooltipStyle = {
     backgroundColor: actualTheme === 'dark' ? '#020617' : '#ffffff',
     borderColor: currentColors.border,
     color: currentColors.textPrimary,
     borderRadius: '8px'
   };
- 
+
+  const optionStyle = {
+    backgroundColor: actualTheme === 'dark' ? '#2D1F49' : '#ffffff',
+    color: currentColors.textPrimary
+  };
+
   return (
-    <div className="container-fluid px-4 pb-4" style={{ backgroundColor: "transparent", minHeight: "100vh", paddingTop: "80px" }}>
-     
+    // Reduced paddingTop from 80px to 24px to bring the header closer to the top
+    <div className="container-fluid px-4 pb-4" style={{ backgroundColor: "transparent", minHeight: "100vh", paddingTop: "24px" }}>
+      
       {/* 1. Header */}
       <div className="mb-4 text-start">
         <h2 className="fw-bold mb-0" style={{ color: currentColors.textPrimary }}>Transaction Intelligence</h2>
         <p className="small" style={{ color: currentColors.textSecondary }}>Ingestion & Monitoring Dashboard</p>
       </div>
- 
+
       {/* 2. Banner Section */}
       <div
         className="rounded-4 mb-4 position-relative overflow-hidden shadow"
@@ -137,117 +133,117 @@ const Transactions = () => {
           </p>
         </div>
       </div>
- 
-      {/* 3. Transaction Detail Form - FIX: Wrapped in a Card for structure! */}
+
+      {/* 3. Transaction Detail Form */}
       <div className="card border-0 shadow-sm mb-5" style={{ backgroundColor: currentColors.cardBg, borderRadius: "12px" }}>
         <div className="card-body p-4 p-md-5 text-start">
           <h5 className="mb-4" style={{ color: currentColors.textPrimary, fontWeight: "bold" }}>Add Transaction Details</h5>
+          
           <form className="row g-4" onSubmit={handleSubmit}>
-           
-            <div className="col-md-4">
+            
+            <div className="col-12 col-md-6 col-lg-4">
               <label className="small" style={dynamicLabelStyle}>Account ID</label>
-              <input type="number" name="accountID" value={formData.accountID} onChange={handleChange} className="form-control" style={dynamicInputStyle} placeholder="Enter Account ID" />
+              <input type="number" name="accountID" className="form-control shadow-none" style={dynamicInputStyle} placeholder="Enter Account ID" required />
             </div>
- 
-            <div className="col-md-4">
+
+            <div className="col-12 col-md-6 col-lg-4">
               <label className="small" style={dynamicLabelStyle}>Customer ID</label>
-              <input type="number" name="customerId" value={formData.customerId} onChange={handleChange} className="form-control" style={dynamicInputStyle} placeholder="Enter Customer ID" />
+              <input type="number" name="customerId" className="form-control shadow-none" style={dynamicInputStyle} placeholder="Enter Customer ID" required />
             </div>
- 
-            <div className="col-md-4">
+
+            <div className="col-12 col-md-6 col-lg-4">
               <label className="small" style={dynamicLabelStyle}>Customer Type</label>
-              <select name="customerType" value={formData.customerType} onChange={handleChange} className="form-select" style={dynamicInputStyle}>
-                <option value="" className="text-dark">Select Customer Type</option>
-                <option value="Business" className="text-dark">Business</option>
-                <option value="Student" className="text-dark">Student</option>
-                <option value="Retail" className="text-dark">Retail</option>
+              <select name="customerType" className="form-select shadow-none" style={dynamicSelectStyle} required>
+                <option value="" style={optionStyle}>Select Customer Type</option>
+                <option value="Business" style={optionStyle}>Business</option>
+                <option value="Student" style={optionStyle}>Student</option>
+                <option value="Retail" style={optionStyle}>Retail</option>
               </select>
             </div>
- 
-            <div className="col-md-4">
+
+            <div className="col-12 col-md-6 col-lg-4">
               <label className="small" style={dynamicLabelStyle}>Counterparty Account</label>
-              <input type="text" name="counterpartyAccount" value={formData.counterpartyAccount} onChange={handleChange} className="form-control" style={dynamicInputStyle} placeholder="Enter Counterparty" />
+              <input type="text" name="counterpartyAccount" className="form-control shadow-none" style={dynamicInputStyle} placeholder="Enter Counterparty" required />
             </div>
- 
-            <div className="col-md-4">
+
+            <div className="col-12 col-md-6 col-lg-4">
               <label className="small" style={dynamicLabelStyle}>Amount</label>
-              <input type="number" step="0.01" name="amount" value={formData.amount} onChange={handleChange} className="form-control" style={dynamicInputStyle} placeholder="0.00" />
+              <input type="number" step="0.01" name="amount" className="form-control shadow-none" style={dynamicInputStyle} placeholder="0.00" required />
             </div>
- 
-            <div className="col-md-4">
+
+            <div className="col-12 col-md-6 col-lg-4">
               <label className="small" style={dynamicLabelStyle}>Currency</label>
-              <input type="text" name="currency" value={formData.currency} onChange={handleChange} className="form-control" style={dynamicInputStyle} placeholder="USD" />
+              <input type="text" name="currency" className="form-control shadow-none" style={dynamicInputStyle} placeholder="USD" required />
             </div>
- 
-            {/* FIX: Aligned Radio Buttons using Bootstrap form-check */}
-            <div className="col-md-4">
+
+            <div className="col-12 col-md-6 col-lg-4">
               <label className="small" style={dynamicLabelStyle}>Transaction Type</label>
               <div className="d-flex gap-4 mt-2" style={{ color: currentColors.textPrimary }}>
                 <div className="form-check">
-                  <input className="form-check-input" type="radio" name="transactionType" value="Credit" id="typeCredit" checked={formData.transactionType === "Credit"} onChange={handleChange} style={{ cursor: "pointer" }} />
+                  <input className="form-check-input" type="radio" name="transactionType" value="Credit" id="typeCredit" style={{ cursor: "pointer" }} required />
                   <label className="form-check-label small" htmlFor="typeCredit" style={{ cursor: "pointer" }}>Credit</label>
                 </div>
                 <div className="form-check">
-                  <input className="form-check-input" type="radio" name="transactionType" value="Debit" id="typeDebit" checked={formData.transactionType === "Debit"} onChange={handleChange} style={{ cursor: "pointer" }} />
+                  <input className="form-check-input" type="radio" name="transactionType" value="Debit" id="typeDebit" style={{ cursor: "pointer" }} required />
                   <label className="form-check-label small" htmlFor="typeDebit" style={{ cursor: "pointer" }}>Debit</label>
                 </div>
               </div>
             </div>
- 
-            <div className="col-md-4">
+
+            <div className="col-12 col-md-6 col-lg-4">
               <label className="small" style={dynamicLabelStyle}>Channel</label>
-              <select name="channel" value={formData.channel} onChange={handleChange} className="form-select" style={dynamicInputStyle}>
-                <option value="" className="text-dark">Select Channel</option>
-                <option value="Branch" className="text-dark">Branch</option>
-                <option value="ATM" className="text-dark">ATM</option>
-                <option value="Online" className="text-dark">Online</option>
+              <select name="channel" className="form-select shadow-none" style={dynamicSelectStyle} required>
+                <option value="" style={optionStyle}>Select Channel</option>
+                <option value="Branch" style={optionStyle}>Branch</option>
+                <option value="ATM" style={optionStyle}>ATM</option>
+                <option value="Online" style={optionStyle}>Online</option>
               </select>
             </div>
- 
-            <div className="col-md-4">
+
+            <div className="col-12 col-md-6 col-lg-4">
               <label className="small" style={dynamicLabelStyle}>Timestamp</label>
-              <input type="datetime-local" name="timestamp" value={formData.timestamp} onChange={handleChange} className="form-control" style={dynamicInputStyle} />
+              <input type="datetime-local" name="timestamp" className="form-control shadow-none" style={dynamicInputStyle} required />
             </div>
- 
-            <div className="col-md-4">
+
+            <div className="col-12 col-md-6 col-lg-4">
               <label className="small" style={dynamicLabelStyle}>GeoLocation</label>
-              <input type="text" name="geoLocation" value={formData.geoLocation} onChange={handleChange} className="form-control" style={dynamicInputStyle} placeholder="Lat, Long" />
+              <input type="text" name="geoLocation" className="form-control shadow-none" style={dynamicInputStyle} placeholder="Lat, Long" />
             </div>
- 
-            {/* FIX: Aligned Radio Buttons using Bootstrap form-check */}
-            <div className="col-md-4">
+
+            <div className="col-12 col-md-6 col-lg-4">
               <label className="small" style={dynamicLabelStyle}>Status</label>
               <div className="d-flex gap-4 mt-2" style={{ color: currentColors.textPrimary }}>
                 <div className="form-check">
-                  <input className="form-check-input" type="radio" name="status" value="Posted" id="statusPosted" checked={formData.status === "Posted"} onChange={handleChange} style={{ cursor: "pointer" }} />
+                  <input className="form-check-input" type="radio" name="status" value="Posted" id="statusPosted" style={{ cursor: "pointer" }} required />
                   <label className="form-check-label small" htmlFor="statusPosted" style={{ cursor: "pointer" }}>Posted</label>
                 </div>
                 <div className="form-check">
-                  <input className="form-check-input" type="radio" name="status" value="Reversed" id="statusReversed" checked={formData.status === "Reversed"} onChange={handleChange} style={{ cursor: "pointer" }} />
+                  <input className="form-check-input" type="radio" name="status" value="Reversed" id="statusReversed" style={{ cursor: "pointer" }} required />
                   <label className="form-check-label small" htmlFor="statusReversed" style={{ cursor: "pointer" }}>Reversed</label>
                 </div>
               </div>
             </div>
- 
-            <div className="col-md-4">
+
+            <div className="col-12 col-md-6 col-lg-4">
               <label className="small" style={dynamicLabelStyle}>Source Type</label>
-              <input type="text" name="sourceType" value={formData.sourceType} onChange={handleChange} className="form-control" style={dynamicInputStyle} placeholder="Source Type" />
+              <input type="text" name="sourceType" className="form-control shadow-none" style={dynamicInputStyle} placeholder="Source Type" />
             </div>
- 
-            <div className="col-12 mt-4 pt-2 border-top" style={{ borderColor: currentColors.border }}>
-              <button type="submit" className="btn px-4 py-2 me-3 shadow-sm mt-3" style={{ backgroundColor: "#ff0080", color: "#fff", fontWeight: "bold", border: "none", borderRadius: "8px" }}>Submit</button>
-              <button type="reset" className="btn px-4 py-2 shadow-sm mt-3" style={{ backgroundColor: "#8e2de2", color: "#fff", fontWeight: "bold", border: "none", borderRadius: "8px" }} onClick={() => setFormData({})}>Reset</button>
+
+            {/* Added pt-4 and pb-3 here to create clear breathing room above and below the buttons */}
+            <div className="col-12 mt-4 pt-4 pb-3 border-top" style={{ borderColor: currentColors.border }}>
+              <button type="submit" className="btn px-4 py-2 me-3 shadow-sm" style={{ backgroundColor: "#ff0080", color: "#fff", fontWeight: "bold", border: "none", borderRadius: "8px" }}>Submit</button>
+              <button type="reset" className="btn px-4 py-2 shadow-sm" style={{ backgroundColor: "#8e2de2", color: "#fff", fontWeight: "bold", border: "none", borderRadius: "8px" }}>Reset</button>
             </div>
           </form>
         </div>
       </div>
- 
+
       <hr style={{ borderColor: currentColors.border, margin: "3rem 0" }} />
- 
+
       {/* 4. Charts Section */}
       <div className="row mt-4">
-       
-        <div className="col-md-4 mb-5">
+        
+        <div className="col-lg-4 mb-5">
           <h6 className="fw-bold mb-4 text-center" style={{ color: currentColors.textPrimary }}>Transaction Types</h6>
           <ResponsiveContainer width="100%" height={260}>
             <BarChart data={typeData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
@@ -259,8 +255,8 @@ const Transactions = () => {
             </BarChart>
           </ResponsiveContainer>
         </div>
- 
-        <div className="col-md-4 mb-5">
+
+        <div className="col-lg-4 mb-5">
           <h6 className="fw-bold mb-4 text-center" style={{ color: currentColors.textPrimary }}>Channel Usage</h6>
           <ResponsiveContainer width="100%" height={260}>
             <BarChart data={channelData} layout="vertical" margin={{ top: 10, right: 20, left: 10, bottom: 0 }}>
@@ -272,8 +268,8 @@ const Transactions = () => {
             </BarChart>
           </ResponsiveContainer>
         </div>
- 
-        <div className="col-md-4 mb-5">
+
+        <div className="col-lg-4 mb-5">
           <h6 className="fw-bold mb-4 text-center" style={{ color: currentColors.textPrimary }}>Customer Segments</h6>
           <ResponsiveContainer width="100%" height={260}>
             <BarChart data={customerData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
@@ -285,10 +281,10 @@ const Transactions = () => {
             </BarChart>
           </ResponsiveContainer>
         </div>
- 
+
       </div>
     </div>
   );
 };
- 
+
 export default Transactions;

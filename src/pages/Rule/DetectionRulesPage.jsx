@@ -1,21 +1,22 @@
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
-
+ 
 import { getAllDetectionRules, deleteDetectionRule } from "../../services/Rule/detectionRuleService";
 import DetectionRuleList from "../../components/Rule/DetectionRuleList";
 import DetectionRuleForm from "../../components/Rule/DetectionRuleForm";
 import DetectionRuleEditForm from "../../components/Rule/DetectionRuleEditForm";
-
+import "../../styles/Rule/rule.css";
+ 
 export default function DetectionRulePage() {
   const [rules, setRules] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [editingRule, setEditingRule] = useState(null);
   const [deletingRule, setDeletingRule] = useState(null);
-
+ 
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
-
+ 
   const fetchData = async () => {
     try {
       const data = await getAllDetectionRules();
@@ -26,11 +27,11 @@ export default function DetectionRulePage() {
       setLoading(false);
     }
   };
-
+ 
   useEffect(() => {
     fetchData();
   }, []);
-
+ 
   const handleDelete = async () => {
     try {
       await deleteDetectionRule(deletingRule.ruleId);
@@ -59,60 +60,63 @@ export default function DetectionRulePage() {
       });
     }
   };
-
+ 
   const handleReset = () => {
     setSearchTerm("");
     setStatusFilter("All");
   };
-
+ 
   const filteredRules = rules.filter((rule) => {
     const keyword = searchTerm.toLowerCase().trim();
-    
+   
     const matchesSearch =
       rule.scenario?.name?.toLowerCase().includes(keyword) ||
       rule.scenario?.riskDomain?.toLowerCase().includes(keyword) ||
       rule.expression?.toLowerCase().includes(keyword) ||
       rule.customerType?.toLowerCase().includes(keyword);
-
+ 
     const matchesStatus = statusFilter === "All" || rule.status === statusFilter;
     return matchesSearch && matchesStatus;
   });
-
+ 
   if (loading) return <div className="p-4 text-white">Loading detection rules...</div>;
-
+ 
   return (
     <div className="p-4">
       <h2 className="fw-bold mb-1 text-white">Detection Rule Management</h2>
       <p className="opacity-75 mb-4 text-white" style={{ fontSize: "0.9rem" }}>
         Configure and manage detection rules with custom expressions and thresholds
       </p>
-
+ 
+     
       {/* Summary Stats */}
-      <div className="row mb-4">
-        <div className="col-md-4">
-          <div className="summary-box text-center">
-            <h6 className="opacity-75">Total Rules</h6>
-            <h3 className="fw-bold mb-0 text-white">{rules.length}</h3>
-          </div>
+      {/* Summary Stats */}
+      <div className="rule-stats-row mb-4">
+       
+        {/* Total Rules Card */}
+        <div className="rule-card">
+          <span className="card-label text-white">Total Rules</span>
+          <span className="card-value text-white">{rules.length}</span>
         </div>
-        <div className="col-md-4">
-          <div className="summary-box text-center">
-            <h6 className="opacity-75 text-success">Active Rules</h6>
-            <h3 className="fw-bold mb-0 text-success">
-              {rules.filter((r) => r.status === "Active").length}
-            </h3>
-          </div>
+ 
+        {/* Active Rules Card */}
+        <div className="rule-card">
+          <span className="card-label text-success-custom">Active Rules</span>
+          <span className="card-value text-success-custom">
+            {rules.filter((r) => r.status === "Active").length}
+          </span>
         </div>
-        <div className="col-md-4">
-          <div className="summary-box text-center">
-            <h6 className="opacity-75 text-danger">Inactive Rules</h6>
-            <h3 className="fw-bold mb-0 text-danger">
-              {rules.filter((r) => r.status === "Inactive").length}
-            </h3>
-          </div>
+ 
+        {/* Inactive Rules Card */}
+        <div className="rule-card">
+          <span className="card-label text-danger-custom">Inactive Rules</span>
+          <span className="card-value text-danger-custom">
+            {rules.filter((r) => r.status === "Inactive").length}
+          </span>
         </div>
+ 
       </div>
-
+ 
       {/* Search & Filters */}
       <div className="glass-panel p-3 mb-4">
         <div className="d-flex gap-3 flex-wrap">
@@ -142,7 +146,7 @@ export default function DetectionRulePage() {
           </button>
         </div>
       </div>
-
+ 
       {/* Rule List */}
       <div className="glass-panel p-0 overflow-hidden">
         <DetectionRuleList
@@ -151,7 +155,7 @@ export default function DetectionRulePage() {
           onDelete={setDeletingRule}
         />
       </div>
-
+ 
       {/* CREATE MODAL */}
       {showCreateForm && (
         <div className="modal d-block" style={{ background: "rgba(0,0,0,0.8)" }}>
@@ -171,7 +175,7 @@ export default function DetectionRulePage() {
           </div>
         </div>
       )}
-
+ 
       {/* EDIT MODAL */}
       {editingRule && (
         <div className="modal d-block" style={{ background: "rgba(0,0,0,0.8)" }}>
@@ -184,7 +188,7 @@ export default function DetectionRulePage() {
               </div>
               <div className="modal-body">
                 <DetectionRuleEditForm
-                  rule={editingRule} 
+                  rule={editingRule}
                   onRuleUpdated={() => { fetchData(); setEditingRule(null); }}
                 />
               </div>
@@ -192,7 +196,7 @@ export default function DetectionRulePage() {
           </div>
         </div>
       )}
-
+ 
       {/* DELETE MODAL */}
       {deletingRule && (
         <div className="modal d-block" style={{ background: "rgba(0,0,0,0.8)" }}>

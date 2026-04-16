@@ -1,63 +1,93 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useReducer, useMemo, useRef } from "react";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useTheme } from "../../context/ThemeContext";
- // <-- IMPORT THEME CONTEXT
- 
+
+// --- Reducer for Alternative Data Handling ---
+const initialState = {
+  transactions: [],
+  loading: true,
+  error: null,
+  filters: { location: "", id: "", amount: "" }
+};
+
+function dashboardReducer(state, action) {
+  switch (action.type) {
+    case "FETCH_SUCCESS":
+      return { ...state, transactions: action.payload, loading: false };
+    case "FETCH_ERROR":
+      return { ...state, error: action.payload, loading: false };
+    case "APPLY_FILTERS":
+      return { ...state, filters: action.payload };
+    case "CLEAR_FILTERS":
+      return { ...state, filters: { location: "", id: "", amount: "" } };
+    default:
+      return state;
+  }
+}
+
 const Dashboard = () => {
-  const { currentColors, actualTheme } = useTheme(); // <-- GET DYNAMIC COLORS
- 
-  const [transactions, setTransactions] = useState([]);
-  const [search, setSearch] = useState({ location: "", id: "", amount: "" });
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true);
- 
+  const { currentColors, actualTheme } = useTheme();
+  
+  const [state, dispatch] = useReducer(dashboardReducer, initialState);
+  const formRef = useRef(null);
+
   // --- Fetch Data ---
   useEffect(() => {
     const fetchTransactions = async () => {
       try {
         const res = await axios.get("https://localhost:44372/api/Transaction");
-        setTransactions(res.data);
+        dispatch({ type: "FETCH_SUCCESS", payload: res.data });
       } catch (err) {
         console.error("Error fetching transactions:", err);
-        setError("Failed to fetch transactions. Please ensure the API is online.");
-      } finally {
-        setLoading(false);
+        dispatch({ 
+          type: "FETCH_ERROR", 
+          payload: "Failed to fetch transactions. Please ensure the API is online." 
+        });
       }
     };
- 
+
     fetchTransactions();
   }, []);
- 
-  // --- Search Logic (Optimized with useMemo) ---
+
+  // --- Search Logic ---
   const filteredTransactions = useMemo(() => {
-    return transactions.filter((t) => {
+    return state.transactions.filter((t) => {
       const matchLocation = (t.geoLocation || "")
         .toLowerCase()
-        .includes(search.location.toLowerCase());
-     
-      const matchId = search.id
-        ? String(t.transactionID) === String(search.id)
+        .includes(state.filters.location.toLowerCase());
+      
+      const matchId = state.filters.id
+        ? String(t.transactionID) === String(state.filters.id)
         : true;
- 
-      const matchAmount = search.amount
-        ? t.amount >= parseFloat(search.amount)
+
+      const matchAmount = state.filters.amount
+        ? t.amount >= parseFloat(state.filters.amount)
         : true;
- 
+
       return matchLocation && matchId && matchAmount;
     });
-  }, [transactions, search]);
- 
-  const handleSearchChange = (e) => {
-    const { name, value } = e.target;
-    setSearch((prev) => ({ ...prev, [name]: value }));
+  }, [state.transactions, state.filters]);
+
+  const handleApplyFilters = (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    dispatch({
+      type: "APPLY_FILTERS",
+      payload: {
+        location: formData.get("location") || "",
+        id: formData.get("id") || "",
+        amount: formData.get("amount") || ""
+      }
+    });
   };
- 
-  const resetSearch = () => {
-    setSearch({ location: "", id: "", amount: "" });
+
+  const handleClearFilters = () => {
+    if (formRef.current) formRef.current.reset();
+    dispatch({ type: "CLEAR_FILTERS" });
   };
- 
-  if (loading) {
+
+  if (state.loading) {
     return (
       <div className="text-center py-5">
         <div className="spinner-border text-primary" role="status">
@@ -66,112 +96,128 @@ const Dashboard = () => {
       </div>
     );
   }
- 
+
   // DYNAMIC STYLE LOGIC FOR INPUTS
   const dynamicInputStyle = {
     backgroundColor: actualTheme === 'dark' ? "rgba(255, 255, 255, 0.05)" : "rgba(0, 0, 0, 0.05)",
     color: currentColors.textPrimary,
     border: `1px solid ${currentColors.border}`,
   };
- 
-  // DYNAMIC TABLE CLASS
+
   const tableClass = actualTheme === 'dark' ? 'table-dark' : 'table-light';
- 
+
   return (
     <div
-      className="container-fluid py-4 pt-4"
+      className="container-fluid py-3"
       style={{
         background: "transparent",
         minHeight: "100%",
-        color: currentColors.textPrimary, // Changed from hardcoded #fff
+        color: currentColors.textPrimary,
       }}
     >
-      <header className="mb-4 mt-4">
-        {/* Changed from text-light */}
-        <h2 className="fw-bold" style={{ color: currentColors.textPrimary }}>FraudShield Dashboard</h2>
-        <p className="small" style={{ color: currentColors.textSecondary }}>Real-time Transaction Monitoring</p>
+      <header className="mb-3">
+        <h2 className="fw-bold mb-1" style={{ color: currentColors.textPrimary }}>FraudShield Dashboard</h2>
+        <p className="small mb-0" style={{ color: currentColors.textSecondary }}>Real-time Transaction Monitoring</p>
       </header>
- 
-      {error && <div className="alert alert-danger">{error}</div>}
- 
+
+      {state.error && <div className="alert alert-danger">{state.error}</div>}
+
       {/* Search Bar Section */}
       <section
         className="card shadow-sm mb-4 border-0"
         style={{
-          backgroundColor: currentColors.cardBg, // Changed from hardcoded rgba
+          backgroundColor: currentColors.cardBg,
           backdropFilter: actualTheme === 'frost' ? "blur(10px)" : "none",
           border: `1px solid ${currentColors.border}`
         }}
       >
         <div className="card-body p-4">
-          <h5 className="card-title mb-3 fw-bold" style={{ color: currentColors.textPrimary }}>Filter Transactions</h5>
-          <form className="row g-3" onSubmit={(e) => e.preventDefault()}>
-            <div className="col-md-4">
-              <label className="form-label small fw-bold" style={{ color: currentColors.textPrimary }}>Location</label>
+          
+          {/* Title with the required bottom margin (mb-4) to separate it from the inputs */}
+          <h5 className="fw-bold mb-4" style={{ color: currentColors.textPrimary }}>
+            Filter Transactions
+          </h5>
+
+          {/* Strict Bootstrap Grid Structure */}
+          <form ref={formRef} className="row g-3 align-items-end" onSubmit={handleApplyFilters}>
+            
+            <div className="col-12 col-md-6 col-xl-3">
+              <label className="form-label small fw-bold mb-2" style={{ color: currentColors.textPrimary }}>Location</label>
               <input
                 type="text"
                 name="location"
-                className="form-control shadow-none"
-                style={dynamicInputStyle} // Applies dynamic theme
-                value={search.location}
-                onChange={handleSearchChange}
+                className="form-control shadow-none py-2"
+                style={dynamicInputStyle}
                 placeholder="City or Country"
               />
             </div>
-            <div className="col-md-4">
-              <label className="form-label small fw-bold" style={{ color: currentColors.textPrimary }}>Transaction ID</label>
+            
+            <div className="col-12 col-md-6 col-xl-3">
+              <label className="form-label small fw-bold mb-2" style={{ color: currentColors.textPrimary }}>Transaction ID</label>
               <input
                 type="text"
                 name="id"
-                className="form-control shadow-none"
-                style={dynamicInputStyle} // Applies dynamic theme
-                value={search.id}
-                onChange={handleSearchChange}
+                className="form-control shadow-none py-2"
+                style={dynamicInputStyle}
                 placeholder="Exact ID"
               />
             </div>
-            <div className="col-md-4">
-              <label className="form-label small fw-bold" style={{ color: currentColors.textPrimary }}>Min. Amount</label>
+            
+            <div className="col-12 col-md-6 col-xl-3">
+              <label className="form-label small fw-bold mb-2" style={{ color: currentColors.textPrimary }}>Min. Amount</label>
               <input
                 type="number"
                 name="amount"
-                className="form-control shadow-none"
-                style={dynamicInputStyle} // Applies dynamic theme
-                value={search.amount}
-                onChange={handleSearchChange}
+                className="form-control shadow-none py-2"
+                style={dynamicInputStyle}
                 placeholder="0.00"
               />
             </div>
-            <div className="col-12 pt-2">
-              <button
-                type="button"
-                onClick={resetSearch}
-                className="btn px-4 py-2 fw-bold shadow-sm"
-                style={{
-                  color: currentColors.textPrimary,
-                  border: `1px solid ${currentColors.border}`,
-                  backgroundColor: actualTheme === 'dark' ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)"
-                }}
-              >
-                Clear Filters
-              </button>
+            
+            {/* Buttons perfectly spanning the final grid column */}
+            <div className="col-12 col-md-6 col-xl-3">
+              <div className="d-flex gap-2 w-100">
+                <button
+                  type="submit"
+                  className="btn flex-grow-1 py-2 fw-bold shadow-sm"
+                  style={{
+                    backgroundColor: "#8e2de2",
+                    color: "#fff",
+                    border: "none",
+                  }}
+                >
+                  Apply
+                </button>
+                <button
+                  type="button"
+                  onClick={handleClearFilters}
+                  className="btn flex-grow-1 py-2 fw-bold shadow-sm"
+                  style={{
+                    color: currentColors.textPrimary,
+                    border: `1px solid ${currentColors.border}`,
+                    backgroundColor: actualTheme === 'dark' ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.05)"
+                  }}
+                >
+                  Clear
+                </button>
+              </div>
             </div>
+
           </form>
         </div>
       </section>
- 
+
       {/* Transactions Table Section */}
       <section
         className="card shadow-sm border-0 mb-5"
         style={{
-          backgroundColor: currentColors.cardBg, // Dynamic Background
+          backgroundColor: currentColors.cardBg,
           border: `1px solid ${currentColors.border}`,
           overflow: 'hidden'
         }}
       >
         <div className="card-body p-0">
           <div className="table-responsive">
-            {/* Dynamic Table Class applied here */}
             <table className={`table ${tableClass} table-hover mb-0 align-middle bg-transparent`}>
               <thead style={{ position: "sticky", top: 0, zIndex: 1, borderBottom: `2px solid ${currentColors.border}` }}>
                 <tr>
@@ -192,7 +238,6 @@ const Dashboard = () => {
                       <td style={{ color: currentColors.textSecondary }}>{t.accountID}</td>
                       <td className="fw-bold" style={{ color: currentColors.textPrimary }}>${t.amount?.toLocaleString()}</td>
                       <td>
-                        {/* Dynamic Badges that look good in both light and dark mode */}
                         <span
                           className="badge px-2 py-1"
                           style={{
@@ -231,5 +276,5 @@ const Dashboard = () => {
     </div>
   );
 };
- 
+
 export default Dashboard;

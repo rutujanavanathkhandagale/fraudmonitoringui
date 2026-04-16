@@ -1,14 +1,13 @@
 // src/components/Header.jsx
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { BsBellFill } from "react-icons/bs";
 import { FiShield, FiMenu } from "react-icons/fi";
 import { useTheme } from "../../context/ThemeContext";
 import { useAuth } from "../../context/AuthContext";
 import UserProfilePopup from "./UserProfilePopup";
 import "../../style/UserProfilePopup.css";
 
-const Header = ({ collapsed, setCollapsed, notificationCount = 0 }) => {
+const Header = ({ collapsed, setCollapsed }) => {
   const { currentColors } = useTheme();
   const { user } = useAuth(); // ✅ get logged-in user
   const navigate = useNavigate();
@@ -65,32 +64,12 @@ const Header = ({ collapsed, setCollapsed, notificationCount = 0 }) => {
       letterSpacing: "1px",
       fontWeight: "bold",
     },
-    bellWrapper: {
-      position: "relative",
+    profileContainer: { 
+      display: "flex", 
+      alignItems: "center", 
       cursor: "pointer",
-      display: "flex",
-      alignItems: "center",
-      paddingRight: "15px",
-      borderRight: `1px solid ${currentColors.border}`,
-      marginRight: "15px",
+      marginLeft: "15px" // Added margin since the bell is gone
     },
-    bell: { fontSize: "1.4rem", color: "gold", marginRight: "8px" },
-    notificationCount: {
-      position: "absolute",
-      top: "-5px",
-      right: "10px",
-      backgroundColor: "#ff0080",
-      color: "#fff",
-      borderRadius: "50%",
-      fontSize: "0.7rem",
-      fontWeight: "bold",
-      width: "18px",
-      height: "18px",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-    },
-    profileContainer: { display: "flex", alignItems: "center", cursor: "pointer" },
     avatar: {
       width: "38px",
       height: "38px",
@@ -111,6 +90,8 @@ const Header = ({ collapsed, setCollapsed, notificationCount = 0 }) => {
       fontSize: "0.95rem",
       textDecoration: "none",
       marginRight: "20px",
+      borderRight: `1px solid ${currentColors.border}`, // Moved the border to the navLink
+      paddingRight: "20px",
       transition: "color 0.3s",
     },
   };
@@ -142,27 +123,15 @@ const Header = ({ collapsed, setCollapsed, notificationCount = 0 }) => {
           <Link to="/about" style={styles.navLink}>About</Link>
         </nav>
 
-        {/* Notification Bell */}
-        <div
-          style={styles.bellWrapper}
-          className="ms-3"
-          onClick={() => navigate(`/notification/${id}`)}
-          title="Notifications"
-        >
-          <BsBellFill style={styles.bell} />
-          {notificationCount > 0 && (
-            <div style={styles.notificationCount}>{notificationCount}</div>
-          )}
-        </div>
-
         {/* Profile */}
         <div style={styles.profileContainer} onClick={() => setShowProfile(true)}>
           <div style={styles.avatar}>
-            {user?.fullName?.charAt(0)?.toUpperCase() || "U"}
+            {/* FIX: Changed fallback character from "U" to "L" */}
+            {user?.fullName?.charAt(0)?.toUpperCase() || "L"}
           </div>
           <div className="d-flex flex-column d-none d-sm-block">
             <span style={styles.name} className="mb-0">
-              {user?.fullName || "Guest"}
+              {user?.fullName || "Litika Gaikwad"}
             </span>
           </div>
         </div>

@@ -5,11 +5,11 @@ import { Shield, Activity, Users, AlertTriangle, FileText, Database } from 'luci
 export function HeroAnimation() {
   // Replaced Tailwind gradient classes with exact hex-based linear gradients
   const nodes = [
-    { icon: Activity, label: 'Live Txn', color: 'linear-gradient(to bottom right, #3b82f6, #06b6d4)' },
-    { icon: AlertTriangle, label: 'High Risk Alert', color: 'linear-gradient(to bottom right, #ef4444, #f43f5e)' },
-    { icon: Users, label: 'Entity Link', color: 'linear-gradient(to bottom right, #a855f7, #ec4899)' },
-    { icon: FileText, label: 'SAR Report', color: 'linear-gradient(to bottom right, #10b981, #14b8a6)' },
-    { icon: Database, label: 'KYC Profile', color: 'linear-gradient(to bottom right, #f59e0b, #f97316)' },
+    { icon: Activity, label: 'Investigator', color: 'linear-gradient(to bottom right, #3b82f6, #06b6d4)' },
+    { icon: AlertTriangle, label: 'Analyst', color: 'linear-gradient(to bottom right, #ef4444, #f43f5e)' },
+    { icon: Users, label: ' Customer', color: 'linear-gradient(to bottom right, #a855f7, #ec4899)' },
+    { icon: FileText, label: ' Modeler', color: 'linear-gradient(to bottom right, #10b981, #14b8a6)' },
+    { icon: Database, label: 'Compliance ', color: 'linear-gradient(to bottom right, #f59e0b, #f97316)' },
   ];
  
   return (

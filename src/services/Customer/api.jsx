@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "https://localhost:7181/api";
+const BASE_URL = "https://localhost:44372/api";
 
 // Personal
 export const savePersonalDetails = (payload) =>
@@ -33,13 +33,13 @@ export const saveKYCProfile = (formData) =>
 export const getKYCProfile = (customerId) =>
   axios.get(`${BASE_URL}/KYCProfiles/customer/${customerId}`);
 export const getChatMessages = (customerId) =>
-  axios.get(`https://localhost:7181/api/Chat/${customerId}`);
+  axios.get(`https://localhost:44372/api/Chat/${customerId}`);
 
 export const sendChatMessage = (payload) =>
-  axios.post("https://localhost:7181/api/Chat/send", payload);
+  axios.post("https://localhost:44372/api/Chat/send", payload);
 
 export const markMessageSeen = (messageId) =>
-  axios.put(`https://localhost:7181/api/Chat/seen/${messageId}`)
+  axios.put(`https://localhost:44372/api/Chat/seen/${messageId}`)
 
 // Watchlist
 export const getWatchlistEntries = () =>
